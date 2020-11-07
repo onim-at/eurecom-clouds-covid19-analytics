@@ -56,7 +56,7 @@ const SignUp = (props) => {
         setError(INITIAL_STATE.error);
         console.log("FIRE");
 
-        //props.history.push(ROUTES.HOME);
+        props.history.push(ROUTES.HOME);
       })
       .catch((error) => {
         setError({ error });
@@ -66,7 +66,13 @@ const SignUp = (props) => {
   const signInWithGoogleHandler = (event) => {
     event.preventDefault();
 
-    firebase.doSignInWithGoogle();
+    firebase.doSignInWithGoogle().then( () => {
+      props.history.push(ROUTES.HOME);
+    })
+    .catch ( (error) => {
+      setError(error);
+    })
+    
   }
 
   return (
@@ -156,7 +162,7 @@ const SignUp = (props) => {
             Sign Up
           </Button>
           <Box textAlign="center">
-            <Typography variant="h5">Or</Typography>
+            <Typography variant="h6">Or</Typography>
           </Box>
           <Button
             fullWidth

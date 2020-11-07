@@ -7,34 +7,60 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
+import Alert from "@material-ui/lab/Alert";
 import Container from "@material-ui/core/Container";
+import { withRouter } from "react-router-dom";
 
-import { FirebaseContext } from '../Firebase'
+import { FirebaseContext } from "../Firebase";
 
-import * as ROUTE from "../../constants/routes";
+import * as ROUTES from "../../constants/routes";
 import * as styles from "../../styles/styles";
 
-const SignIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+const INITIAL_STATE = {
+  email: "",
+  password: "",
+  error: null,
+};
+
+const SignIn = (props) => {
+  const [email, setEmail] = useState(INITIAL_STATE.email);
+  const [password, setPassword] = useState(INITIAL_STATE.password);
+  const [error, setError] = useState(INITIAL_STATE.error);
 
   const firebase = useContext(FirebaseContext);
 
   const classes = styles.useStyles();
 
+  const isInvalid = password === "" || email === "";
+
   const signInWithEmailAndPasswordHandler = (event, email, password) => {
     event.preventDefault();
+
+    firebase
+      .doSignInWithEmailAndPassword(email, password)
+      .then(() => {
+        setEmail(INITIAL_STATE.email);
+        setPassword(INITIAL_STATE.password);
+        setError(INITIAL_STATE.error);
+
+        props.history.push(ROUTES.HOME);
+      })
+      .catch((error) => {
+        setError({ error });
+      });
   };
 
-  const onChangeHandler = (event) => {
-    const { name, value } = event.currentTarget;
+  const signInWithGoogleHandler = (event) => {
+    event.preventDefault();
 
-    if (name === "userEmail") {
-      setEmail(value);
-    } else if (name === "userPassword") {
-      setPassword(value);
-    }
+    firebase.doSignInWithGoogle().then( () => {
+      props.history.push(ROUTES.HOME);
+    })
+    .catch ( (error) => {
+      setError(error);
+    })
+    
+
   };
 
   return (
@@ -46,7 +72,7 @@ const SignIn = () => {
           Sign in
         </Typography>
 
-        <form className={classes.form} noValidate>
+        <form className={classes.form}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -57,6 +83,10 @@ const SignIn = () => {
             name="email"
             autoComplete="email"
             autoFocus
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value);
+            }}
           />
           <TextField
             variant="outlined"
@@ -68,6 +98,10 @@ const SignIn = () => {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={(event) => {
+              setPassword(event.target.value);
+            }}
           />
           <Button
             type="submit"
@@ -75,11 +109,15 @@ const SignIn = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={isInvalid}
+            onClick={(event) => {
+              signInWithEmailAndPasswordHandler(event);
+            }}
           >
             Sign In
           </Button>
           <Box textAlign="center">
-            <Typography variant="h5">Or</Typography>
+            <Typography variant="h6">Or</Typography>
           </Box>
           <Button
             type="submit"
@@ -87,10 +125,15 @@ const SignIn = () => {
             variant="contained"
             color="secondary"
             className={classes.submit}
+            onClick={(event) => {
+              signInWithGoogleHandler(event);
+            }}
           >
             Sign In with Google
           </Button>
-
+          {error != null && (
+            <Alert severity="error">{error.error.message}</Alert>
+          )}
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
@@ -98,7 +141,7 @@ const SignIn = () => {
               </Link>
             </Grid>
             <Grid item>
-              <Link href={ROUTE.SIGN_UP} variant="body2">
+              <Link href={ROUTES.SIGN_UP} variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -109,4 +152,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default withRouter(SignIn);
