@@ -7,7 +7,7 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Alert from "@material-ui/lab/Alert"
+import Alert from "@material-ui/lab/Alert";
 import Container from "@material-ui/core/Container";
 import { withRouter } from "react-router-dom";
 
@@ -43,10 +43,9 @@ const SignUp = (props) => {
     email === "" ||
     username === "";
 
-  const onSubmit = (event) => {
+  const createUserWithEmailAndPasswordHandler = (event) => {
     event.preventDefault();
 
-    console.log("FIREBASE");
     firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then((authUser) => {
@@ -64,6 +63,12 @@ const SignUp = (props) => {
       });
   };
 
+  const signInWithGoogleHandler = (event) => {
+    event.preventDefault();
+
+    firebase.doSignInWithGoogle();
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -72,7 +77,7 @@ const SignUp = (props) => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} onSubmit={onSubmit}>
+        <form className={classes.form}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -139,12 +144,14 @@ const SignUp = (props) => {
             </Grid>
           </Grid>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
             disabled={isInvalid}
+            onClick={(event) => {
+              createUserWithEmailAndPasswordHandler(event);
+            }}
           >
             Sign Up
           </Button>
@@ -152,18 +159,18 @@ const SignUp = (props) => {
             <Typography variant="h5">Or</Typography>
           </Box>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="secondary"
             className={classes.submit}
+            onClick={(event) => {
+              signInWithGoogleHandler(event);
+            }}
           >
             Sign Up with Google
           </Button>
           {error != null && (
-            <Alert severity="error">
-              {error.error.message}
-            </Alert>
+            <Alert severity="error">{error.error.message}</Alert>
           )}
           <Grid container justify="flex-end">
             <Grid item>
