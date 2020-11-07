@@ -13,10 +13,10 @@ const Navigation = () => (
             <Link to={ROUTES.COUNTRY}>Country</Link>
         </li>
         <li>
-            <Link to={ROUTES.COUNTRY}>Sign in</Link>
+            <Link to={ROUTES.SIGN_IN}>Sign in</Link>
         </li>
         <li>
-            <Link to={ROUTES.COUNTRY}>Sign up</Link>
+            <Link to={ROUTES.SIGN_UP}>Sign up</Link>
         </li>
     </ul>
   </div>

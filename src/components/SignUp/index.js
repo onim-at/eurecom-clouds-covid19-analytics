@@ -1,100 +1,181 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import Alert from "@material-ui/lab/Alert"
+import Container from "@material-ui/core/Container";
+import { withRouter } from "react-router-dom";
 
-const SignUp = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [error, setError] = useState(null);
-  
-  const createUserWithEmailAndPasswordHandler = (event, email, password) => {
+import { FirebaseContext } from "../Firebase";
+
+import * as ROUTES from "../../constants/routes";
+import * as styles from "../../styles/styles";
+
+const INITIAL_STATE = {
+  username: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  error: null,
+};
+
+const SignUp = (props) => {
+  const [email, setEmail] = useState(INITIAL_STATE.email);
+  const [password, setPassword] = useState(INITIAL_STATE.password);
+  const [confirmPassword, setConfirmPassword] = useState(
+    INITIAL_STATE.confirmPassword
+  );
+  const [username, setUsername] = useState(INITIAL_STATE.username);
+  const [error, setError] = useState(INITIAL_STATE.error);
+
+  const firebase = useContext(FirebaseContext);
+
+  const classes = styles.useStyles();
+
+  const isInvalid =
+    password !== confirmPassword ||
+    password === "" ||
+    email === "" ||
+    username === "";
+
+  const onSubmit = (event) => {
     event.preventDefault();
-    setEmail("");
-    setPassword("");
-    setDisplayName("");
+
+    console.log("FIREBASE");
+    firebase
+      .doCreateUserWithEmailAndPassword(email, password)
+      .then((authUser) => {
+        setEmail(INITIAL_STATE.email);
+        setUsername(INITIAL_STATE.username);
+        setPassword(INITIAL_STATE.password);
+        setConfirmPassword(INITIAL_STATE.confirmPassword);
+        setError(INITIAL_STATE.error);
+        console.log("FIRE");
+
+        //props.history.push(ROUTES.HOME);
+      })
+      .catch((error) => {
+        setError({ error });
+      });
   };
-  
-  const onChangeHandler = event => {
-    const { name, value } = event.currentTarget;
-    if (name === "userEmail") {
-      setEmail(value);
-    } else if (name === "userPassword") {
-      setPassword(value);
-    } else if (name === "displayName") {
-      setDisplayName(value);
-    }
-  };
-  
+
   return (
-    <div className="mt-8">
-      <h1 className="text-3xl mb-2 text-center font-bold">Sign Up</h1>
-      <div className="border border-blue-400 mx-auto w-11/12 md:w-2/4 rounded py-8 px-4 md:px-8">
-        {error !== null && (
-          <div className="py-4 bg-red-600 w-full text-white text-center mb-3">
-            {error}
-          </div>
-        )}
-        <form className="">
-          <label htmlFor="displayName" className="block">
-            Display Name:
-          </label>
-          <input
-            type="text"
-            className="my-1 p-1 w-full "
-            name="displayName"
-            value={displayName}
-            placeholder="E.g: Faruq"
-            id="displayName"
-            onChange={event => onChangeHandler(event)}
-          />
-          <label htmlFor="userEmail" className="block">
-            Email:
-          </label>
-          <input
-            type="email"
-            className="my-1 p-1 w-full"
-            name="userEmail"
-            value={email}
-            placeholder="E.g: faruq123@gmail.com"
-            id="userEmail"
-            onChange={event => onChangeHandler(event)}
-          />
-          <label htmlFor="userPassword" className="block">
-            Password:
-          </label>
-          <input
-            type="password"
-            className="mt-1 mb-3 p-1 w-full"
-            name="userPassword"
-            value={password}
-            placeholder="Your Password"
-            id="userPassword"
-            onChange={event => onChangeHandler(event)}
-          />
-          <button
-            className="bg-green-400 hover:bg-green-500 w-full py-2 text-white"
-            onClick={event => {
-              createUserWithEmailAndPasswordHandler(event, email, password);
-            }}
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>AAAA</Avatar>
+        <Typography component="h1" variant="h5">
+          Sign up
+        </Typography>
+        <form className={classes.form} onSubmit={onSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                name="username"
+                variant="outlined"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                autoFocus
+                autoComplete="username"
+                value={username}
+                onChange={(event) => {
+                  setUsername(event.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                id="confirmPassword"
+                autoComplete="confirm-password"
+                value={confirmPassword}
+                onChange={(event) => {
+                  setConfirmPassword(event.target.value);
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            disabled={isInvalid}
           >
-            Sign up
-          </button>
+            Sign Up
+          </Button>
+          <Box textAlign="center">
+            <Typography variant="h5">Or</Typography>
+          </Box>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="secondary"
+            className={classes.submit}
+          >
+            Sign Up with Google
+          </Button>
+          {error != null && (
+            <Alert severity="error">
+              {error.error.message}
+            </Alert>
+          )}
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link href={ROUTES.SIGN_IN} variant="body2">
+                Already have an account? Sign in
+              </Link>
+            </Grid>
+          </Grid>
         </form>
-        <p className="text-center my-3">or</p>
-        <button
-          className="bg-red-500 hover:bg-red-600 w-full py-2 text-white"
-        >
-          Sign In with Google
-        </button>
-        <p className="text-center my-3">
-          Already have an account?{" "}
-          <Link to="/" className="text-blue-500 hover:text-blue-600">
-            Sign in here
-          </Link>
-        </p>
       </div>
-    </div>
+    </Container>
   );
 };
 
-export default SignUp;
+export default withRouter(SignUp);

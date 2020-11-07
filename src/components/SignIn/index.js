@@ -1,78 +1,111 @@
-import React, {useState} from 'react';
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
+
+import { FirebaseContext } from '../Firebase'
+
+import * as ROUTE from "../../constants/routes";
+import * as styles from "../../styles/styles";
 
 const SignIn = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
-    
-    const signInWithEmailAndPasswordHandler = 
-            (event,email, password) => {
-                event.preventDefault();
-    };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-      const onChangeHandler = (event) => {
-          const {name, value} = event.currentTarget;
+  const firebase = useContext(FirebaseContext);
 
-          if(name === 'userEmail') {
-              setEmail(value);
-          }
-          else if(name === 'userPassword'){
-            setPassword(value);
-          }
-      };
+  const classes = styles.useStyles();
+
+  const signInWithEmailAndPasswordHandler = (event, email, password) => {
+    event.preventDefault();
+  };
+
+  const onChangeHandler = (event) => {
+    const { name, value } = event.currentTarget;
+
+    if (name === "userEmail") {
+      setEmail(value);
+    } else if (name === "userPassword") {
+      setPassword(value);
+    }
+  };
 
   return (
-    <div className="mt-8">
-      <h1 className="text-3xl mb-2 text-center font-bold">Sign In</h1>
-      <div className="border border-blue-400 mx-auto w-11/12 md:w-2/4 rounded py-8 px-4 md:px-8">
-        {error !== null && <div className = "py-4 bg-red-600 w-full text-white text-center mb-3">{error}</div>}
-        <form className="">
-          <label htmlFor="userEmail" className="block">
-            Email:
-          </label>
-          <input
-            type="email"
-            className="my-1 p-1 w-full"
-            name="userEmail"
-            value = {email}
-            placeholder="E.g: faruq123@gmail.com"
-            id="userEmail"
-            onChange = {(event) => onChangeHandler(event)}
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>AAAA</Avatar>
+        <Typography component="h1" variant="h4">
+          Sign in
+        </Typography>
+
+        <form className={classes.form} noValidate>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
           />
-          <label htmlFor="userPassword" className="block">
-            Password:
-          </label>
-          <input
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
             type="password"
-            className="mt-1 mb-3 p-1 w-full"
-            name="userPassword"
-            value = {password}
-            placeholder="Your Password"
-            id="userPassword"
-            onChange = {(event) => onChangeHandler(event)}
+            id="password"
+            autoComplete="current-password"
           />
-          <button className="bg-green-400 hover:bg-green-500 w-full py-2 text-white" onClick = {(event) => {signInWithEmailAndPasswordHandler(event, email, password)}}>
-            Sign in
-          </button>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Sign In
+          </Button>
+          <Box textAlign="center">
+            <Typography variant="h5">Or</Typography>
+          </Box>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="secondary"
+            className={classes.submit}
+          >
+            Sign In with Google
+          </Button>
+
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href={ROUTE.SIGN_UP} variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
         </form>
-        <p className="text-center my-3">or</p>
-        <button
-          className="bg-red-500 hover:bg-red-600 w-full py-2 text-white">
-          Sign in with Google
-        </button>
-        <p className="text-center my-3">
-          Don't have an account?{" "}
-          <Link to="signUp" className="text-blue-500 hover:text-blue-600">
-            Sign up here
-          </Link>{" "}
-          <br />{" "}
-          <Link to = "passwordReset" className="text-blue-500 hover:text-blue-600">
-            Forgot Password?
-          </Link>
-        </p>
       </div>
-    </div>
+    </Container>
   );
 };
 
