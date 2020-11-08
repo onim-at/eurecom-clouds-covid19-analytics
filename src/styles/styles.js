@@ -20,3 +20,14 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export const useNavigationStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  }
+}));
