@@ -12,6 +12,7 @@ import { withAuthentication } from "../Session";
 import * as ROUTES from "../../constants/routes";
 import PasswordForgetPage from "../PasswordForget";
 import AddNews from "../AddNews";
+import AdminPage from "../Admin";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
       <Route path={ROUTES.SIGN_UP} component={SignUp} />
       <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
       <Route path={ROUTES.ADD_NEWS} component={AddNews} />
+      <Route path={ROUTES.ADMIN} component={AdminPage} />
     </Router>
   );
 };

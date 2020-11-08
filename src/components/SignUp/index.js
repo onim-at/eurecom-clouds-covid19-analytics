@@ -50,6 +50,12 @@ const SignUp = (props) => {
     firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then((authUser) => {
+        return firebase.user(authUser.user.uid).set({
+          username,
+          email,
+        });
+      })
+      .then((authUser) => {
         setEmail(INITIAL_STATE.email);
         setUsername(INITIAL_STATE.username);
         setPassword(INITIAL_STATE.password);
@@ -177,9 +183,7 @@ const SignUp = (props) => {
           >
             Sign Up with Google
           </Button>
-          {error != null && (
-            <Alert severity="error">{error.message}</Alert>
-          )}
+          {error != null && <Alert severity="error">{error.message}</Alert>}
           <Grid container justify="flex-end">
             <Grid item>
               <SignInLink />

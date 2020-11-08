@@ -7,22 +7,20 @@ import { FirebaseContext } from "../Firebase";
 const withAuthentication = (Component) => {
   const WithAuthentication = (props) => {
     const [authUser, setAuthUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const firebase = useContext(FirebaseContext);
 
     useEffect(() => {
-      firebase.auth.onAuthStateChanged((authUser) => {
+      setLoading(true);
+
+      var listener = firebase.auth.onAuthStateChanged((authUser) => {
         authUser ? setAuthUser(authUser) : setAuthUser(null);
         setLoading(false);
       });
 
-      // remove listener if component unmounts?
-      // var listener = firebase.auth.onAuthStateChanged((authUser) => {
-      //   authUser ? setAuthUser(authUser) : setAuthUser(null);
-      // });
-      // return (listener) => {
-      //   listener();
-      // }
+      return () => {
+        listener();
+      };
     });
 
     return (
