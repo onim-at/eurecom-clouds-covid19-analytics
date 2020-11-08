@@ -13,8 +13,10 @@ import { withRouter } from "react-router-dom";
 
 import { FirebaseContext } from "../Firebase";
 
+import { SignUpLink } from "../SignUp";
 import * as ROUTES from "../../constants/routes";
 import * as styles from "../../styles/styles";
+import { PasswordForgetLink } from "../PasswordForget";
 
 const INITIAL_STATE = {
   email: "",
@@ -22,7 +24,9 @@ const INITIAL_STATE = {
   error: null,
 };
 
-const SignIn = (props) => {
+const SignInPage = () => <SignInForm />;
+
+const SignInFormBase = (props) => {
   const [email, setEmail] = useState(INITIAL_STATE.email);
   const [password, setPassword] = useState(INITIAL_STATE.password);
   const [error, setError] = useState(INITIAL_STATE.error);
@@ -33,7 +37,7 @@ const SignIn = (props) => {
 
   const isInvalid = password === "" || email === "";
 
-  const signInWithEmailAndPasswordHandler = (event, email, password) => {
+  const signInWithEmailAndPasswordHandler = (event) => {
     event.preventDefault();
 
     firebase
@@ -46,21 +50,21 @@ const SignIn = (props) => {
         props.history.push(ROUTES.HOME);
       })
       .catch((error) => {
-        setError({ error });
+        setError(error);
       });
   };
 
   const signInWithGoogleHandler = (event) => {
     event.preventDefault();
 
-    firebase.doSignInWithGoogle().then( () => {
-      props.history.push(ROUTES.HOME);
-    })
-    .catch ( (error) => {
-      setError(error);
-    })
-    
-
+    firebase
+      .doSignInWithGoogle()
+      .then(() => {
+        props.history.push(ROUTES.HOME);
+      })
+      .catch((error) => {
+        setError(error);
+      });
   };
 
   return (
@@ -132,24 +136,30 @@ const SignIn = (props) => {
             Sign In with Google
           </Button>
           {error != null && (
-            <Alert severity="error">{error.error.message}</Alert>
+            <Alert severity="error">{error.message}</Alert>
           )}
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href={ROUTES.SIGN_UP} variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
         </form>
+        <Grid container>
+          <Grid item xs>
+            <PasswordForgetLink />
+          </Grid>
+          <Grid item>
+            <SignUpLink />
+          </Grid>
+        </Grid>
       </div>
     </Container>
   );
 };
 
-export default withRouter(SignIn);
+const SignInLink = () => (
+  <Link href={ROUTES.SIGN_IN} variant="body2">
+    Already have an account? Sign in
+  </Link>
+);
+
+export default SignInPage;
+
+const SignInForm = withRouter(SignInFormBase);
+
+export { SignInForm, SignInLink };

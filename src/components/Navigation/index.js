@@ -11,44 +11,56 @@ import * as Styles from "../../styles/styles";
 import { AuthUserContext } from "../Session";
 
 const Navigation = (props) => {
-  const authUserContext = useContext(AuthUserContext);
+  const authUser = useContext(AuthUserContext);
   const classes = Styles.useNavigationStyles();
 
-  return (
-    <AppBar position="static">
-      <Toolbar>
-        <IconButton
-          edge="start"
-          className={classes.menuButton}
-          color="inherit"
-          aria-label="menu"
-        ></IconButton>
-        <Typography variant="h6" className={classes.title}>
-          COVID-19
-        </Typography>
-        <Button color="inherit" href={ROUTES.HOME}>
-          Home
-        </Button>
-        <Button color="inherit" href={ROUTES.COUNTRY}>
-          Country
-        </Button>
-        {authUserContext ? <NavigationAuth /> : <NavigationNonAuth />}
-      </Toolbar>
-    </AppBar>
+  return authUser ? (
+    <NavigationAuth classes={classes} username={authUser.email} />
+  ) : (
+    <NavigationNonAuth classes={classes}/>
   );
 };
 
-const NavigationAuth = () => <SignOutButton color="inherit" />;
+const NavigationAuth = ({classes, username}) => (
+  <AppBar color="transparent" position="static">
+    <Toolbar>
+      <Typography variant="h5" className={classes.title}>
+        COVID-19
+      </Typography>
+      <Typography variant="h6" className={classes.title}>
+        Welcome {username} 
+      </Typography>
+      <Button color="inherit" href={ROUTES.HOME}>
+        Home
+      </Button>
+      <Button color="inherit" href={ROUTES.COUNTRY}>
+        Country
+      </Button>
+      <SignOutButton color="inherit" />
+    </Toolbar>
+  </AppBar>
+);
 
-const NavigationNonAuth = () => (
-  <>
-    <Button color="inherit" href={ROUTES.SIGN_IN}>
-      Sign in
-    </Button>
-    <Button color="inherit" href={ROUTES.SIGN_UP}>
-      Sign up
-    </Button>
-  </>
+const NavigationNonAuth = ({classes}) => (
+  <AppBar color="transparent" position="static">
+    <Toolbar>
+      <Typography variant="h5" className={classes.title}>
+        COVID-19
+      </Typography>
+      <Button color="inherit" href={ROUTES.HOME}>
+        Home
+      </Button>
+      <Button color="inherit" href={ROUTES.COUNTRY}>
+        Country
+      </Button>
+      <Button color="inherit" href={ROUTES.SIGN_IN}>
+        Sign in
+      </Button>
+      <Button color="inherit" href={ROUTES.SIGN_UP}>
+        Sign up
+      </Button>
+    </Toolbar>
+  </AppBar>
 );
 
 export default Navigation;

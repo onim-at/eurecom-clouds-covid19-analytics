@@ -15,6 +15,7 @@ import { FirebaseContext } from "../Firebase";
 
 import * as ROUTES from "../../constants/routes";
 import * as styles from "../../styles/styles";
+import { SignInLink } from "../SignIn";
 
 const INITIAL_STATE = {
   username: "",
@@ -59,21 +60,22 @@ const SignUp = (props) => {
         props.history.push(ROUTES.HOME);
       })
       .catch((error) => {
-        setError({ error });
+        setError(error);
       });
   };
 
   const signInWithGoogleHandler = (event) => {
     event.preventDefault();
 
-    firebase.doSignInWithGoogle().then( () => {
-      props.history.push(ROUTES.HOME);
-    })
-    .catch ( (error) => {
-      setError(error);
-    })
-    
-  }
+    firebase
+      .doSignInWithGoogle()
+      .then(() => {
+        props.history.push(ROUTES.HOME);
+      })
+      .catch((error) => {
+        setError(error);
+      });
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -176,13 +178,11 @@ const SignUp = (props) => {
             Sign Up with Google
           </Button>
           {error != null && (
-            <Alert severity="error">{error.error.message}</Alert>
+            <Alert severity="error">{error.message}</Alert>
           )}
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href={ROUTES.SIGN_IN} variant="body2">
-                Already have an account? Sign in
-              </Link>
+              <SignInLink />
             </Grid>
           </Grid>
         </form>
@@ -191,4 +191,12 @@ const SignUp = (props) => {
   );
 };
 
+const SignUpLink = () => (
+  <Link href={ROUTES.SIGN_UP} variant="body2">
+    "Don't have an account? Sign Up"
+  </Link>
+);
+
 export default withRouter(SignUp);
+
+export { SignUpLink };

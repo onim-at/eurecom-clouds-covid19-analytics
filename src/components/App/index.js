@@ -7,43 +7,28 @@ import Country from "../Country";
 import SignIn from "../SignIn";
 import SignUp from "../SignUp";
 
-import { FirebaseContext } from "../Firebase";
-import { AuthUserContext } from "../Session";
+import { withAuthentication } from "../Session";
 
 import * as ROUTES from "../../constants/routes";
+import PasswordForgetPage from "../PasswordForget";
 
 const App = () => {
-  const [authUser, setAuthUser] = useState(null);
-  const firebase = useContext(FirebaseContext);
-
-  useEffect(() => {
-    firebase.auth.onAuthStateChanged((authUser) => {
-      authUser ? setAuthUser(authUser) : setAuthUser(null);
-    });
-
-    // remove listener if component unmounts?
-    // var listener = firebase.auth.onAuthStateChanged((authUser) => {
-    //   authUser ? setAuthUser(authUser) : setAuthUser(null);
-    // });
-    // return (listener) => {
-    //   listener();
-    // }
-  });
 
   return (
-    <AuthUserContext.Provider value={authUser}>
+    
       <Router>
-        <Navigation authUser={authUser} />
+        <Navigation />
 
-        <hr />
+   
 
         <Route exact path={ROUTES.HOME} component={Home} />
         <Route path={ROUTES.COUNTRY} component={Country} />
         <Route path={ROUTES.SIGN_IN} component={SignIn} />
         <Route path={ROUTES.SIGN_UP} component={SignUp} />
+        <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
       </Router>
-    </AuthUserContext.Provider>
+    
   );
 };
 
-export default App;
+export default withAuthentication(App);
