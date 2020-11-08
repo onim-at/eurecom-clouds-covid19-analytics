@@ -7,6 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 
 import SignOutButton from "../SignOut";
 import * as ROUTES from "../../constants/routes";
+import * as ROLES from "../../constants/roles";
 import * as Styles from "../../styles/styles";
 import { AuthUserContext } from "../Session";
 
@@ -15,20 +16,20 @@ const Navigation = (props) => {
   const classes = Styles.useNavigationStyles();
 
   return authUser ? (
-    <NavigationAuth classes={classes} username={authUser.email} />
+    <NavigationAuth classes={classes} authUser={authUser} />
   ) : (
-    <NavigationNonAuth classes={classes}/>
+    <NavigationNonAuth classes={classes} />
   );
 };
 
-const NavigationAuth = ({classes, username}) => (
+const NavigationAuth = ({ classes, authUser }) => (
   <AppBar color="transparent" position="static">
     <Toolbar>
       <Typography variant="h5" className={classes.title}>
         COVID-19
       </Typography>
       <Typography variant="h6" className={classes.title}>
-        Welcome {username} 
+        Welcome {authUser.username}
       </Typography>
       <Button color="inherit" href={ROUTES.HOME}>
         Home
@@ -36,12 +37,17 @@ const NavigationAuth = ({classes, username}) => (
       <Button color="inherit" href={ROUTES.COUNTRY}>
         Country
       </Button>
+      {!!authUser.roles[ROLES.WRITER] && (
+        <Button color="inherit" href={ROUTES.ADD_NEWS}>
+          ADD NEWS
+        </Button>
+      )}
       <SignOutButton color="inherit" />
     </Toolbar>
   </AppBar>
 );
 
-const NavigationNonAuth = ({classes}) => (
+const NavigationNonAuth = ({ classes }) => (
   <AppBar color="transparent" position="static">
     <Toolbar>
       <Typography variant="h5" className={classes.title}>

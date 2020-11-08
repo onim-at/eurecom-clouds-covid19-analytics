@@ -6,17 +6,20 @@ import { FirebaseContext } from "../Firebase";
 
 const withAuthentication = (Component) => {
   const WithAuthentication = (props) => {
-    const [authUser, setAuthUser] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [authUser, setAuthUser] = useState(JSON.parse(localStorage.getItem('authUser')));
     const firebase = useContext(FirebaseContext);
 
     useEffect(() => {
-      setLoading(true);
-
-      var listener = firebase.auth.onAuthStateChanged((authUser) => {
-        authUser ? setAuthUser(authUser) : setAuthUser(null);
-        setLoading(false);
-      });
+      var listener = firebase.onAuthUserListener(
+        (authUser) => {
+          localStorage.setItem("authUser", JSON.stringify(authUser));
+          setAuthUser(authUser);
+        },
+        () => {
+          localStorage.removeItem("authUser");
+          setAuthUser(null);
+        }
+      );
 
       return () => {
         listener();
@@ -25,7 +28,7 @@ const withAuthentication = (Component) => {
 
     return (
       <AuthUserContext.Provider value={authUser}>
-        {!loading && <Component {...props} />}
+        <Component {...props} />
       </AuthUserContext.Provider>
     );
   };

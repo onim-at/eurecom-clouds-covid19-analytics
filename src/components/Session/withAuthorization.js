@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { withRouter } from "react-router-dom";
 
 import AuthUserContext from "./context";
@@ -12,11 +12,14 @@ const withAuthorization = (condition) => (Component) => {
     const authUser = useContext(AuthUserContext);
 
     useEffect(() => {
-      var listener = firebase.auth.onAuthStateChanged((authUser) => {
-        if (!condition(authUser)) {
-          props.history.push(ROUTES.SIGN_IN);
-        }
-      });
+      var listener = firebase.onAuthUserListener(
+        (authUser) => {
+          if (!condition(authUser)) {
+            props.history.push(ROUTES.HOME);
+          }
+        },
+        () => props.history.push(ROUTES.HOME)
+      );
 
       return () => {
         listener();
