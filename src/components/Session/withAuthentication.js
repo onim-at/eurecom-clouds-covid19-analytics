@@ -3,17 +3,17 @@ import React, { useState, useEffect, useContext } from "react";
 import AuthUserContext from "./context";
 
 import { FirebaseContext } from "../Firebase";
-import AuthUserContext from "./context";
 
 const withAuthentication = (Component) => {
   const WithAuthentication = (props) => {
     const [authUser, setAuthUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const firebase = useContext(FirebaseContext);
-    const authUser = useContext(AuthUserContext);
 
     useEffect(() => {
       firebase.auth.onAuthStateChanged((authUser) => {
         authUser ? setAuthUser(authUser) : setAuthUser(null);
+        setLoading(false);
       });
 
       // remove listener if component unmounts?
@@ -25,7 +25,11 @@ const withAuthentication = (Component) => {
       // }
     });
 
-    return condition(authUser) ? <Component {...this.props} /> : null;
+    return (
+      <AuthUserContext.Provider value={authUser}>
+        {!loading && <Component {...props} />}
+      </AuthUserContext.Provider>
+    );
   };
 
   return WithAuthentication;

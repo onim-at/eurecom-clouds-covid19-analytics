@@ -11,23 +11,19 @@ import { withAuthentication } from "../Session";
 
 import * as ROUTES from "../../constants/routes";
 import PasswordForgetPage from "../PasswordForget";
+import AddNews from "../AddNews";
 
 const App = () => {
-
   return (
-    
-      <Router>
-        <Navigation />
-
-   
-
-        <Route exact path={ROUTES.HOME} component={Home} />
-        <Route path={ROUTES.COUNTRY} component={Country} />
-        <Route path={ROUTES.SIGN_IN} component={SignIn} />
-        <Route path={ROUTES.SIGN_UP} component={SignUp} />
-        <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
-      </Router>
-    
+    <Router>
+      <Navigation />
+      <Route exact path={ROUTES.HOME} component={Home} />
+      <Route path={ROUTES.COUNTRY} component={Country} />
+      <Route path={ROUTES.SIGN_IN} component={SignIn} />
+      <Route path={ROUTES.SIGN_UP} component={SignUp} />
+      <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
+      <Route path={ROUTES.ADD_NEWS} component={AddNews} />
+    </Router>
   );
 };
 
