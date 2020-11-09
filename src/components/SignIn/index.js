@@ -123,21 +123,8 @@ const SignInFormBase = (props) => {
           <Box textAlign="center">
             <Typography variant="h6">Or</Typography>
           </Box>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="secondary"
-            className={classes.submit}
-            onClick={(event) => {
-              signInWithGoogleHandler(event);
-            }}
-          >
-            Sign In with Google
-          </Button>
-          {error != null && (
-            <Alert severity="error">{error.message}</Alert>
-          )}
+            <SignInGoogle />
+          {error != null && <Alert severity="error">{error.message}</Alert>}
         </form>
         <Grid container>
           <Grid item xs>
@@ -158,8 +145,51 @@ const SignInLink = () => (
   </Link>
 );
 
+const SignInGoogleBase = (props) => {
+  const [error, setError] = useState(null);
+  const firebase = useContext(FirebaseContext);
+
+  const classes = styles.useStyles();
+
+  const signInWithGoogleHandler = (event) => {
+    event.preventDefault();
+
+    firebase
+      .doSignInWithGoogle()
+      .then((socialAuthUser) => {
+        return firebase.user(socialAuthUser.user.uid).set({
+          username: socialAuthUser.user.displayName,
+          email: socialAuthUser.user.email,
+          roles: {},
+        });
+      })
+      .then(() => {
+        setError(null);
+        props.history.push(ROUTES.HOME);
+      })
+      .catch((error) => {
+        setError(error);
+      });
+  };
+
+  return (
+    <Button
+      fullWidth
+      variant="contained"
+      color="secondary"
+      className={classes.submit}
+      onClick={(event) => {
+        signInWithGoogleHandler(event);
+      }}
+    >
+      Sign In with Google
+    </Button>
+  );
+};
+
 export default SignInPage;
 
 const SignInForm = withRouter(SignInFormBase);
+const SignInGoogle = withRouter(SignInGoogleBase);
 
-export { SignInForm, SignInLink };
+export { SignInForm, SignInLink, SignInGoogle };

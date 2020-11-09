@@ -15,7 +15,7 @@ import { FirebaseContext } from "../Firebase";
 
 import * as ROUTES from "../../constants/routes";
 import * as styles from "../../styles/styles";
-import { SignInLink } from "../SignIn";
+import { SignInLink, SignInGoogle } from "../SignIn";
 
 const INITIAL_STATE = {
   username: "",
@@ -172,17 +172,7 @@ const SignUp = (props) => {
           <Box textAlign="center">
             <Typography variant="h6">Or</Typography>
           </Box>
-          <Button
-            fullWidth
-            variant="contained"
-            color="secondary"
-            className={classes.submit}
-            onClick={(event) => {
-              signInWithGoogleHandler(event);
-            }}
-          >
-            Sign Up with Google
-          </Button>
+          <SignInGoogle />
           {error != null && <Alert severity="error">{error.message}</Alert>}
           <Grid container justify="flex-end">
             <Grid item>
