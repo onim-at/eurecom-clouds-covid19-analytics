@@ -29,5 +29,5 @@ export const useNavigationStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-  }
+  },
 }));

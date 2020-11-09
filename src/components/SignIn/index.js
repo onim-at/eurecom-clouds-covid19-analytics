@@ -54,19 +54,6 @@ const SignInFormBase = (props) => {
       });
   };
 
-  const signInWithGoogleHandler = (event) => {
-    event.preventDefault();
-
-    firebase
-      .doSignInWithGoogle()
-      .then(() => {
-        props.history.push(ROUTES.HOME);
-      })
-      .catch((error) => {
-        setError(error);
-      });
-  };
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -123,7 +110,7 @@ const SignInFormBase = (props) => {
           <Box textAlign="center">
             <Typography variant="h6">Or</Typography>
           </Box>
-            <SignInGoogle />
+          <SignInGoogle setError={setError}/>
           {error != null && <Alert severity="error">{error.message}</Alert>}
         </form>
         <Grid container>
@@ -139,14 +126,7 @@ const SignInFormBase = (props) => {
   );
 };
 
-const SignInLink = () => (
-  <Link href={ROUTES.SIGN_IN} variant="body2">
-    Already have an account? Sign in
-  </Link>
-);
-
 const SignInGoogleBase = (props) => {
-  const [error, setError] = useState(null);
   const firebase = useContext(FirebaseContext);
 
   const classes = styles.useStyles();
@@ -164,11 +144,11 @@ const SignInGoogleBase = (props) => {
         });
       })
       .then(() => {
-        setError(null);
+        props.setError(null);
         props.history.push(ROUTES.HOME);
       })
       .catch((error) => {
-        setError(error);
+        props.setError(error);
       });
   };
 
@@ -186,6 +166,13 @@ const SignInGoogleBase = (props) => {
     </Button>
   );
 };
+
+const SignInLink = (props) => (
+  <Link href={ROUTES.SIGN_IN} variant="body2">
+    Already have an account? Sign in
+  </Link>
+);
+
 
 export default SignInPage;
 

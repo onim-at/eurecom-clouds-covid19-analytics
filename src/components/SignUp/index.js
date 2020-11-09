@@ -172,7 +172,7 @@ const SignUp = (props) => {
           <Box textAlign="center">
             <Typography variant="h6">Or</Typography>
           </Box>
-          <SignInGoogle />
+          <SignInGoogle setError={setError} />
           {error != null && <Alert severity="error">{error.message}</Alert>}
           <Grid container justify="flex-end">
             <Grid item>
