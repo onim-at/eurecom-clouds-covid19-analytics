@@ -70,19 +70,6 @@ const SignUp = (props) => {
       });
   };
 
-  const signInWithGoogleHandler = (event) => {
-    event.preventDefault();
-
-    firebase
-      .doSignInWithGoogle()
-      .then(() => {
-        props.history.push(ROUTES.HOME);
-      })
-      .catch((error) => {
-        setError(error);
-      });
-  };
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
