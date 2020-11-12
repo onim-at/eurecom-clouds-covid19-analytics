@@ -34,9 +34,6 @@ const NavigationAuth = ({ classes, authUser }) => (
       <Button color="inherit" href={ROUTES.HOME}>
         Home
       </Button>
-      <Button color="inherit" href={ROUTES.COUNTRY}>
-        Country
-      </Button>
       {!!authUser.roles[ROLES.WRITER] && (
         <Button color="inherit" href={ROUTES.ADD_NEWS}>
           ADD NEWS
@@ -55,9 +52,6 @@ const NavigationNonAuth = ({ classes }) => (
       </Typography>
       <Button color="inherit" href={ROUTES.HOME}>
         Home
-      </Button>
-      <Button color="inherit" href={ROUTES.COUNTRY}>
-        Country
       </Button>
       <Button color="inherit" href={ROUTES.SIGN_IN}>
         Sign in

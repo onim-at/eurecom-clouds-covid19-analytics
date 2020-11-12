@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
 import Navigation from "../Navigation";
 import Home from "../Home";
-import Country from "../Country";
 import SignIn from "../SignIn";
 import SignUp from "../SignUp";
 
@@ -17,8 +16,8 @@ const App = () => {
   return (
     <Router>
       <Navigation />
-      <Route exact path={ROUTES.HOME} component={Home} />
-      <Route path={ROUTES.COUNTRY} component={Country} />
+      <Route path={ROUTES.HOME} component={Home} />
+      <Route path={ROUTES.COUNTRY} component={Home} />
       <Route path={ROUTES.SIGN_IN} component={SignIn} />
       <Route path={ROUTES.SIGN_UP} component={SignUp} />
       <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
