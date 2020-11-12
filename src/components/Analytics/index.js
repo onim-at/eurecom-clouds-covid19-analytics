@@ -11,6 +11,8 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 
 import { Line } from "react-chartjs-2";
 
+import * as COLORS from "../../constants/colors"
+
 const moment = require("moment");
 
 const SummaryTable = ({ data, title, loading }) => {
@@ -21,39 +23,39 @@ const SummaryTable = ({ data, title, loading }) => {
   const percentage = (x, y) => ((x / y) * 100).toFixed(2) + "%";
 
   const getRows = (data) => [
-    { id: 1, measure: "Total Cases", value: data.TotalConfirmed, bg: "khaki" },
-    { id: 2, measure: "New Cases", value: data.NewConfirmed, bg: "khaki" },
+    { id: 1, measure: "Total Cases", value: data.TotalConfirmed, bg: COLORS.CONFIRMED },
+    { id: 2, measure: "New Cases", value: data.NewConfirmed, bg: COLORS.CONFIRMED },
     {
       id: 3,
       measure: "Active Cases",
       value: data.TotalConfirmed - data.TotalRecovered,
-      bg: "khaki",
+      bg: COLORS.CONFIRMED,
     },
     {
       id: 4,
       measure: "Total Recovered",
       value: data.TotalRecovered,
-      bg: "LightSkyBlue",
+      bg: COLORS.RECOVERED,
     },
     {
       id: 5,
       measure: "New Recovered",
       value: data.NewRecovered,
-      bg: "LightSkyBlue",
+      bg: COLORS.RECOVERED,
     },
     {
       id: 6,
       measure: "Recovery Rate",
       value: percentage(data.TotalRecovered, data.TotalConfirmed),
-      bg: "LightSkyBlue",
+      bg: COLORS.RECOVERED,
     },
-    { id: 7, measure: "Total Deaths", value: data.TotalDeaths, bg: "Tomato" },
-    { id: 8, measure: "New Deaths", value: data.NewDeaths, bg: "Tomato" },
+    { id: 7, measure: "Total Deaths", value: data.TotalDeaths, bg: COLORS.DEATHS },
+    { id: 8, measure: "New Deaths", value: data.NewDeaths, bg: COLORS.DEATHS },
     {
       id: 9,
       measure: "Mortality Rate",
       value: percentage(data.TotalDeaths, data.TotalConfirmed),
-      bg: "Tomato",
+      bg: COLORS.DEATHS,
     },
   ];
 
@@ -91,9 +93,23 @@ const LineChartTotal = ({ data, title, loading }) => {
     console.log(recovered)
     return {
       labels: labels,
-      dataset: [
+      datasets: [
         {
+          borderColor: COLORS.DEATHS,
+          backgroundColor: COLORS.DEATHS_BG,
           label: "Total deaths",
+          data: deaths,
+        },
+        {
+          borderColor: COLORS.RECOVERED,
+          backgroundColor: COLORS.RECOVERED_BG,
+          label: "Total Recovered",
+          data: recovered,
+        },
+        {
+          borderColor: COLORS.CONFIRMED,
+          backgroundColor: COLORS.CONFIRMED_BG,
+          label: "Total Cases",
           data: confirmed,
         },
       ],
@@ -120,7 +136,7 @@ const LineChartTotal = ({ data, title, loading }) => {
 };
 
 const Title = ({ title }) => (
-  <Typography variant="h4" style={{ background: "Beige" }}>
+  <Typography variant="h5" style={{ background: "Beige" }}>
     <Box p={1} m={1} fontWeight="fontWeightBold">
       {title}
     </Box>

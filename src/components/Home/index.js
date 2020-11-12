@@ -15,10 +15,10 @@ import Alert from "@material-ui/lab/Alert";
 
 const Home = () => {
   const [summary, setSummary] = useState({});
-  const [live, setLive] = useState({});
+  const [total, setTotal] = useState({});
   const [error, setError] = useState(null);
   const [summaryLoading, setSummaryLoading] = useState(true);
-  const [liveLoading, setLiveLoading] = useState(true);
+  const [totalLoading, setTotalLoading] = useState(true);
   const firebase = useContext(FirebaseContext);
   const classes = styles.useStyles();
   const { country } = useParams();
@@ -41,12 +41,13 @@ const Home = () => {
 
     if (location.Slug) {
       firebase
-        .getLiveByCountry(location.Slug)
+        .getTotalByCountry(location.Slug)
         .then((data) => {
-          setLive(data);
-          setLiveLoading(false)
+          setTotal(data);
+          setTotalLoading(false)
         })
         .catch((error) => {
+          console.log(error)
           setError(error);
         });
     }
@@ -62,7 +63,7 @@ const Home = () => {
           Live Updates and Statistics
         </Typography>
         <hr />
-        {error && <Alert>{error.message}</Alert>}
+        {error && <Alert severity="error">{error.message}</Alert>}
         <Grid container justify="center">
           <Grid item xs={10}>
             <SummaryTable
@@ -74,9 +75,9 @@ const Home = () => {
           <Route path={ROUTES.COUNTRY}>
             <Grid item xs={10}>
               <LineChartTotal
-                data={live}
+                data={total}
                 title={TITLES.DAILY_TOTAL + titleName}
-                loading={liveLoading}
+                loading={totalLoading}
               />
             </Grid>
           </Route>

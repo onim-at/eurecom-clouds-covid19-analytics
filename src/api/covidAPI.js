@@ -9,12 +9,12 @@ export async function getSummary() {
   if (response.ok) {
     return data;
   } else {
-    let err = { status: response.status, errObj: data };
+    let err = { status: response.status, message: data.message };
     throw err;
   }
 }
 
-export async function getLiveByCountry(country) {
+export async function getTotalByCountry(country) {
   let url = "/total/country/" + country;
 
   const response = await fetch(baseURL + url);
@@ -23,7 +23,7 @@ export async function getLiveByCountry(country) {
   if (response.ok) {
     return data;
   } else {
-    let err = { status: response.status, errObj: data };
+    let err = { status: response.status, message: data.message };
     throw err;
   }
 }
