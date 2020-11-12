@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 
-import { SummaryTable, LineChartTotal } from "../Analytics";
+import { SummaryTable, SummaryPie, LineChartTotal, SummaryTableCountry } from "../Analytics";
 import { FirebaseContext } from "../Firebase";
 import * as styles from "../../styles/styles";
 import * as TITLES from "../../constants/titles";
@@ -44,10 +44,10 @@ const Home = () => {
         .getTotalByCountry(location.Slug)
         .then((data) => {
           setTotal(data);
-          setTotalLoading(false)
+          setTotalLoading(false);
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
           setError(error);
         });
     }
@@ -72,12 +72,28 @@ const Home = () => {
               title={TITLES.SUMMARY + titleName}
             />
           </Grid>
+          <Grid item xs={10}>
+            <SummaryPie
+              data={summary}
+              loading={summaryLoading}
+              title={TITLES.DISTRIBUTION + titleName}
+            />
+          </Grid>
           <Route path={ROUTES.COUNTRY}>
             <Grid item xs={10}>
               <LineChartTotal
                 data={total}
                 title={TITLES.DAILY_TOTAL + titleName}
                 loading={totalLoading}
+              />
+            </Grid>
+          </Route>
+          <Route path={ROUTES.HOME}>
+            <Grid item xs={10}>
+              <SummaryTableCountry
+                data={summary.Countries}
+                title={TITLES.COUNTRY + titleName}
+                loading={summaryLoading}
               />
             </Grid>
           </Route>

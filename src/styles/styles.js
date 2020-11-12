@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import * as COLORS from "../constants/colors";
 
 export const useStyles = makeStyles((theme) => ({
   paper: {
@@ -29,5 +30,22 @@ export const useNavigationStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+  },
+}));
+
+export const useTableStyles = makeStyles((theme) => ({
+  root: {
+    "& .confirmed--cell": {
+      backgroundColor: COLORS.CONFIRMED,
+      borderColor: "white"
+    },
+    "& .recovered--cell": {
+      backgroundColor: COLORS.RECOVERED,
+      borderColor: "white"
+    },
+    "& .deaths--cell": {
+      backgroundColor: COLORS.DEATHS,
+      borderColor: "white"
+    },
   },
 }));

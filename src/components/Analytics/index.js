@@ -8,10 +8,12 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import { DataGrid } from "@material-ui/data-grid";
 
-import { Line } from "react-chartjs-2";
+import { Pie, Line } from "react-chartjs-2";
 
-import * as COLORS from "../../constants/colors"
+import * as styles from "../../styles/styles";
+import * as COLORS from "../../constants/colors";
 
 const moment = require("moment");
 
@@ -23,8 +25,18 @@ const SummaryTable = ({ data, title, loading }) => {
   const percentage = (x, y) => ((x / y) * 100).toFixed(2) + "%";
 
   const getRows = (data) => [
-    { id: 1, measure: "Total Cases", value: data.TotalConfirmed, bg: COLORS.CONFIRMED },
-    { id: 2, measure: "New Cases", value: data.NewConfirmed, bg: COLORS.CONFIRMED },
+    {
+      id: 1,
+      measure: "Total Cases",
+      value: data.TotalConfirmed,
+      bg: COLORS.CONFIRMED,
+    },
+    {
+      id: 2,
+      measure: "New Cases",
+      value: data.NewConfirmed,
+      bg: COLORS.CONFIRMED,
+    },
     {
       id: 3,
       measure: "Active Cases",
@@ -49,7 +61,12 @@ const SummaryTable = ({ data, title, loading }) => {
       value: percentage(data.TotalRecovered, data.TotalConfirmed),
       bg: COLORS.RECOVERED,
     },
-    { id: 7, measure: "Total Deaths", value: data.TotalDeaths, bg: COLORS.DEATHS },
+    {
+      id: 7,
+      measure: "Total Deaths",
+      value: data.TotalDeaths,
+      bg: COLORS.DEATHS,
+    },
     { id: 8, measure: "New Deaths", value: data.NewDeaths, bg: COLORS.DEATHS },
     {
       id: 9,
@@ -83,14 +100,34 @@ const SummaryTable = ({ data, title, loading }) => {
   );
 };
 
+const SummaryPie = ({ data, title, loading }) => {
+  const getData = (data) => ({
+    labels: ["Death Cases", "Recovered Cases", "Active Cases"],
+    datasets: [
+      {
+        data: [data.TotalDeaths, data.TotalRecovered, data.TotalConfirmed],
+        backgroundColor: [COLORS.DEATHS, COLORS.RECOVERED, COLORS.CONFIRMED],
+      },
+    ],
+  });
+
+  return (
+    <>
+      <Title title={title} />
+      {loading && <LinearProgress />}
+      {!loading && <Pie data={getData(data)} />}
+    </>
+  );
+};
+
 const LineChartTotal = ({ data, title, loading }) => {
   const getData = (data) => {
-    console.log(data)
+    console.log(data);
     let deaths = data.map((item) => item.Deaths);
     let recovered = data.map((item) => item.Recovered);
     let confirmed = data.map((item) => item.Confirmed);
     let labels = data.map((item) => moment(item.Date).format("MM-DD"));
-    console.log(recovered)
+    console.log(recovered);
     return {
       labels: labels,
       datasets: [
@@ -135,6 +172,50 @@ const LineChartTotal = ({ data, title, loading }) => {
   );
 };
 
+const SummaryTableCountry = ({ data, title, loading }) => {
+  const classes = styles.useTableStyles();
+
+  const columns = [
+    { field: "id", hide: true },
+    { field: "country", headerName: "Country", width: 220 },
+    {
+      field: "newCases",
+      headerName: "New Cases",
+      width: 130,
+      cellClassName: "confirmed--cell",
+    },
+    { field: "totalCases", headerName: "Total Cases", width: 130, cellClassName: "confirmed--cell" },
+    { field: "newRecoveries", headerName: "New Recoverieses", width: 130, cellClassName: "recovered--cell" },
+    { field: "totalRecoveries", headerName: "Total Recoveries", width: 130, cellClassName: "recovered--cell" },
+    { field: "newDeaths", headerName: "New Deaths", width: 130, cellClassName: "deaths--cell" },
+    { field: "totalDeaths", headerName: "Total Deaths", width: 130, cellClassName: "deaths--cell" },
+  ];
+
+  const getRows = (data) => {
+    
+
+    return data.map((item, index) => ({
+      id: index,
+      country: item.Country,
+      totalCases: item.TotalConfirmed,
+      totalRecoveries: item.TotalRecovered,
+      totalDeaths: item.TotalDeaths,
+    }));
+  };
+
+  return (
+    <>
+      <Title title={title} />
+      {loading && <LinearProgress />}
+      {!loading && (
+        <Box style={{ height: 520, width: "100%" }} className={classes.root}>
+          <DataGrid rows={getRows(data)} columns={columns} pageSize={20} />
+        </Box>
+      )}
+    </>
+  );
+};
+
 const Title = ({ title }) => (
   <Typography variant="h5" style={{ background: "Beige" }}>
     <Box p={1} m={1} fontWeight="fontWeightBold">
@@ -143,4 +224,4 @@ const Title = ({ title }) => (
   </Typography>
 );
 
-export { SummaryTable, LineChartTotal };
+export { SummaryTable, SummaryPie, LineChartTotal, SummaryTableCountry };
