@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
-import * as styles from "../../styles/styles";
+import { Line } from "react-chartjs-2";
+
+const moment = require("moment");
 
 const SummaryTable = ({ data, title, loading }) => {
   const numberWithCommas = (x) => {
@@ -81,6 +81,44 @@ const SummaryTable = ({ data, title, loading }) => {
   );
 };
 
+const LineChartTotal = ({ data, title, loading }) => {
+  const getData = (data) => {
+    console.log(data)
+    let deaths = data.map((item) => item.Deaths);
+    let recovered = data.map((item) => item.Recovered);
+    let confirmed = data.map((item) => item.Confirmed);
+    let labels = data.map((item) => moment(item.Date).format("MM-DD"));
+    console.log(recovered)
+    return {
+      labels: labels,
+      dataset: [
+        {
+          label: "Total deaths",
+          data: confirmed,
+        },
+      ],
+    };
+  };
+
+  return (
+    <>
+      <Title title={title} />
+      {loading && <LinearProgress />}
+      {!loading && (
+        <Line
+          data={getData(data)}
+          options={{
+            legend: {
+              display: true,
+              position: "top",
+            },
+          }}
+        />
+      )}
+    </>
+  );
+};
+
 const Title = ({ title }) => (
   <Typography variant="h4" style={{ background: "Beige" }}>
     <Box p={1} m={1} fontWeight="fontWeightBold">
@@ -89,4 +127,4 @@ const Title = ({ title }) => (
   </Typography>
 );
 
-export { SummaryTable };
+export { SummaryTable, LineChartTotal };

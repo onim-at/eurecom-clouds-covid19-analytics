@@ -1,22 +1,24 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
+import { Route } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 
-import { SummaryTable } from "../Analytics";
+import { SummaryTable, LineChartTotal } from "../Analytics";
 import { FirebaseContext } from "../Firebase";
 import * as styles from "../../styles/styles";
-import * as titles from "../../constants/titles";
+import * as TITLES from "../../constants/titles";
+import * as ROUTES from "../../constants/routes";
 import Alert from "@material-ui/lab/Alert";
-
-const moment = require("moment");
 
 const Home = () => {
   const [summary, setSummary] = useState({});
+  const [live, setLive] = useState({});
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [summaryLoading, setSummaryLoading] = useState(true);
+  const [liveLoading, setLiveLoading] = useState(true);
   const firebase = useContext(FirebaseContext);
   const classes = styles.useStyles();
   const { country } = useParams();
@@ -28,14 +30,26 @@ const Home = () => {
 
   useEffect(() => {
     firebase
-      .getSummary(moment().format("YYYY-MM-DD"), location)
+      .getSummary(location)
       .then((data) => {
         setSummary(data);
-        setLoading(false);
+        setSummaryLoading(false);
       })
       .catch((error) => {
         setError(error);
       });
+
+    if (location.Slug) {
+      firebase
+        .getLiveByCountry(location.Slug)
+        .then((data) => {
+          setLive(data);
+          setLiveLoading(false)
+        })
+        .catch((error) => {
+          setError(error);
+        });
+    }
   }, [firebase, location]);
 
   let titleName = country ? summary.Country : "Global";
@@ -53,10 +67,19 @@ const Home = () => {
           <Grid item xs={10}>
             <SummaryTable
               data={summary}
-              loading={loading}
-              title={titles.SUMMARY + titleName}
+              loading={summaryLoading}
+              title={TITLES.SUMMARY + titleName}
             />
           </Grid>
+          <Route path={ROUTES.COUNTRY}>
+            <Grid item xs={10}>
+              <LineChartTotal
+                data={live}
+                title={TITLES.DAILY_TOTAL + titleName}
+                loading={liveLoading}
+              />
+            </Grid>
+          </Route>
         </Grid>
       </div>
     </Container>
