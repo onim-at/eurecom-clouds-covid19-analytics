@@ -6,12 +6,23 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 
-import { SummaryTable, SummaryPie, LineChartTotal, SummaryTableCountry } from "../Analytics";
+import {
+  SummaryTable,
+  SummaryPie,
+  LineChartTotal,
+  SummaryTableCountry,
+} from "../Analytics";
 import { FirebaseContext } from "../Firebase";
+import API from "../../api";
 import * as styles from "../../styles/styles";
 import * as TITLES from "../../constants/titles";
 import * as ROUTES from "../../constants/routes";
 import Alert from "@material-ui/lab/Alert";
+
+const moment = require("moment");
+
+const GLOBAL = "Global";
+const COUNTRIES = "Countries";
 
 const Home = () => {
   const [summary, setSummary] = useState({});
@@ -22,38 +33,36 @@ const Home = () => {
   const firebase = useContext(FirebaseContext);
   const classes = styles.useStyles();
   const { country } = useParams();
-
-  const location = useMemo(
-    () => ({ Location: country ? "Countries" : "Global", Slug: country }),
-    [country]
-  );
+  const isGlobal = country ? false : true;
 
   useEffect(() => {
-    firebase
-      .getSummary(location)
+    var getSummary = isGlobal ? API.getSummary : firebase.getSummaryByCountry;
+    var getTotal = isGlobal ? API.getTotalGlobal : API.getTotalByCountry;
+
+    getSummary(country)
       .then((data) => {
         setSummary(data);
         setSummaryLoading(false);
       })
       .catch((error) => {
+        console.log(error)
         setError(error);
       });
 
-    if (location.Slug) {
-      firebase
-        .getTotalByCountry(location.Slug)
-        .then((data) => {
-          setTotal(data);
-          setTotalLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          setError(error);
-        });
-    }
-  }, [firebase, location]);
+    getTotal(country)
+      .then((data) => {
+        setTotal(data);
+        setTotalLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+      });
+  }, [firebase, country, isGlobal]);
+  
+  let loading = summaryLoading || totalLoading;
 
-  let titleName = country ? summary.Country : "Global";
+  let titleName = country ? summary.Country : GLOBAL;
+  titleName = loading ? "Loading..." : titleName;
 
   return (
     <Container>
@@ -68,32 +77,31 @@ const Home = () => {
           <Grid item xs={10}>
             <SummaryTable
               data={summary}
-              loading={summaryLoading}
+              loading={loading}
               title={TITLES.SUMMARY + titleName}
             />
           </Grid>
           <Grid item xs={10}>
             <SummaryPie
               data={summary}
-              loading={summaryLoading}
+              loading={loading}
               title={TITLES.DISTRIBUTION + titleName}
             />
           </Grid>
-          <Route path={ROUTES.COUNTRY}>
-            <Grid item xs={10}>
-              <LineChartTotal
-                data={total}
-                title={TITLES.DAILY_TOTAL + titleName}
-                loading={totalLoading}
-              />
-            </Grid>
-          </Route>
+          <Grid item xs={10}>
+            <LineChartTotal
+              data={total}
+              title={TITLES.DAILY_TOTAL + titleName}
+              loading={loading}
+              transformData={isGlobal ? transformGlobalData : transformCountryData}
+            />
+          </Grid>
           <Route path={ROUTES.HOME}>
             <Grid item xs={10}>
               <SummaryTableCountry
                 data={summary.Countries}
-                title={TITLES.COUNTRY + titleName}
-                loading={summaryLoading}
+                title={TITLES.COUNTRY}
+                loading={loading}
               />
             </Grid>
           </Route>
@@ -102,5 +110,25 @@ const Home = () => {
     </Container>
   );
 };
+
+const transformCountryData = (data) => {
+  let deaths = data.map((item) => item.Deaths);
+  let recovered = data.map((item) => item.Recovered);
+  let confirmed = data.map((item) => item.Confirmed);
+  let labels = data.map((item) => moment(item.Date).format("MM-DD"));
+  return [labels, deaths, recovered, confirmed]
+}
+
+const transformGlobalData = (data) => {
+  let start = moment("2020-04-11")
+  data.sort((a, b) => a.TotalConfirmed - b.TotalConfirmed);
+  let deaths = data.map((item) => item.TotalDeaths);
+  let recovered = data.map((item) => item.TotalRecovered);
+  let confirmed = data.map((item) => item.TotalConfirmed);
+  let labels = data.map((item) => start.add(1, "days").format("MM-DD"));
+
+  return [labels, deaths, recovered, confirmed]
+}
+
 
 export default Home;

@@ -1,5 +1,7 @@
 const baseURL = "https://api.covid19api.com";
 
+const moment = require("moment");
+
 export async function getSummary() {
   let url = "/summary";
 
@@ -7,7 +9,7 @@ export async function getSummary() {
   const data = await response.json();
 
   if (response.ok) {
-    return data;
+    return {...data.Global, Countries: data.Countries};
   } else {
     let err = { status: response.status, message: data.message };
     throw err;
@@ -28,6 +30,21 @@ export async function getLiveByCountry(country) {
   }
 }
 
+export async function getTotalGlobal() {
+  let start = "2020-04-13T00:00:00Z"
+  let end = moment().format("YYYY-MM-DDThh:mm:ssZ")
+  let url = "/world?from=" + start + "&to=" + end;
+  
+  const response = await fetch(baseURL + url);
+  const data = await response.json();
+
+  if (response.ok) {
+    return data;
+  } else {
+    let err = { status: response.status, message: data.message };
+    throw err;
+  }
+}
 
 export async function getTotalByCountry(country) {
   let url = "/total/country/" + country;

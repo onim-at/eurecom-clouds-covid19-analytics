@@ -120,14 +120,12 @@ const SummaryPie = ({ data, title, loading }) => {
   );
 };
 
-const LineChartTotal = ({ data, title, loading }) => {
+const LineChartTotal = ({ data, title, loading, transformData = (data) => data }) => {
+  
+
   const getData = (data) => {
-    console.log(data);
-    let deaths = data.map((item) => item.Deaths);
-    let recovered = data.map((item) => item.Recovered);
-    let confirmed = data.map((item) => item.Confirmed);
-    let labels = data.map((item) => moment(item.Date).format("MM-DD"));
-    console.log(recovered);
+
+    var [labels, deaths, recovered, confirmed] = transformData(data)
     return {
       labels: labels,
       datasets: [
@@ -181,19 +179,42 @@ const SummaryTableCountry = ({ data, title, loading }) => {
     {
       field: "newCases",
       headerName: "New Cases",
-      width: 130,
+      width: 110,
       cellClassName: "confirmed--cell",
     },
-    { field: "totalCases", headerName: "Total Cases", width: 130, cellClassName: "confirmed--cell" },
-    { field: "newRecoveries", headerName: "New Recoverieses", width: 130, cellClassName: "recovered--cell" },
-    { field: "totalRecoveries", headerName: "Total Recoveries", width: 130, cellClassName: "recovered--cell" },
-    { field: "newDeaths", headerName: "New Deaths", width: 130, cellClassName: "deaths--cell" },
-    { field: "totalDeaths", headerName: "Total Deaths", width: 130, cellClassName: "deaths--cell" },
+    {
+      field: "totalCases",
+      headerName: "Total Cases",
+      width: 135,
+      cellClassName: "confirmed--cell",
+    },
+    {
+      field: "newRecoveries",
+      headerName: "New Recoveries",
+      width: 138,
+      cellClassName: "recovered--cell",
+    },
+    {
+      field: "totalRecoveries",
+      headerName: "Total Recoveries",
+      width: 140,
+      cellClassName: "recovered--cell",
+    },
+    {
+      field: "newDeaths",
+      headerName: "New Deaths",
+      width: 110,
+      cellClassName: "deaths--cell",
+    },
+    {
+      field: "totalDeaths",
+      headerName: "Total Deaths",
+      width: 130,
+      cellClassName: "deaths--cell",
+    },
   ];
 
   const getRows = (data) => {
-    
-
     return data.map((item, index) => ({
       id: index,
       country: item.Country,
