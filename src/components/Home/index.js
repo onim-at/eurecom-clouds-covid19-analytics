@@ -11,6 +11,7 @@ import {
   SummaryPie,
   LineChartTotal,
   SummaryTableCountry,
+  BarPlotWeek
 } from "../Analytics";
 import { FirebaseContext } from "../Firebase";
 import API from "../../api";
@@ -57,6 +58,7 @@ const Home = () => {
       .catch((error) => {
         setError(error);
       });
+
   }, [firebase, country, isGlobal]);
   
   let loading = summaryLoading || totalLoading;
@@ -86,6 +88,14 @@ const Home = () => {
               data={summary}
               loading={loading}
               title={TITLES.DISTRIBUTION + titleName}
+            />
+          </Grid>
+          <Grid item xs={10}>
+            <BarPlotWeek
+              data={total}
+              loading={loading}
+              title={TITLES.DAILY_WEEK + titleName}
+              transformData={isGlobal ? transformGlobalData : transformCountryData}
             />
           </Grid>
           <Grid item xs={10}>

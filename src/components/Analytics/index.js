@@ -10,7 +10,7 @@ import TableRow from "@material-ui/core/TableRow";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { DataGrid } from "@material-ui/data-grid";
 
-import { Pie, Line } from "react-chartjs-2";
+import { Pie, Line, Bar } from "react-chartjs-2";
 
 import * as styles from "../../styles/styles";
 import * as COLORS from "../../constants/colors";
@@ -120,12 +120,57 @@ const SummaryPie = ({ data, title, loading }) => {
   );
 };
 
-const LineChartTotal = ({ data, title, loading, transformData = (data) => data }) => {
-  
-
+const BarPlotWeek = ({ data, title, loading, transformData }) => {
   const getData = (data) => {
-
+    var len = 7;
     var [labels, deaths, recovered, confirmed] = transformData(data)
+    return {
+      labels: labels.slice(-len) ,
+      datasets: [
+        {
+          backgroundColor: COLORS.DEATHS,
+          label: "Total deaths",
+          data: deaths.slice(-len),
+        },
+        {
+          backgroundColor: COLORS.RECOVERED,
+          label: "Total Recovered",
+          data: recovered.slice(-len),
+        },
+        {
+          backgroundColor: COLORS.CONFIRMED,
+          label: "Total Cases",
+          data: confirmed.slice(-len),
+        },
+      ],
+    };
+  };
+
+
+  const options = {
+    responsive: true,
+    legend: {
+      display: false,
+    },
+    type: "bar",
+  };
+  return (
+    <>
+      <Title title={title} />
+      {loading && <LinearProgress />}
+      {!loading && <Bar data={getData(data)} options={options} />}
+    </>
+  );
+};
+
+const LineChartTotal = ({
+  data,
+  title,
+  loading,
+  transformData = (data) => data,
+}) => {
+  const getData = (data) => {
+    var [labels, deaths, recovered, confirmed] = transformData(data);
     return {
       labels: labels,
       datasets: [
@@ -175,7 +220,7 @@ const SummaryTableCountry = ({ data, title, loading }) => {
 
   const columns = [
     { field: "id", hide: true },
-    { field: "country", headerName: "Country", width: 220 },
+    { field: "country", headerName: "Country", width: 200 },
     {
       field: "newCases",
       headerName: "New Cases",
@@ -245,4 +290,10 @@ const Title = ({ title }) => (
   </Typography>
 );
 
-export { SummaryTable, SummaryPie, LineChartTotal, SummaryTableCountry };
+export {
+  SummaryTable,
+  SummaryPie,
+  LineChartTotal,
+  SummaryTableCountry,
+  BarPlotWeek,
+};
