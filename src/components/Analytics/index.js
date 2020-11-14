@@ -9,9 +9,11 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { DataGrid } from "@material-ui/data-grid";
-
+import Link from "@material-ui/core/Link";
+import Button from "@material-ui/core/Button";
 import { Pie, Line, Bar } from "react-chartjs-2";
 
+import * as CONSTANTS from "../../constants/routes";
 import * as styles from "../../styles/styles";
 import * as COLORS from "../../constants/colors";
 
@@ -123,9 +125,9 @@ const SummaryPie = ({ data, title, loading }) => {
 const BarPlotWeek = ({ data, title, loading, transformData }) => {
   const getData = (data) => {
     var len = 7;
-    var [labels, deaths, recovered, confirmed] = transformData(data)
+    var [labels, deaths, recovered, confirmed] = transformData(data);
     return {
-      labels: labels.slice(-len) ,
+      labels: labels.slice(-len),
       datasets: [
         {
           backgroundColor: COLORS.DEATHS,
@@ -145,7 +147,6 @@ const BarPlotWeek = ({ data, title, loading, transformData }) => {
       ],
     };
   };
-
 
   const options = {
     responsive: true,
@@ -220,7 +221,17 @@ const SummaryTableCountry = ({ data, title, loading }) => {
 
   const columns = [
     { field: "id", hide: true },
-    { field: "country", headerName: "Country", width: 200 },
+    {
+      field: "country",
+      headerName: "Country",
+      width: 200,
+      cellClassName: "country--cell",
+      renderCell: (params) => (
+        <Button href={CONSTANTS.COUNTRY_BASE + "/" + params.value.Slug}>
+          {params.value.Country}
+        </Button>
+      ),
+    },
     {
       field: "newCases",
       headerName: "New Cases",
@@ -262,7 +273,7 @@ const SummaryTableCountry = ({ data, title, loading }) => {
   const getRows = (data) => {
     return data.map((item, index) => ({
       id: index,
-      country: item.Country,
+      country: item,
       totalCases: item.TotalConfirmed,
       totalRecoveries: item.TotalRecovered,
       totalDeaths: item.TotalDeaths,

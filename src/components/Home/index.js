@@ -11,7 +11,7 @@ import {
   SummaryPie,
   LineChartTotal,
   SummaryTableCountry,
-  BarPlotWeek
+  BarPlotWeek,
 } from "../Analytics";
 import { FirebaseContext } from "../Firebase";
 import API from "../../api";
@@ -42,11 +42,12 @@ const Home = () => {
 
     getSummary(country)
       .then((data) => {
+        console.log(data)
         setSummary(data);
         setSummaryLoading(false);
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         setError(error);
       });
 
@@ -58,9 +59,8 @@ const Home = () => {
       .catch((error) => {
         setError(error);
       });
-
   }, [firebase, country, isGlobal]);
-  
+
   let loading = summaryLoading || totalLoading;
 
   let titleName = country ? summary.Country : GLOBAL;
@@ -91,19 +91,25 @@ const Home = () => {
             />
           </Grid>
           <Grid item xs={10}>
-            <BarPlotWeek
-              data={total}
-              loading={loading}
-              title={TITLES.DAILY_WEEK + titleName}
-              transformData={isGlobal ? transformGlobalData : transformCountryData}
-            />
+            <Route path={ROUTES.HOME}>
+              <BarPlotWeek
+                data={total}
+                loading={loading}
+                title={TITLES.DAILY_WEEK + titleName}
+                transformData={
+                  isGlobal ? transformGlobalData : transformCountryData
+                }
+              />
+            </Route>
           </Grid>
           <Grid item xs={10}>
             <LineChartTotal
               data={total}
               title={TITLES.DAILY_TOTAL + titleName}
               loading={loading}
-              transformData={isGlobal ? transformGlobalData : transformCountryData}
+              transformData={
+                isGlobal ? transformGlobalData : transformCountryData
+              }
             />
           </Grid>
           <Route path={ROUTES.HOME}>
@@ -126,19 +132,21 @@ const transformCountryData = (data) => {
   let recovered = data.map((item) => item.Recovered);
   let confirmed = data.map((item) => item.Confirmed);
   let labels = data.map((item) => moment(item.Date).format("MM-DD"));
-  return [labels, deaths, recovered, confirmed]
-}
+  return [labels, deaths, recovered, confirmed];
+};
 
 const transformGlobalData = (data) => {
-  let start = moment("2020-04-11")
-  data.sort((a, b) => a.TotalConfirmed - b.TotalConfirmed);
-  let deaths = data.map((item) => item.TotalDeaths);
-  let recovered = data.map((item) => item.TotalRecovered);
-  let confirmed = data.map((item) => item.TotalConfirmed);
+  let start = moment("2020-04-12");
+  let sorting = function (a, b) {
+    return a - b;
+  };
+  //data.sort((a, b) => a.TotalConfirmed - b.TotalConfirmed);
+  let deaths = data.map((item) => item.TotalDeaths).sort(sorting);
+  let recovered = data.map((item) => item.TotalRecovered).sort(sorting);
+  let confirmed = data.map((item) => item.TotalConfirmed).sort(sorting);
   let labels = data.map((item) => start.add(1, "days").format("MM-DD"));
 
-  return [labels, deaths, recovered, confirmed]
-}
-
+  return [labels, deaths, recovered, confirmed];
+};
 
 export default Home;

@@ -35,6 +35,11 @@ export const useNavigationStyles = makeStyles((theme) => ({
 
 export const useTableStyles = makeStyles((theme) => ({
   root: {
+    "& .country--cell": {
+      backgroundColor: COLORS.COUNTRY,
+      borderColor: "white",
+      color:"White"
+    },
     "& .confirmed--cell": {
       backgroundColor: COLORS.CONFIRMED,
       borderColor: "white"
