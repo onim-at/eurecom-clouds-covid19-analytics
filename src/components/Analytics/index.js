@@ -122,27 +122,27 @@ const SummaryPie = ({ data, title, loading }) => {
   );
 };
 
-const BarPlotWeek = ({ data, title, loading, transformData }) => {
+const BarPlotWeek = ({ data, title, loading }) => {
   const getData = (data) => {
     var len = 7;
-    var [labels, deaths, recovered, confirmed] = transformData(data);
+
     return {
-      labels: labels.slice(-len),
+      labels: data.labels.slice(-len),
       datasets: [
         {
           backgroundColor: COLORS.DEATHS,
           label: "Total deaths",
-          data: deaths.slice(-len),
+          data: data.newDeaths.slice(-len),
         },
         {
           backgroundColor: COLORS.RECOVERED,
           label: "Total Recovered",
-          data: recovered.slice(-len),
+          data: data.newRecoveries.slice(-len),
         },
         {
           backgroundColor: COLORS.CONFIRMED,
           label: "Total Cases",
-          data: confirmed.slice(-len),
+          data: data.newConfirmed.slice(-len),
         },
       ],
     };
@@ -151,9 +151,9 @@ const BarPlotWeek = ({ data, title, loading, transformData }) => {
   const options = {
     responsive: true,
     legend: {
-      display: false,
+      display: true,
+      position: "top",
     },
-    type: "bar",
   };
   return (
     <>
@@ -164,34 +164,28 @@ const BarPlotWeek = ({ data, title, loading, transformData }) => {
   );
 };
 
-const LineChartTotal = ({
-  data,
-  title,
-  loading,
-  transformData = (data) => data,
-}) => {
+const LineChartTotal = ({ data, title, loading }) => {
   const getData = (data) => {
-    var [labels, deaths, recovered, confirmed] = transformData(data);
     return {
-      labels: labels,
+      labels: data.labels,
       datasets: [
         {
           borderColor: COLORS.DEATHS,
           backgroundColor: COLORS.DEATHS_BG,
           label: "Total deaths",
-          data: deaths,
+          data: data.totalDeaths,
         },
         {
           borderColor: COLORS.RECOVERED,
           backgroundColor: COLORS.RECOVERED_BG,
           label: "Total Recovered",
-          data: recovered,
+          data: data.totalRecoveries,
         },
         {
           borderColor: COLORS.CONFIRMED,
           backgroundColor: COLORS.CONFIRMED_BG,
           label: "Total Cases",
-          data: confirmed,
+          data: data.totalConfirmed,
         },
       ],
     };
