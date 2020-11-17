@@ -218,13 +218,15 @@ const SummaryTableCountry = ({ data, title, loading }) => {
     {
       field: "country",
       headerName: "Country",
-      width: 200,
+      width: 240,
       cellClassName: "country--cell",
       renderCell: (params) => (
-        <Button href={CONSTANTS.COUNTRY_BASE + "/" + params.value.Slug}>
+        <Button style={{color: "white"}} href={CONSTANTS.COUNTRY_BASE + "/" + params.value.Slug}>
           {params.value.Country}
         </Button>
       ),
+      sortComparator: (v1, v2, row1, row2) => { 
+        return row1.value.Country.localeCompare(row2.value.Country)},
     },
     {
       field: "newCases",
@@ -268,8 +270,11 @@ const SummaryTableCountry = ({ data, title, loading }) => {
     return data.map((item, index) => ({
       id: index,
       country: item,
+      newCases: item.NewConfirmed,
       totalCases: item.TotalConfirmed,
+      newRecoveries: item.NewRecovered,
       totalRecoveries: item.TotalRecovered,
+      newDeaths: item.NewDeaths,
       totalDeaths: item.TotalDeaths,
     }));
   };
@@ -279,7 +284,10 @@ const SummaryTableCountry = ({ data, title, loading }) => {
       <Title title={title} />
       {loading && <LinearProgress />}
       {!loading && (
-        <Box style={{ height: 520, width: "100%" }} className={classes.root}>
+        <Box
+          style={{ height: 520, width: "100%", borderColor: "white" }}
+          className={classes.root}
+        >
           <DataGrid rows={getRows(data)} columns={columns} pageSize={20} />
         </Box>
       )}

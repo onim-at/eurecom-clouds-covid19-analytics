@@ -37,20 +37,20 @@ export const useTableStyles = makeStyles((theme) => ({
   root: {
     "& .country--cell": {
       backgroundColor: COLORS.COUNTRY,
-      borderColor: "white",
-      color:"White"
+      border: "2px solid white",
     },
     "& .confirmed--cell": {
       backgroundColor: COLORS.CONFIRMED,
-      borderColor: "white"
+      border: "2px solid white",
     },
+
     "& .recovered--cell": {
       backgroundColor: COLORS.RECOVERED,
-      borderColor: "white"
+      border: "2px solid white",
     },
     "& .deaths--cell": {
       backgroundColor: COLORS.DEATHS,
-      borderColor: "white"
+      border: "2px solid white",
     },
   },
 }));
