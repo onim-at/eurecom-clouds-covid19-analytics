@@ -42,12 +42,10 @@ const Home = () => {
 
     getSummary(country)
       .then((data) => {
-        console.log(data);
         setSummary(data);
         setSummaryLoading(false);
       })
       .catch((error) => {
-        console.log(error);
         setError(error);
       });
 
@@ -94,13 +92,11 @@ const Home = () => {
             />
           </Grid>
           <Grid item xs={10}>
-            <Route path={ROUTES.HOME}>
-              <BarPlotWeek
-                data={total}
-                loading={loading}
-                title={TITLES.DAILY_WEEK + titleName}
-              />
-            </Route>
+            <BarPlotWeek
+              data={total}
+              loading={loading}
+              title={TITLES.DAILY_WEEK + titleName}
+            />
           </Grid>
           <Grid item xs={10}>
             <LineChartTotal
@@ -125,15 +121,30 @@ const Home = () => {
 };
 
 const transformCountryData = (data) => {
-  let deaths = data.map((item) => item.Deaths);
-  let recovered = data.map((item) => item.Recovered);
-  let confirmed = data.map((item) => item.Confirmed);
+  let totalDeaths = data.map((item) => item.Deaths);
+  let totalRecovered = data.map((item) => item.Recovered);
+  let totalConfirmed = data.map((item) => item.Confirmed);
+  let newDeaths = new Array(data.length);
+  let newRecovered = new Array(data.length);
+  let newConfirmed = new Array(data.length);
+  newDeaths[0] = newConfirmed[0] = newRecovered[0] = 0;
+
+  for (let i = 0; i < data.length - 1; i++) {
+    newDeaths[i + 1] = totalDeaths[i + 1] - totalDeaths[i];
+    newConfirmed[i + 1] = totalConfirmed[i + 1] - totalConfirmed[i];
+    newRecovered[i + 1] = totalRecovered[i + 1] - totalRecovered[i];
+  }
+
   let labels = data.map((item) => moment(item.Date).format("MM-DD"));
+  
   return {
     labels: labels,
-    totalDeaths: deaths,
-    totalRecoveries: recovered,
-    totalConfirmed: confirmed,
+    totalDeaths: totalDeaths,
+    newDeaths: newDeaths,
+    totalRecoveries: totalRecovered,
+    newRecoveries: newRecovered,
+    totalConfirmed: totalConfirmed,
+    newConfirmed: newConfirmed,
   };
 };
 

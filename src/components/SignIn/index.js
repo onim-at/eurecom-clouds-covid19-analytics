@@ -110,7 +110,7 @@ const SignInFormBase = (props) => {
           <Box textAlign="center">
             <Typography variant="h6">Or</Typography>
           </Box>
-          <SignInGoogle setError={setError}/>
+          <SignInGoogle setError={setError} />
           {error != null && <Alert severity="error">{error.message}</Alert>}
         </form>
         <Grid container>
@@ -137,10 +137,15 @@ const SignInGoogleBase = (props) => {
     firebase
       .doSignInWithGoogle()
       .then((socialAuthUser) => {
+        console.log(socialAuthUser)
+        var user = firebase.user(socialAuthUser.user.uid)
+        user.get().then((doc) => {
+          
+        })
         return firebase.user(socialAuthUser.user.uid).set({
           username: socialAuthUser.user.displayName,
           email: socialAuthUser.user.email,
-          roles: {},
+          roles: {WRITER: 'WRITER'}
         });
       })
       .then(() => {
@@ -172,7 +177,6 @@ const SignInLink = (props) => (
     Already have an account? Sign in
   </Link>
 );
-
 
 export default SignInPage;
 

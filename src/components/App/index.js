@@ -10,6 +10,7 @@ import Navigation from "../Navigation";
 import Home from "../Home";
 import SignIn from "../SignIn";
 import SignUp from "../SignUp";
+import {PrimarySearchAppBar} from "../Navigation"
 
 import { withAuthentication } from "../Session";
 

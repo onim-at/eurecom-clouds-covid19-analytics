@@ -24,7 +24,7 @@ const withAuthentication = (Component) => {
       return () => {
         listener();
       };
-    });
+    }, []);
 
     return (
       <AuthUserContext.Provider value={authUser}>
