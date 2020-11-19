@@ -16,6 +16,7 @@ import { FirebaseContext } from "../Firebase";
 import { SignUpLink } from "../SignUp";
 import * as ROUTES from "../../constants/routes";
 import * as styles from "../../styles/styles";
+
 import { PasswordForgetLink } from "../PasswordForget";
 
 const INITIAL_STATE = {
@@ -131,28 +132,39 @@ const SignInGoogleBase = (props) => {
 
   const classes = styles.useStyles();
 
+  const ERROR_CODE_ACCOUNT_EXISTS =
+    "auth/account-exists-with-different-credential";
+
+  const ERROR_MSG_ACCOUNT_EXISTS = `
+  An account with an E-Mail address to
+  this social account already exists. Try to login from
+  this account instead and associate your social accounts on
+  your personal account page.
+`;
+
   const signInWithGoogleHandler = (event) => {
     event.preventDefault();
 
     firebase
       .doSignInWithGoogle()
       .then((socialAuthUser) => {
-        console.log(socialAuthUser)
-        var user = firebase.user(socialAuthUser.user.uid)
-        user.get().then((doc) => {
-          
-        })
-        return firebase.user(socialAuthUser.user.uid).set({
-          username: socialAuthUser.user.displayName,
-          email: socialAuthUser.user.email,
-          roles: {WRITER: 'WRITER'}
-        });
+        if (socialAuthUser.additionalUserInfo.isNewUser) {
+          return firebase.user(socialAuthUser.user.uid).set({
+            username: socialAuthUser.user.displayName,
+            email: socialAuthUser.user.email,
+            roles: {},
+          });
+        }
       })
       .then(() => {
         props.setError(null);
         props.history.push(ROUTES.HOME);
       })
       .catch((error) => {
+        console.log(error);
+        if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
+          error.message = ERROR_MSG_ACCOUNT_EXISTS;
+        }
         props.setError(error);
       });
   };

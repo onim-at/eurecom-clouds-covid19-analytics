@@ -15,7 +15,6 @@ import * as Styles from "../../styles/styles";
 
 const PasswordForgetPage = () => (
   <div>
-    <h1>PasswordForget</h1>
     <PasswordForgetForm />
   </div>
 );

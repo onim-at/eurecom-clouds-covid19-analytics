@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import Link from "@material-ui/core/Link";
+import CardMedia from "@material-ui/core/CardMedia";
 
 import {
   SummaryTable,
@@ -18,6 +20,8 @@ import API from "../../api";
 import * as styles from "../../styles/styles";
 import * as TITLES from "../../constants/titles";
 import * as ROUTES from "../../constants/routes";
+import * as IMAGES from "../../medias/images"
+
 import Alert from "@material-ui/lab/Alert";
 
 const moment = require("moment");
@@ -70,13 +74,24 @@ const Home = () => {
   return (
     <Container>
       <div className={classes.paper}>
-        <Typography variant="h3">Covid-19</Typography>
-        <Typography variant="h5" color="textSecondary">
+        <Grid container direction="row" justify="center"spacing={1}>
+          <Grid item>
+            <CardMedia
+              component="img"
+              height="45px"
+              src={IMAGES.VIRUS_ICON}
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="h3">COVID-19</Typography>
+          </Grid>
+        </Grid>
+        <Typography variant="h4" color="textSecondary">
           Live Updates and Statistics
         </Typography>
-        <hr />
+        
         {error && <Alert severity="error">{error.message}</Alert>}
-        <Grid container justify="center">
+        <Grid container justify="center" spacing={6}>
           <Grid item xs={10}>
             <SummaryTable
               data={summary}
@@ -114,6 +129,14 @@ const Home = () => {
               />
             </Grid>
           </Route>
+          <Grid item xs={10}>
+            <Typography align="center">
+              Data Source:
+              <Link href="https://covid19api.com/">
+                COVID-19 API / Johns Hopkins CSSE
+              </Link>
+            </Typography>
+          </Grid>
         </Grid>
       </div>
     </Container>
@@ -136,7 +159,7 @@ const transformCountryData = (data) => {
   }
 
   let labels = data.map((item) => moment(item.Date).format("MM-DD"));
-  
+
   return {
     labels: labels,
     totalDeaths: totalDeaths,
