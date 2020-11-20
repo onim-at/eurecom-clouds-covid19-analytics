@@ -46,8 +46,11 @@ const Home = () => {
   useEffect(() => {
     var getSummary = isGlobal ? API.getSummary : firebase.getSummaryByCountry;
     var getTotal = isGlobal ? API.getTotalGlobal : API.getTotalByCountry;
-
+    setSummaryLoading(true);
+    setTotalLoading(true);
+    setError(null);
     getSummary(country)
+    
       .then((data) => {
         setSummary(data);
         setSummaryLoading(false);
@@ -90,15 +93,22 @@ const Home = () => {
         </Typography>
         <Route path={ROUTES.COUNTRY}>
           <Grid container justify="center" alignItems="center">
-            <Grid item  className={classes.countryTitle} xs={10}>
+            <Grid item className={classes.countryTitle} xs={10}>
               <Breadcrumbs
-                separator={<NavigateNextIcon style={{ color: 'white' }}  fontSize="large" />}
+                separator={
+                  <NavigateNextIcon
+                    style={{ color: "white" }}
+                    fontSize="large"
+                  />
+                }
                 aria-label="breadcrumb"
               >
-                <Link  style={{ textDecoration: 'none' }} href="/home">
-                <Box fontWeight="fontWeightBold" color="dodgerBlue" >Worldwide</Box>
+                <Link style={{ textDecoration: "none" }} href="/home">
+                  <Box fontWeight="fontWeightBold" color="dodgerBlue">
+                    Worldwide
+                  </Box>
                 </Link>
-                <Typography style={{color: "white"}}>{titleName}</Typography>
+                <Typography style={{ color: "white" }}>{titleName}</Typography>
               </Breadcrumbs>
             </Grid>
           </Grid>

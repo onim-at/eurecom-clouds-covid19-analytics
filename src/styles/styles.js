@@ -20,8 +20,9 @@ export const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   countryTitle: {
+    display: 'flex',
+    justifyContent: 'center',
     padding: "8px 0px",
-    margin: "4px",
     backgroundColor: COLORS.COUNTRY,
   },
 }));
