@@ -7,6 +7,9 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Link from "@material-ui/core/Link";
 import CardMedia from "@material-ui/core/CardMedia";
+import Box from "@material-ui/core/Box";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 
 import {
   SummaryTable,
@@ -20,7 +23,7 @@ import API from "../../api";
 import * as styles from "../../styles/styles";
 import * as TITLES from "../../constants/titles";
 import * as ROUTES from "../../constants/routes";
-import * as IMAGES from "../../medias/images"
+import * as IMAGES from "../../medias/images";
 
 import Alert from "@material-ui/lab/Alert";
 
@@ -74,13 +77,9 @@ const Home = () => {
   return (
     <Container>
       <div className={classes.paper}>
-        <Grid container direction="row" justify="center"spacing={1}>
+        <Grid container direction="row" justify="center" spacing={1}>
           <Grid item>
-            <CardMedia
-              component="img"
-              height="45px"
-              src={IMAGES.VIRUS_ICON}
-            />
+            <CardMedia component="img" height="45px" src={IMAGES.VIRUS_ICON} />
           </Grid>
           <Grid item>
             <Typography variant="h3">COVID-19</Typography>
@@ -89,7 +88,22 @@ const Home = () => {
         <Typography variant="h4" color="textSecondary">
           Live Updates and Statistics
         </Typography>
-        
+        <Route path={ROUTES.COUNTRY}>
+          <Grid container justify="center" alignItems="center">
+            <Grid item  className={classes.countryTitle} xs={10}>
+              <Breadcrumbs
+                separator={<NavigateNextIcon style={{ color: 'white' }}  fontSize="large" />}
+                aria-label="breadcrumb"
+              >
+                <Link  style={{ textDecoration: 'none' }} href="/home">
+                <Box fontWeight="fontWeightBold" color="dodgerBlue" >Worldwide</Box>
+                </Link>
+                <Typography style={{color: "white"}}>{titleName}</Typography>
+              </Breadcrumbs>
+            </Grid>
+          </Grid>
+        </Route>
+
         {error && <Alert severity="error">{error.message}</Alert>}
         <Grid container justify="center" spacing={6}>
           <Grid item xs={10}>

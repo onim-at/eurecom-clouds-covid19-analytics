@@ -84,5 +84,3 @@ const NavigationNonAuth = ({ classes }) => (
 );
 
 export default Navigation;
-
-export { PrimarySearchAppBar };

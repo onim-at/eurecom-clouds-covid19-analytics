@@ -19,6 +19,11 @@ export const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  countryTitle: {
+    padding: "8px 0px",
+    margin: "4px",
+    backgroundColor: COLORS.COUNTRY,
+  },
 }));
 
 export const useNavigationStyles = makeStyles((theme) => ({
