@@ -10,22 +10,20 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Box from "@material-ui/core/Box";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Alert from "@material-ui/lab/Alert";
+import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Fade from "@material-ui/core/Fade";
 
-import {
-  SummaryTable,
-  SummaryPie,
-  LineChartTotal,
-  SummaryTableCountry,
-  BarPlotWeek,
-} from "../Analytics";
 import { FirebaseContext } from "../Firebase";
 import API from "../../api";
+import Statistics from "./statistics";
+import News from "./news";
+
 import * as styles from "../../styles/styles";
-import * as TITLES from "../../constants/titles";
 import * as ROUTES from "../../constants/routes";
 import * as IMAGES from "../../medias/images";
-
-import Alert from "@material-ui/lab/Alert";
 
 const moment = require("moment");
 
@@ -38,6 +36,7 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [summaryLoading, setSummaryLoading] = useState(true);
   const [totalLoading, setTotalLoading] = useState(true);
+  const [showStatistics, setShowStatistics] = useState(true);
   const firebase = useContext(FirebaseContext);
   const classes = styles.useStyles();
   const { country } = useParams();
@@ -46,11 +45,11 @@ const Home = () => {
   useEffect(() => {
     var getSummary = isGlobal ? API.getSummary : firebase.getSummaryByCountry;
     var getTotal = isGlobal ? API.getTotalGlobal : API.getTotalByCountry;
+
     setSummaryLoading(true);
     setTotalLoading(true);
     setError(null);
     getSummary(country)
-    
       .then((data) => {
         setSummary(data);
         setSummaryLoading(false);
@@ -91,81 +90,81 @@ const Home = () => {
         <Typography variant="h4" color="textSecondary">
           Live Updates and Statistics
         </Typography>
+
         <Route path={ROUTES.COUNTRY}>
-          <Grid container justify="center" alignItems="center">
-            <Grid item className={classes.countryTitle} xs={10}>
-              <Breadcrumbs
-                separator={
-                  <NavigateNextIcon
-                    style={{ color: "white" }}
-                    fontSize="large"
-                  />
-                }
-                aria-label="breadcrumb"
-              >
-                <Link style={{ textDecoration: "none" }} href="/home">
-                  <Box fontWeight="fontWeightBold" color="dodgerBlue">
-                    Worldwide
-                  </Box>
-                </Link>
-                <Typography style={{ color: "white" }}>{titleName}</Typography>
-              </Breadcrumbs>
-            </Grid>
-          </Grid>
+          <CountryTitle titleName={titleName} classes={classes} />
         </Route>
 
+        <Paper className={classes.grow}>
+          <Tabs
+            indicatorColor="primary"
+            textColor="primary"
+            value={false}
+            onChange={(event, value) => {
+              setShowStatistics(value);
+            }}
+            centered
+            variant="fullWidth"
+          >
+            <Tab value={true} label="Statistics" />
+            <Tab value={false} label="News" />
+          </Tabs>
+        </Paper>
+
         {error && <Alert severity="error">{error.message}</Alert>}
-        <Grid container justify="center" spacing={6}>
-          <Grid item xs={10}>
-            <SummaryTable
-              data={summary}
+
+        <Fade in={showStatistics} mountOnEnter unmountOnExit>
+          <div>
+            <Statistics
+              summary={summary}
+              total={total}
               loading={loading}
-              title={TITLES.SUMMARY + titleName}
+              titleName={titleName}
             />
-          </Grid>
-          <Grid item xs={10}>
-            <SummaryPie
-              data={summary}
-              loading={loading}
-              title={TITLES.DISTRIBUTION + titleName}
-            />
-          </Grid>
-          <Grid item xs={10}>
-            <BarPlotWeek
-              data={total}
-              loading={loading}
-              title={TITLES.DAILY_WEEK + titleName}
-            />
-          </Grid>
-          <Grid item xs={10}>
-            <LineChartTotal
-              data={total}
-              title={TITLES.DAILY_TOTAL + titleName}
-              loading={loading}
-            />
-          </Grid>
-          <Route path={ROUTES.HOME}>
-            <Grid item xs={10}>
-              <SummaryTableCountry
-                data={summary.Countries}
-                title={TITLES.COUNTRY}
-                loading={loading}
-              />
-            </Grid>
-          </Route>
-          <Grid item xs={10}>
-            <Typography align="center">
-              Data Source:
-              <Link href="https://covid19api.com/">
-                COVID-19 API / Johns Hopkins CSSE
-              </Link>
-            </Typography>
-          </Grid>
-        </Grid>
+          </div>
+        </Fade>
+
+        <Fade in={!showStatistics} mountOnEnter unmountOnExit>
+          <div>
+            <News />
+          </div>
+        </Fade>
+        <Footer />
       </div>
     </Container>
   );
 };
+
+const CountryTitle = ({ titleName, classes }) => (
+  <Grid container justify="center" alignItems="center">
+    <Grid item className={classes.countryTitle} xs={10}>
+      <Breadcrumbs
+        separator={
+          <NavigateNextIcon style={{ color: "white" }} fontSize="large" />
+        }
+        aria-label="breadcrumb"
+      >
+        <Link style={{ textDecoration: "none" }} href="/home">
+          <Box fontWeight="fontWeightBold" color="dodgerBlue">
+            Worldwide
+          </Box>
+        </Link>
+        <Typography style={{ color: "white" }}>{titleName}</Typography>
+      </Breadcrumbs>
+    </Grid>
+  </Grid>
+);
+
+const Footer = () => (
+  <Box m={4}>
+    <Typography align="center">
+      Data Source:
+      <Link href="https://covid19api.com/">
+        COVID-19 API / Johns Hopkins CSSE
+      </Link>
+    </Typography>
+  </Box>
+);
 
 const transformCountryData = (data) => {
   let totalDeaths = data.map((item) => item.Deaths);

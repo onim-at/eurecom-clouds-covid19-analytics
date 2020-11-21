@@ -25,18 +25,9 @@ export const useStyles = makeStyles((theme) => ({
     padding: "8px 0px",
     backgroundColor: COLORS.COUNTRY,
   },
-}));
-
-export const useNavigationStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
+  grow: {
+    flexGrow: 1
+  }
 }));
 
 export const useTableStyles = makeStyles((theme) => ({
@@ -61,7 +52,7 @@ export const useTableStyles = makeStyles((theme) => ({
   },
 }));
 
-export const useNewNavigationStyles = makeStyles((theme) => ({
+export const useNavigationStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },

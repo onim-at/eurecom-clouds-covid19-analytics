@@ -19,7 +19,7 @@ import * as Styles from "../../styles/styles";
 
 const Navigation = (props) => {
   const authUser = useContext(AuthUserContext);
-  const classes = Styles.useNewNavigationStyles();
+  const classes = Styles.useNavigationStyles();
 
   return (
     <div className={classes.grow}>
