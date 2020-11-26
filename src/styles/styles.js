@@ -100,16 +100,36 @@ export const useNavigationStyles = makeStyles((theme) => ({
       width: '20ch',
     },
   },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
 }));
+
+
+export const useGridSlideStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    overflow: 'hidden',
+    backgroundColor: theme.palette.background.paper,
+    height: 350
+  },
+  gridList: {
+    flexWrap: 'nowrap',
+    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+    transform: 'translateZ(0)',
+  }
+}));
+
+export const useCardStyles = makeStyles({
+  root: {
+    display: 'block',
+  
+    transitionDuration: '0.3s',
+    height: 350,
+    maxWidth: 300,
+  },
+  media: {
+    height: 140,
+  },
+  content: {
+    height: 70
+  }
+});

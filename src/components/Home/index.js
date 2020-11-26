@@ -19,7 +19,7 @@ import Fade from "@material-ui/core/Fade";
 import { FirebaseContext } from "../Firebase";
 import API from "../../api";
 import Statistics from "./statistics";
-import News from "./news";
+import NewsPage from "./newsPage";
 
 import * as styles from "../../styles/styles";
 import * as ROUTES from "../../constants/routes";
@@ -126,7 +126,7 @@ const Home = () => {
 
         <Fade in={!showStatistics} mountOnEnter unmountOnExit>
           <div>
-            <News />
+            <NewsPage />
           </div>
         </Fade>
         <Footer />

@@ -6,17 +6,17 @@ import {
   Redirect,
 } from "react-router-dom";
 
+import { withAuthentication } from "../Session";
+
 import Navigation from "../Navigation";
 import Home from "../Home";
 import SignIn from "../SignIn";
 import SignUp from "../SignUp";
-import {PrimarySearchAppBar} from "../Navigation"
-
-import { withAuthentication } from "../Session";
+import CreateNews from "../CreateNews";
+import PasswordForgetPage from "../PasswordForget";
+import YourNews from "../YourNews";
 
 import * as ROUTES from "../../constants/routes";
-import PasswordForgetPage from "../PasswordForget";
-import AddNews from "../AddNews";
 
 const App = () => {
   return (
@@ -28,7 +28,8 @@ const App = () => {
         <Route path={ROUTES.SIGN_IN} component={SignIn} />
         <Route path={ROUTES.SIGN_UP} component={SignUp} />
         <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
-        <Route path={ROUTES.ADD_NEWS} component={AddNews} />
+        <Route path={ROUTES.YOUR_NEWS} component={YourNews} />
+        <Route path={ROUTES.CREATE_NEWS} component={CreateNews} />
         <Route render={() => <Redirect to={ROUTES.HOME} />} />
       </Switch>
     </Router>

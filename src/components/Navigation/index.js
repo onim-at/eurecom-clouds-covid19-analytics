@@ -61,7 +61,7 @@ const NavigationAuth = ({ classes, authUser }) => (
       <AccountCircle />
     </IconButton>
     {!!authUser.roles[ROLES.WRITER] && (
-      <Button color="inherit" href={ROUTES.ADD_NEWS}>
+      <Button color="inherit" href={ROUTES.YOUR_NEWS}>
         Your news
       </Button>
     )}
