@@ -4,7 +4,7 @@ import { withAuthorization } from "../Session";
 
 import * as ROLES from '../../constants/roles'
 
-const AddNews = () => (
+const YourNews = () => (
   <div>
     <h1>Add News</h1>
     <p> Accessible only to Writer user. </p>
@@ -13,4 +13,4 @@ const AddNews = () => (
 
 const condition = (authUser) => authUser && !!authUser.roles[ROLES.WRITER];
 
-export default withAuthorization(condition)(AddNews);
+export default withAuthorization(condition)(YourNews);
