@@ -1,15 +1,21 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useParams } from "react-router-dom";
+
 import Container from "@material-ui/core/Container";
 import ImageUploader from "react-images-upload";
 import Grid from "@material-ui/core/Grid";
-import Alert from "@material-ui/lab/Alert"
+import Alert from "@material-ui/lab/Alert";
 import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
 import * as styles from "../../styles/styles";
 import ReactMarkdown from "react-markdown";
-
+import { FirebaseContext } from "../Firebase";
+import { AuthUserContext } from "../Session";
+import { withAuthorization } from "../Session";
+import News from "../News";
+import * as ROLES from "../../constants/roles";
 const moment = require("moment");
 
 const CreateNews = () => {
@@ -17,17 +23,39 @@ const CreateNews = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(markdown_description_label);
   const [error, setError] = useState(false);
+  const firebase = useContext(FirebaseContext);
+  const user = useContext(AuthUserContext);
   const classes = styles.useStyles();
-  const country = "italy";
+  const { location } = useParams();
 
   function submitNews() {
-    if (!title || !content) {
-      setError({message: "Please insert a valid title or content"});
+    if (!title || !content || !image) {
+      setError({ message: "You must insert image, title and content before submit" });
     } else {
       setError("");
-      // call api to upload data
-      // show ok message
-      // redirect to your new in x seconds or by clicking on new button
+
+      var imagePath = location + "/" + image.name;
+      firebase
+        .storeImage(imagePath, image)
+        .then((imageLink) => {
+          console.log("LINK", imageLink);
+          var news = new News(
+            location,
+            title,
+            imageLink,
+            content,
+            user.uid,
+            moment().format("YYYY-MM-DD")
+          );
+          firebase.addNews(news).then(() => {
+            // show ok message
+            // redirect to your new in x seconds or by clicking on new button
+          })
+        })
+        .catch((err) => {
+          setError(err.message);
+          firebase.removeImage(imagePath);
+        });      
     }
   }
 
@@ -45,8 +73,7 @@ const CreateNews = () => {
               withIcon={true}
               buttonText="Choose front image"
               onChange={(image) => {
-                setImage(image);
-                console.log(image);
+                setImage(image[0]);
               }}
               imgExtension={[".jpg", ".gif", ".png", ".gif"]}
               maxFileSize={5242880}
@@ -82,7 +109,9 @@ const CreateNews = () => {
           </Grid>
 
           <Grid item xs={10} align="center">
-            <Button variant="contained" onClick={() => submitNews()}>Submit News</Button>
+            <Button variant="contained" onClick={() => submitNews()}>
+              Submit News
+            </Button>
           </Grid>
         </Grid>
       </div>
@@ -94,4 +123,6 @@ const markdown_description_label =
   "Use *markdown* to write your article, \
 see [this reference](https://markdown-it.github.io/) to learn more about it.";
 
-export default CreateNews;
+const condition = (authUser) => authUser && !!authUser.roles[ROLES.WRITER];
+
+export default withAuthorization(condition)(CreateNews);

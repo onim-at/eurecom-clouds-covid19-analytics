@@ -16,9 +16,22 @@ import GridListTileBar from "@material-ui/core/GridListTileBar";
 import * as styles from "../../styles/styles";
 
 
+class News {
+  constructor(location, title, image, content, user, date) {
+    this.location = location;
+    this.title = title;
+    this.image = image;
+    this.content = content;
+    this.user = user;
+    this.date = date;
+  }
 
+  static from(data) {
+    return new News(data.location, data.title, data.image, data.content, data.user, data.date);
+}
+}
 
-const News = () => {
+const ShowNews = () => {
   return <></>;
 };
 
@@ -35,7 +48,7 @@ const SingleLineGridList = ({ data }) => {
   return (
     <div className={classes.root}>
       <GridList className={classes.gridList} cols={2.5}>
-        {tileData.map((tile, index) => (
+        {data.map((tile, index) => (
           <GridListTile key={index}>
             {tile}
           </GridListTile>
@@ -76,7 +89,7 @@ function TitlebarGridList() {
 }
 */
 
-const NewsCard = ({ author, date, image, title, text }) => {
+const NewsCard = ({news}) => {
   const classes = styles.useCardStyles();
 
   return (
@@ -84,16 +97,16 @@ const NewsCard = ({ author, date, image, title, text }) => {
       <CardActionArea>
         <CardHeader
           avatar={<Avatar aria-label="recipe">R</Avatar>}
-          title={author}
-          subheader={date}
+          title={news.user}
+          subheader={news.date}
         />
-        <CardMedia className={classes.media} image={image} title={title} />
+        <CardMedia className={classes.media} image={news.image} title={news.title} />
         <CardContent className={classes.content}>
           <Typography gutterBottom variant="h5" component="h2">
-            {title}
+            {news.title}
           </Typography>
           <Typography variant="body2" noWrap color="textSecondary">
-            {text}
+            {news.text}
           </Typography>
         </CardContent>
       </CardActionArea>
