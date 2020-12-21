@@ -33,9 +33,11 @@ const COUNTRIES = "Countries";
 const Home = () => {
   const [summary, setSummary] = useState({});
   const [total, setTotal] = useState({});
+  const [news, setNews] = useState([]);
   const [error, setError] = useState(null);
   const [summaryLoading, setSummaryLoading] = useState(true);
   const [totalLoading, setTotalLoading] = useState(true);
+  const [newsLoading, setNewsLoading] = useState(true);
   const [showStatistics, setShowStatistics] = useState(true);
   const firebase = useContext(FirebaseContext);
   const classes = styles.useStyles();
@@ -45,10 +47,14 @@ const Home = () => {
   useEffect(() => {
     var getSummary = isGlobal ? API.getSummary : firebase.getSummaryByCountry;
     var getTotal = isGlobal ? API.getTotalGlobal : API.getTotalByCountry;
+    var newsLocation = country ? country : 'global';
 
     setSummaryLoading(true);
     setTotalLoading(true);
+    setNewsLoading(true);
     setError(null);
+    
+
     getSummary(country)
       .then((data) => {
         setSummary(data);
@@ -69,6 +75,14 @@ const Home = () => {
       .catch((error) => {
         setError(error);
       });
+
+    firebase.getNewsByLocation(newsLocation).then((news) => {
+      setNews(news);
+      setNewsLoading(false);
+    }).catch((error) => {
+      setError(error);
+    });
+
   }, [firebase, country, isGlobal]);
 
   let loading = summaryLoading || totalLoading;
@@ -126,7 +140,7 @@ const Home = () => {
 
         <Fade in={!showStatistics} mountOnEnter unmountOnExit>
           <div>
-            <NewsPage />
+            <NewsPage loading={newsLoading} news={news}/>
           </div>
         </Fade>
         <Footer />

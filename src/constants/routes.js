@@ -5,5 +5,6 @@ export const SIGN_IN = "/signin";
 export const SIGN_UP = "/signup";
 export const PASSWORD_FORGET = "/pw-forget";
 export const YOUR_NEWS = "/your-news";
-export const ADMIN = "/admin";
+export const NEWS = "/news/:id";
 export const CREATE_NEWS = "/create-news/:location";
+export const MODIFY_NEWS = "/modify-news/:id";

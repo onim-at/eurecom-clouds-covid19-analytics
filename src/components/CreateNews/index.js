@@ -40,11 +40,13 @@ const CreateNews = () => {
         .then((imageLink) => {
           console.log("LINK", imageLink);
           var news = new News(
+            null,
             location,
             title,
             imageLink,
             content,
             user.uid,
+            user.username,
             moment().format("YYYY-MM-DD")
           );
           firebase.addNews(news).then(() => {

@@ -107,14 +107,20 @@ export const useGridSlideStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
+    justifyContent: 'space-around',
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper,
-    height: 350
   },
   gridList: {
     flexWrap: 'nowrap',
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
     transform: 'translateZ(0)',
+  },
+  gridListTile: {
+    position: 'relative',
+      float: 'left',
+      minWidth: 250,
+      height: '100% !important'
   }
 }));
 
@@ -124,12 +130,14 @@ export const useCardStyles = makeStyles({
   
     transitionDuration: '0.3s',
     height: 350,
-    maxWidth: 300,
+    width: 250,
+  },
+  header: {
+    height: 130,
+    width: 250,
   },
   media: {
-    height: 140,
+    height: 170,
+    width: 250
   },
-  content: {
-    height: 70
-  }
 });

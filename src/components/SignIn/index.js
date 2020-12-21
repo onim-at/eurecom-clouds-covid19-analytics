@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -59,7 +58,6 @@ const SignInFormBase = (props) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>AAAA</Avatar>
         <Typography component="h1" variant="h4">
           Sign in
         </Typography>
