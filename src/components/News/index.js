@@ -17,6 +17,9 @@ import GridListTileBar from "@material-ui/core/GridListTileBar";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import ReactMarkdown from "react-markdown";
 
+import { withRouter } from "react-router-dom";
+
+import * as ROUTES from "../../constants/routes";
 import * as styles from "../../styles/styles";
 
 class News {
@@ -45,50 +48,63 @@ class News {
 
 const LineGridList = ({ data }) => {
   const classes = styles.useGridSlideStyles();
- 
+
   return (
     <div className={classes.root}>
-      <GridList style={{flexWrap: 'nowrap'}} className={classes.gridList} cols={5}>
+      <GridList
+        style={{ flexWrap: "nowrap" }}
+        className={classes.gridList}
+        cols={5}
+      >
         {data.map((tile, index) => (
-          <GridListTile className={classes.gridListTile} key={index}>{tile}</GridListTile>
+          <GridListTile className={classes.gridListTile} key={index}>
+            {tile}
+          </GridListTile>
         ))}
       </GridList>
     </div>
   );
 };
 
-const NewsCard = ({ news }) => {
+const BaseNewsCard = ({ history, news, writer }) => {
   const classes = styles.useCardStyles();
 
-  function showNews(news){
-    console.log("show news: ", news)
-
+  function showNews(news) {
+    var url = ROUTES.NEWS_BASE + "/" + news.newsid;
+    history.push(url, news);
   }
 
-  function modifyNews(news){
-    console.log("modify news: ", news)
-
+  function modifyNews(news) {
+    var url = ROUTES.MODIFY_NEWS_BASE + "/" + news.newsid;
+    history.push(url, news);
   }
-
 
   return (
     <Card className={classes.root}>
       <CardActionArea onClick={() => showNews(news)}>
-        <CardHeader className={classes.header} title={news.title} subheader={news.date + ", @" + news.username} />
+        <CardHeader
+          className={classes.header}
+          title={news.title}
+          subheader={news.date + ", @" + news.username}
+        />
         <CardMedia
           className={classes.media}
           image={news.image}
           title={news.title}
         />
       </CardActionArea>
-      <CardActions>
-        <Button size="small" color="primary" onClick={() => modifyNews(news)}>
-          Modify
-        </Button>
-      </CardActions>
+      {writer && (
+        <CardActions>
+          <Button size="small" color="primary" onClick={() => modifyNews(news)}>
+            Modify
+          </Button>
+        </CardActions>
+      )}
     </Card>
   );
 };
+
+const NewsCard = withRouter(BaseNewsCard);
 
 export default News;
 export { NewsCard, News, LineGridList };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, withRouter } from "react-router-dom";
 
 import Container from "@material-ui/core/Container";
 import ImageUploader from "react-images-upload";
@@ -18,19 +18,47 @@ import News from "../News";
 import * as ROLES from "../../constants/roles";
 const moment = require("moment");
 
-const CreateNews = () => {
+const CreateNews = (props) => {
   const [image, setImage] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(markdown_description_label);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
   const firebase = useContext(FirebaseContext);
   const user = useContext(AuthUserContext);
   const classes = styles.useStyles();
   const { location } = useParams();
+  var modify = props.location.state ? true : false;
+  
+  useEffect(() => {
+    setLoading(true);
+    if (modify) {
+      var news = props.location.state;
+
+      setImage({ url: news.image, notModified: true });
+      setContent(news.content);
+      setTitle(news.title);
+    }
+  }, []);
+
+  function updateNews() {
+    if (!title || !content || !image) {
+      setError({
+        message: "You must insert image, title and content before submit",
+      });
+    } else {
+      setError("");
+    }
+
+    
+
+  }
 
   function submitNews() {
     if (!title || !content || !image) {
-      setError({ message: "You must insert image, title and content before submit" });
+      setError({
+        message: "You must insert image, title and content before submit",
+      });
     } else {
       setError("");
 
@@ -40,7 +68,6 @@ const CreateNews = () => {
         .then((imageLink) => {
           console.log("LINK", imageLink);
           var news = new News(
-            null,
             location,
             title,
             imageLink,
@@ -52,12 +79,12 @@ const CreateNews = () => {
           firebase.addNews(news).then(() => {
             // show ok message
             // redirect to your new in x seconds or by clicking on new button
-          })
+          });
         })
         .catch((err) => {
           setError(err.message);
           firebase.removeImage(imagePath);
-        });      
+        });
     }
   }
 
@@ -72,6 +99,7 @@ const CreateNews = () => {
           )}
           <Grid item xs={8}>
             <ImageUploader
+              value={image}
               withIcon={true}
               buttonText="Choose front image"
               onChange={(image) => {
@@ -86,6 +114,7 @@ const CreateNews = () => {
           <Grid item xs={10} align="center">
             <InputLabel htmlFor="component-simple">Title</InputLabel>
             <Input
+              value={title}
               id="component-simple"
               onChange={(event) => {
                 setTitle(event.target.value);
@@ -98,7 +127,7 @@ const CreateNews = () => {
             <TextField
               multiline
               id="outlined-multiline-static"
-              defaultValue={markdown_description_label}
+              value={content}
               variant="outlined"
               onChange={(event) => {
                 setContent(event.target.value);
@@ -112,7 +141,7 @@ const CreateNews = () => {
 
           <Grid item xs={10} align="center">
             <Button variant="contained" onClick={() => submitNews()}>
-              Submit News
+              {modify ? "Modify" : "Submit"} News
             </Button>
           </Grid>
         </Grid>
@@ -127,4 +156,4 @@ see [this reference](https://markdown-it.github.io/) to learn more about it.";
 
 const condition = (authUser) => authUser && !!authUser.roles[ROLES.WRITER];
 
-export default withAuthorization(condition)(CreateNews);
+export default withAuthorization(condition)(withRouter(CreateNews));

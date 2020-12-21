@@ -30,6 +30,8 @@ const App = () => {
         <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
         <Route path={ROUTES.YOUR_NEWS} component={YourNews} />
         <Route path={ROUTES.CREATE_NEWS} component={CreateNews} />
+        <Route path={ROUTES.MODIFY_NEWS} component={CreateNews} />
+
         <Route render={() => <Redirect to={ROUTES.HOME} />} />
       </Switch>
     </Router>
