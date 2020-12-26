@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import Container from "@material-ui/core/Container";
@@ -10,6 +10,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
+
+import { CountrySelect } from "../Navigation";
+
 import * as styles from "../../styles/styles";
 import ReactMarkdown from "react-markdown";
 import { FirebaseContext } from "../Firebase";
@@ -23,12 +26,17 @@ const CreateNews = (props) => {
   const [image, setImage] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(markdown_description_label);
+  const [location, setLocation] = useState("global");
   const [error, setError] = useState(false);
   const firebase = useContext(FirebaseContext);
   const user = useContext(AuthUserContext);
   const classes = styles.useStyles();
-  const { location } = useParams();
 
+  console.log(props.countries);
+
+  var globalData = { Country: "Global", Slug: "global", ISO2: "GL" };
+  var countrySelectData = props.countries.slice();
+  countrySelectData.unshift(globalData);
 
   function submitNews() {
     if (!title || !content || !image) {
@@ -64,6 +72,9 @@ const CreateNews = (props) => {
         });
     }
   }
+  const countrySelectHandler = (value) => {
+    setLocation(value.Slug);
+  };
 
   return (
     <Container>
@@ -86,6 +97,14 @@ const CreateNews = (props) => {
               maxFileSize={5242880}
               withPreview={true}
               singleImage={true}
+            />
+          </Grid>
+          <Grid item xs={10} align="center">
+            <CountrySelect
+              loading={props.loading}
+              countries={countrySelectData}
+              error={props.error}
+              handleSubmit={countrySelectHandler}
             />
           </Grid>
           <Grid item xs={10} align="center">

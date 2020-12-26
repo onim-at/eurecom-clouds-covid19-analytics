@@ -11,15 +11,20 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 
 import { AuthUserContext } from "../Session";
-import API from "../../api";
 import SignOutButton from "../SignOut";
 import * as ROUTES from "../../constants/routes";
 import * as ROLES from "../../constants/roles";
 import * as Styles from "../../styles/styles";
 
-const Navigation = (props) => {
+const NavigationBase = (props) => {
   const authUser = useContext(AuthUserContext);
   const classes = Styles.useNavigationStyles();
+
+  const handleSubmit = (value) => {
+    if (value) {
+      props.history.push(ROUTES.COUNTRY_BASE + "/" + value.Slug);
+    }
+  };
 
   return (
     <div className={classes.grow}>
@@ -34,7 +39,12 @@ const Navigation = (props) => {
             <Typography variant="h5">COVID-19 Analytics</Typography>
           </Link>
 
-          <CountrySelect />
+          <CountrySelect
+            loading={props.loading}
+            countries={props.countries}
+            error={props.error}
+            handleSubmit={handleSubmit}
+          />
 
           <div className={classes.grow} />
 
@@ -61,9 +71,14 @@ const NavigationAuth = ({ classes, authUser }) => (
       <AccountCircle />
     </IconButton>
     {!!authUser.roles[ROLES.WRITER] && (
-      <Button color="inherit" href={ROUTES.YOUR_NEWS}>
-        Your news
-      </Button>
+      <>
+        <Button color="inherit" href={ROUTES.YOUR_NEWS}>
+          Your News
+        </Button>
+        <Button color="inherit" href={ROUTES.CREATE_NEWS}>
+          Create News
+        </Button>
+      </>
     )}
     <SignOutButton color="inherit" />
   </>
@@ -80,39 +95,17 @@ const NavigationNonAuth = ({ classes }) => (
   </>
 );
 
-const CountrySelectBase = (props) => {
-  const [countries, setCountries] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    API.getCountries()
-      .then((countries) => {
-        countries.sort((a, b) => a.Country.localeCompare(b.Country));
-        setCountries(countries);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-      });
-  }, []);
-
-  const handleSubmit = (value) => {
-    if (value) {
-      props.history.push(ROUTES.COUNTRY_BASE + "/" + value.Slug);
-    }
-  };
-
+const CountrySelect = (props) => {
   return (
     <Autocomplete
       id="country-select"
       style={{ width: 300 }}
-      options={countries}
+      options={props.countries}
       size="small"
       autoHighlight
-      loading={loading}
+      loading={props.loading}
       getOptionLabel={(option) => option.Country}
-      onChange={(event, value) => handleSubmit(value)}
+      onChange={(event, value) => props.handleSubmit(value)}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -128,6 +121,8 @@ const CountrySelectBase = (props) => {
   );
 };
 
-const CountrySelect = withRouter(CountrySelectBase);
+const Navigation = withRouter(NavigationBase);
 
 export default Navigation;
+
+export { CountrySelect };
