@@ -12,7 +12,7 @@ import Navigation from "../Navigation";
 import Home from "../Home";
 import SignIn from "../SignIn";
 import SignUp from "../SignUp";
-import CreateNews from "../CreateNews";
+import { CreateNews, UpdateNews } from "../CreateNews";
 import PasswordForgetPage from "../PasswordForget";
 import YourNews from "../YourNews";
 
@@ -30,7 +30,7 @@ const App = () => {
         <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
         <Route path={ROUTES.YOUR_NEWS} component={YourNews} />
         <Route path={ROUTES.CREATE_NEWS} component={CreateNews} />
-        <Route path={ROUTES.MODIFY_NEWS} component={CreateNews} />
+        <Route path={ROUTES.MODIFY_NEWS} component={UpdateNews} />
 
         <Route render={() => <Redirect to={ROUTES.HOME} />} />
       </Switch>

@@ -23,10 +23,11 @@ import * as ROUTES from "../../constants/routes";
 import * as styles from "../../styles/styles";
 
 class News {
-  constructor(location, title, image, content, userid, username, date) {
+  constructor(location, title, image, imagePath, content, userid, username, date) {
     this.location = location;
     this.title = title;
     this.image = image;
+    this.imagePath = imagePath;
     this.content = content;
     this.userid = userid;
     this.username = username;
@@ -38,6 +39,7 @@ class News {
       data.location,
       data.title,
       data.image,
+      data.imagePath,
       data.content,
       data.userid,
       data.username,
@@ -66,7 +68,7 @@ const LineGridList = ({ data }) => {
   );
 };
 
-const BaseNewsCard = ({ history, news, writer }) => {
+const BaseNewsCard = ({ history, news, writer, deleteNews }) => {
   const classes = styles.useCardStyles();
 
   function showNews(news) {
@@ -97,6 +99,9 @@ const BaseNewsCard = ({ history, news, writer }) => {
         <CardActions>
           <Button size="small" color="primary" onClick={() => modifyNews(news)}>
             Modify
+          </Button>
+          <Button size="small" color="primary" onClick={() => deleteNews(news.newsid)}>
+            Delete
           </Button>
         </CardActions>
       )}

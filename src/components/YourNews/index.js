@@ -27,6 +27,14 @@ const YourNews = () => {
     });
   }, []);
 
+  function deleteNews(id) {
+    firebase.deleteNews(id);
+    var filteredNews = news.filter(
+      (data) => data.newsid.localeCompare(id) != 0
+    );
+    setNews(filteredNews);
+  }
+
   return (
     <Container>
       <Grid
@@ -44,7 +52,7 @@ const YourNews = () => {
           {!loading && (
             <LineGridList
               data={news.map((item) => (
-                <NewsCard news={item} writer={true}/>
+                <NewsCard news={item} deleteNews={deleteNews} writer={true} />
               ))}
             />
           )}
