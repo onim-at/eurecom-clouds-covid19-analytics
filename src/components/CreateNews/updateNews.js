@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import Container from "@material-ui/core/Container";
@@ -10,6 +10,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import * as styles from "../../styles/styles";
 import ReactMarkdown from "react-markdown";
 import { FirebaseContext } from "../Firebase";
@@ -25,14 +27,14 @@ const UpdateNews = (props) => {
   const [content, setContent] = useState("");
   const [error, setError] = useState(false);
   const [location, setLocation] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState("");
   const [oldNews, setOldNews] = useState(true);
   const firebase = useContext(FirebaseContext);
   const user = useContext(AuthUserContext);
   const classes = styles.useStyles();
 
   useEffect(() => {
-    setLoading(true);
     var news = props.location.state;
 
     setImage({ url: news.image, path: news.imagePath, notModified: true });
@@ -40,7 +42,7 @@ const UpdateNews = (props) => {
     setTitle(news.title);
     setLocation(news.location);
     setOldNews(news);
-  }, []);
+  }, [props.location.state]);
 
   function updateNews() {
     if (!title || !content || !image) {
@@ -49,7 +51,8 @@ const UpdateNews = (props) => {
       });
     } else {
       setError("");
-
+      setMessage("");
+      setUploading(true);
       if (image.notModified) {
         var news = new News(
           location,
@@ -61,10 +64,11 @@ const UpdateNews = (props) => {
           user.username,
           moment().format("YYYY-MM-DD")
         );
-        console.log(oldNews)
+        console.log(oldNews);
         firebase.updateNews(oldNews.newsid, news).then(() => {
-          // show ok message
-          // redirect to your new in x seconds or by clicking on new button
+          setMessage(
+            "The news has been modified. You can continue to browse the website"
+          );
         });
       } else {
         var imagePath = uuidv4() + "-" + image.name;
@@ -85,8 +89,9 @@ const UpdateNews = (props) => {
             );
             firebase.updateNews(oldNews.newsid, news).then(() => {
               firebase.removeImage(oldNews.imagePath);
-              // show ok message
-              // redirect to your new in x seconds or by clicking on new button
+              setMessage(
+                "The news has been modified. You can continue to browse the website"
+              );
             });
           })
           .catch((err) => {
@@ -124,6 +129,7 @@ const UpdateNews = (props) => {
             <InputLabel htmlFor="component-simple">Title</InputLabel>
             <Input
               value={title}
+              disabled={uploading}
               id="component-simple"
               onChange={(event) => {
                 setTitle(event.target.value);
@@ -134,6 +140,7 @@ const UpdateNews = (props) => {
 
           <Grid item xs={6}>
             <TextField
+              disabled={uploading}
               multiline
               id="outlined-multiline-static"
               value={content}
@@ -149,10 +156,24 @@ const UpdateNews = (props) => {
           </Grid>
 
           <Grid item xs={10} align="center">
-            <Button variant="contained" onClick={() => updateNews()}>
+            <Button
+              disabled={uploading}
+              variant="contained"
+              onClick={() => updateNews()}
+            >
               Modify News
             </Button>
           </Grid>
+          {uploading && !message && (
+            <Grid item xs={10} align="center">
+              <CircularProgress />
+            </Grid>
+          )}
+          {message && (
+            <Grid item xs={6}>
+              <Alert severity="success">{message}</Alert>
+            </Grid>
+          )}
         </Grid>
       </div>
     </Container>

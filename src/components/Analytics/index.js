@@ -16,8 +16,6 @@ import * as CONSTANTS from "../../constants/routes";
 import * as styles from "../../styles/styles";
 import * as COLORS from "../../constants/colors";
 
-const moment = require("moment");
-
 const SummaryTable = ({ data, title, loading }) => {
   const numberWithCommas = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

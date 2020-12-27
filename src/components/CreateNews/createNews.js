@@ -10,6 +10,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { CountrySelect } from "../Navigation";
 
@@ -28,6 +29,8 @@ const CreateNews = (props) => {
   const [content, setContent] = useState(markdown_description_label);
   const [location, setLocation] = useState("worldwide");
   const [error, setError] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState("");
   const firebase = useContext(FirebaseContext);
   const user = useContext(AuthUserContext);
   const classes = styles.useStyles();
@@ -43,7 +46,8 @@ const CreateNews = (props) => {
       });
     } else {
       setError("");
-
+      setMessage("");
+      setUploading(true);
       var imagePath = uuidv4() + "-" + image.name;
       firebase
         .storeImage(imagePath, image)
@@ -59,13 +63,19 @@ const CreateNews = (props) => {
             moment().format("YYYY-MM-DD")
           );
           firebase.addNews(news).then(() => {
-            // show ok message
-            // redirect to your new in x seconds or by clicking on new button
+            setUploading(false);
+            setTitle("");
+            setContent(markdown_description_label);
+            setImage(null);
+            setMessage(
+              "News has been uploaded. You can create another article or browse the website"
+            );
           });
         })
         .catch((err) => {
           setError(err.message);
           firebase.removeImage(imagePath);
+          setUploading(false);
         });
     }
   }
@@ -84,6 +94,7 @@ const CreateNews = (props) => {
           )}
           <Grid item xs={8}>
             <ImageUploader
+              disabled={uploading}
               value={image}
               withIcon={true}
               buttonText="Choose front image"
@@ -107,6 +118,7 @@ const CreateNews = (props) => {
           <Grid item xs={10} align="center">
             <InputLabel htmlFor="component-simple">Title</InputLabel>
             <Input
+              disabled={uploading}
               value={title}
               id="component-simple"
               onChange={(event) => {
@@ -118,6 +130,7 @@ const CreateNews = (props) => {
 
           <Grid item xs={6}>
             <TextField
+              disabled={uploading}
               multiline
               id="outlined-multiline-static"
               value={content}
@@ -133,10 +146,24 @@ const CreateNews = (props) => {
           </Grid>
 
           <Grid item xs={10} align="center">
-            <Button variant="contained" onClick={() => submitNews()}>
+            <Button
+              disabled={uploading}
+              variant="contained"
+              onClick={() => submitNews()}
+            >
               Submit News
             </Button>
           </Grid>
+          {uploading && (
+            <Grid item xs={10} align="center">
+              <CircularProgress />
+            </Grid>
+          )}
+          {message && (
+            <Grid item xs={6}>
+              <Alert severity="success">{message}</Alert>
+            </Grid>
+          )}
         </Grid>
       </div>
     </Container>
