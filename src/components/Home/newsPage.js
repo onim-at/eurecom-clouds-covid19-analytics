@@ -1,25 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { NewsCard, LineGridList } from "../News";
+import { NewsCard, LineGridList, DisplayNews } from "../News";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
+import IconButton from "@material-ui/core/IconButton"
 
-const NewsPage = ({ loading, news }) => {
+const NewsPage = ({ loading, newsList }) => {
+  const [showList, setShowList] = useState(true);
+  const [currentNews, setCurrentNews] = useState({});
+
+  function showSelectedNews(news) {
+    setCurrentNews(news);
+    setShowList(false);
+  }
+
   return (
     <Grid container justify="center" spacing={6}>
-      <Grid item xs={10}>
-      </Grid>
+      <Grid item xs={10}></Grid>
       {loading && <LinearProgress />}
       {!loading && (
         <Grid item xs={10}>
-          <LineGridList
-            data={news.map((item) => (
-              <NewsCard news={item} />
-            ))}
-          />
+          {showList && (
+            <NewsList newsList={newsList} showNews={showSelectedNews} />
+          )}
+          {!showList && (
+            <>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                color="inherit"
+                onClick={() => {setShowList(true)}}
+              >
+                <KeyboardBackspaceIcon />
+              </IconButton>
+              <DisplayNews news={currentNews} />
+            </>
+          )}
         </Grid>
       )}
     </Grid>
   );
 };
+
+function NewsList({ newsList, showNews }) {
+  return (
+    <LineGridList
+      data={newsList.map((item) => (
+        <NewsCard news={item} writer={false} showNews={showNews} />
+      ))}
+    />
+  );
+}
 
 export default NewsPage;

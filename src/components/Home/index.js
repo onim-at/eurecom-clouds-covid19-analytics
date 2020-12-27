@@ -27,7 +27,7 @@ import * as IMAGES from "../../medias/images";
 
 const moment = require("moment");
 
-const GLOBAL = "Global";
+const GLOBAL = "Worldwide";
 const COUNTRIES = "Countries";
 
 const Home = () => {
@@ -47,7 +47,7 @@ const Home = () => {
   useEffect(() => {
     var getSummary = isGlobal ? API.getSummary : firebase.getSummaryByCountry;
     var getTotal = isGlobal ? API.getTotalGlobal : API.getTotalByCountry;
-    var newsLocation = country ? country : 'global';
+    var newsLocation = country ? country : 'worldwide';
 
     setSummaryLoading(true);
     setTotalLoading(true);
@@ -113,7 +113,7 @@ const Home = () => {
           <Tabs
             indicatorColor="primary"
             textColor="primary"
-            value={false}
+            value={showStatistics}
             onChange={(event, value) => {
               setShowStatistics(value);
             }}
@@ -140,7 +140,7 @@ const Home = () => {
 
         <Fade in={!showStatistics} mountOnEnter unmountOnExit>
           <div>
-            <NewsPage loading={newsLoading} news={news}/>
+            <NewsPage loading={newsLoading} newsList={news}/>
           </div>
         </Fade>
         <Footer />

@@ -152,9 +152,6 @@ const UpdateNews = (props) => {
             <Button variant="contained" onClick={() => updateNews()}>
               Modify News
             </Button>
-            <Button variant="contained" onClick={() => false}>
-              Delete News
-            </Button>
           </Grid>
         </Grid>
       </div>

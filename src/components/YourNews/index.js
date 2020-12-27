@@ -52,7 +52,7 @@ const YourNews = () => {
           {!loading && (
             <LineGridList
               data={news.map((item) => (
-                <NewsCard news={item} deleteNews={deleteNews} writer={true} />
+                <NewsCard news={item} deleteNews={deleteNews} showNews={() => false} writer={true} />
               ))}
             />
           )}

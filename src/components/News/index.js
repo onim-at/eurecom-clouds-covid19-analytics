@@ -23,7 +23,16 @@ import * as ROUTES from "../../constants/routes";
 import * as styles from "../../styles/styles";
 
 class News {
-  constructor(location, title, image, imagePath, content, userid, username, date) {
+  constructor(
+    location,
+    title,
+    image,
+    imagePath,
+    content,
+    userid,
+    username,
+    date
+  ) {
     this.location = location;
     this.title = title;
     this.image = image;
@@ -68,13 +77,8 @@ const LineGridList = ({ data }) => {
   );
 };
 
-const BaseNewsCard = ({ history, news, writer, deleteNews }) => {
+const BaseNewsCard = ({ history, news, writer, showNews, deleteNews }) => {
   const classes = styles.useCardStyles();
-
-  function showNews(news) {
-    var url = ROUTES.NEWS_BASE + "/" + news.newsid;
-    history.push(url, news);
-  }
 
   function modifyNews(news) {
     var url = ROUTES.MODIFY_NEWS_BASE + "/" + news.newsid;
@@ -100,7 +104,11 @@ const BaseNewsCard = ({ history, news, writer, deleteNews }) => {
           <Button size="small" color="primary" onClick={() => modifyNews(news)}>
             Modify
           </Button>
-          <Button size="small" color="primary" onClick={() => deleteNews(news.newsid)}>
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => deleteNews(news.newsid)}
+          >
             Delete
           </Button>
         </CardActions>
@@ -109,7 +117,42 @@ const BaseNewsCard = ({ history, news, writer, deleteNews }) => {
   );
 };
 
+const DisplayNews = ({ news }) => {
+  var imgStyle = {
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "50%",
+  };
+
+  return (
+    <Grid
+      container
+      direction="column"
+      justify="center"
+      alignItems="center"
+      spacing={3}
+    >
+      <Grid item>
+        <Typography variant="h2">{news.title}</Typography>
+      </Grid>
+      <Grid item>
+        {news.image && 
+        <img style={imgStyle} src={news.image} />}
+      </Grid>
+      <Grid item>
+        <ReactMarkdown skipHtml>{news.content}</ReactMarkdown>
+      </Grid>
+      <Grid item>
+        <Typography variant="h6" color="textSecondary">
+          {news.date}, @{news.username}
+        </Typography>
+      </Grid>
+    </Grid>
+  );
+};
+
 const NewsCard = withRouter(BaseNewsCard);
 
 export default News;
-export { NewsCard, News, LineGridList };
+export { NewsCard, News, LineGridList, DisplayNews };

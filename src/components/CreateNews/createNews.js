@@ -23,18 +23,16 @@ import * as ROLES from "../../constants/roles";
 const moment = require("moment");
 
 const CreateNews = (props) => {
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(markdown_description_label);
-  const [location, setLocation] = useState("global");
+  const [location, setLocation] = useState("worldwide");
   const [error, setError] = useState(false);
   const firebase = useContext(FirebaseContext);
   const user = useContext(AuthUserContext);
   const classes = styles.useStyles();
 
-  console.log(props.countries);
-
-  var globalData = { Country: "Global", Slug: "global", ISO2: "GL" };
+  var globalData = { Country: "Worldwide", Slug: "worldwide", ISO2: "WW" };
   var countrySelectData = props.countries.slice();
   countrySelectData.unshift(globalData);
 
@@ -50,7 +48,6 @@ const CreateNews = (props) => {
       firebase
         .storeImage(imagePath, image)
         .then((imageLink) => {
-          console.log("LINK", imageLink);
           var news = new News(
             location,
             title,
