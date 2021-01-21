@@ -62,13 +62,19 @@ const SignInFormBase = (props) => {
           Sign in
         </Typography>
 
-        <form className={classes.form}>
+        <form
+          className={classes.form}
+          onSubmit={(event) => {
+            signInWithEmailAndPasswordHandler(event);
+          }}
+        >
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
             id="email"
+            type="email"
             label="Email Address"
             name="email"
             autoComplete="email"
@@ -100,9 +106,6 @@ const SignInFormBase = (props) => {
             color="primary"
             className={classes.submit}
             disabled={isInvalid}
-            onClick={(event) => {
-              signInWithEmailAndPasswordHandler(event);
-            }}
           >
             Sign In
           </Button>

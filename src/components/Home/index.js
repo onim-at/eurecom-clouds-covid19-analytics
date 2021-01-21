@@ -95,7 +95,7 @@ const Home = () => {
       <div className={classes.paper}>
         <Grid container direction="row" justify="center" spacing={1}>
           <Grid item>
-            <CardMedia component="img" height="45px" src={IMAGES.VIRUS_ICON} />
+            <img height="45px" width="45px" src={IMAGES.VIRUS_ICON} />
           </Grid>
           <Grid item>
             <Typography variant="h3">COVID-19</Typography>
