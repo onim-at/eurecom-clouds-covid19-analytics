@@ -9,6 +9,7 @@ import {
 import { withAuthentication } from "../Session";
 import API from "../../api";
 import Navigation from "../Navigation";
+import {PrimarySearchAppBar} from "../Navigation";
 import Home from "../Home";
 import SignIn from "../SignIn";
 import SignUp from "../SignUp";

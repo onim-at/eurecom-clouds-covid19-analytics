@@ -101,7 +101,7 @@ const Home = () => {
             <Typography variant="h3">COVID-19</Typography>
           </Grid>
         </Grid>
-        <Typography variant="h4" color="textSecondary">
+        <Typography variant="h5" color="textSecondary">
           Live Updates and Statistics
         </Typography>
 

@@ -1,24 +1,40 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { withRouter } from "react-router-dom";
+import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+import Typography from "@material-ui/core/Typography";
+import InputBase from "@material-ui/core/InputBase";
+import Badge from "@material-ui/core/Badge";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import MenuIcon from "@material-ui/icons/Menu";
+import SearchIcon from "@material-ui/icons/Search";
 import Link from "@material-ui/core/Link";
+import MailIcon from "@material-ui/icons/Mail";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import Box from "@material-ui/core/Box";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-
-import { AuthUserContext } from "../Session";
 import SignOutButton from "../SignOut";
-import * as ROUTES from "../../constants/routes";
+import Button from "@material-ui/core/Button";
+
 import * as ROLES from "../../constants/roles";
 import * as Styles from "../../styles/styles";
+import { AuthUserContext } from "../Session";
 
-const NavigationBase = (props) => {
+import * as ROUTES from "../../constants/routes";
+
+
+
+function NavigationBase(props) {
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const authUser = useContext(AuthUserContext);
   const classes = Styles.useNavigationStyles();
+
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleSubmit = (value) => {
     if (value) {
@@ -26,9 +42,74 @@ const NavigationBase = (props) => {
     }
   };
 
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const menuId = "primary-search-account-menu";
+
+  const mobileMenuId = "primary-search-account-menu-mobile";
+  const renderMobileAuthMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      {authUser && !!authUser.roles[ROLES.WRITER] && (
+        <>
+          <MenuItem>
+            <Button color="inherit" href={ROUTES.YOUR_NEWS}>
+              Your News
+            </Button>
+          </MenuItem>
+          <MenuItem>
+            <Button color="inherit" href={ROUTES.CREATE_NEWS}>
+              Create News
+            </Button>
+          </MenuItem>
+        </>
+      )}
+      <MenuItem>
+        <SignOutButton color="inherit" />
+      </MenuItem>
+    </Menu>
+  );
+  
+  const mobileNonAuthMenuId = "primary-search-account-menu-non-auth-mobile";
+  const renderMobileNonAuthMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={mobileNonAuthMenuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem>
+        <Button color="inherit" href={ROUTES.SIGN_IN}>
+          Sign in
+        </Button>
+      </MenuItem>
+      <MenuItem>
+        <Button color="inherit" href={ROUTES.SIGN_UP}>
+          Sign up
+        </Button>
+      </MenuItem>
+    </Menu>
+  );
+
   return (
     <div className={classes.grow}>
-      <AppBar color="transparent" position="static">
+      <AppBar position="static" color="transparent">
         <Toolbar>
           <Link
             color="inherit"
@@ -36,40 +117,50 @@ const NavigationBase = (props) => {
             href={ROUTES.HOME}
             className={classes.title}
           >
-            <Typography variant="h5">COVID-19 Analytics</Typography>
+            <Box display={{ xs: "none", sm: "block" }}>
+              <Typography variant="h5">COVID-19 Analytics</Typography>
+            </Box>
           </Link>
-
-          <CountrySelect
-            loading={props.loading}
-            countries={props.countries}
-            error={props.error}
-            handleSubmit={handleSubmit}
-          />
-
+          <div className={classes.search}>
+            <CountrySelect
+              loading={props.loading}
+              countries={props.countries}
+              error={props.error}
+              handleSubmit={handleSubmit}
+            />
+          </div>
           <div className={classes.grow} />
-
-          {authUser ? (
-            <NavigationAuth classes={classes} authUser={authUser} />
-          ) : (
-            <NavigationNonAuth classes={classes} />
-          )}
+          <div className={classes.sectionDesktop}>
+            {authUser ? (
+              <NavigationAuth classes={classes} authUser={authUser} />
+            ) : (
+              <NavigationNonAuth classes={classes} />
+            )}
+          </div>
+          <div className={classes.sectionMobile}>
+            <IconButton
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
+      {authUser ? 
+      renderMobileAuthMenu : 
+      renderMobileNonAuthMenu}
     </div>
   );
-};
+}
 
 const NavigationAuth = ({ classes, authUser }) => (
   <>
     <Typography variant="h6">Welcome {authUser.username}</Typography>
-    <IconButton
-      aria-label="account of current user"
-      aria-controls="menu-appbar"
-      aria-haspopup="true"
-      color="inherit"
-    >
-      <AccountCircle />
-    </IconButton>
+
     {!!authUser.roles[ROLES.WRITER] && (
       <>
         <Button color="inherit" href={ROUTES.YOUR_NEWS}>
@@ -123,6 +214,6 @@ const CountrySelect = (props) => {
 
 const Navigation = withRouter(NavigationBase);
 
-export default Navigation;
+export {CountrySelect}
 
-export { CountrySelect };
+export default Navigation
