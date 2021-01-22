@@ -42,7 +42,7 @@ export async function getLiveByCountry(country) {
     throw err;
   }
 }
-
+/*
 export async function getTotalGlobal() {
   let start = "2020-04-13T00:00:00Z";
   let end = moment().format("YYYY-MM-DDThh:mm:ssZ");
@@ -52,6 +52,21 @@ export async function getTotalGlobal() {
   const data = await response.json();
 
   if (response.ok) {
+    return data;
+  } else {
+    let err = { status: response.status, message: data.message };
+    throw err;
+  }
+}
+*/
+
+export async function getTotalGlobal() {
+  let url = "https://corona.lmao.ninja/v2/historical/all";
+  const response = await fetch(url);
+  const data = await response.json();
+
+  if (response.ok) {
+    console.log(data)
     return data;
   } else {
     let err = { status: response.status, message: data.message };

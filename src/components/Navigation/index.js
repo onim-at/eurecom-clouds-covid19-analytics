@@ -64,18 +64,20 @@ function NavigationBase(props) {
       onClose={handleMobileMenuClose}
     >
       {authUser && !!authUser.roles[ROLES.WRITER] && (
-        <>
+        
           <MenuItem>
             <Button color="inherit" href={ROUTES.YOUR_NEWS}>
               Your News
             </Button>
           </MenuItem>
+          )}
+          {authUser && !!authUser.roles[ROLES.WRITER] && (
           <MenuItem>
             <Button color="inherit" href={ROUTES.CREATE_NEWS}>
               Create News
             </Button>
           </MenuItem>
-        </>
+       
       )}
       <MenuItem>
         <SignOutButton color="inherit" />

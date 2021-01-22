@@ -209,6 +209,36 @@ const transformCountryData = (data) => {
 };
 
 const transformGlobalData = (data) => {
+  let computeDailyData = (currentValue, index, array) => {
+    if(index == 0){
+      return 0
+    }
+    return currentValue - array[index-1]
+  }
+
+  let labels = Object.keys(data["cases"])
+  let totalConfirmed = Object.values(data["cases"])
+  let totalRecovered = Object.values(data["recovered"])
+  let totalDeaths = Object.values(data["deaths"])
+  let newConfirmed = totalConfirmed.map(computeDailyData)
+  let newRecovered = totalRecovered.map(computeDailyData)
+  let newDeaths = totalDeaths.map(computeDailyData)
+
+  let processedData = {
+    labels: labels,
+    totalConfirmed: totalConfirmed,
+    newConfirmed: newConfirmed,
+    totalRecoveries: totalRecovered,
+    newRecoveries: newRecovered,
+    totalDeaths: totalDeaths,
+    newDeaths: newDeaths,
+  };
+  console.log(processedData)
+  return processedData
+}
+
+/*
+const transformGlobalData = (data) => {
   let start = moment("2020-04-12");
   let sorting = function (a, b) {
     return a[0] - b[0];
@@ -242,5 +272,5 @@ const transformGlobalData = (data) => {
     newDeaths: newDeaths,
   };
 };
-
+*/
 export default Home;
