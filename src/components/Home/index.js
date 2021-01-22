@@ -233,7 +233,6 @@ const transformGlobalData = (data) => {
     totalDeaths: totalDeaths,
     newDeaths: newDeaths,
   };
-  console.log(processedData)
   return processedData
 }
 

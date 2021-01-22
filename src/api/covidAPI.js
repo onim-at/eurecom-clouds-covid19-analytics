@@ -66,7 +66,6 @@ export async function getTotalGlobal() {
   const data = await response.json();
 
   if (response.ok) {
-    console.log(data)
     return data;
   } else {
     let err = { status: response.status, message: data.message };
