@@ -15,7 +15,7 @@ import ReactMarkdown from "react-markdown";
 import { withRouter } from "react-router-dom";
 
 import * as ROUTES from "../../constants/routes";
-import * as styles from "../../styles/styles";
+import * as styles from "./styles";
 
 class News {
   constructor(

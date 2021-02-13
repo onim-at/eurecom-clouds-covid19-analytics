@@ -22,7 +22,7 @@ import SignOutButton from "../SignOut";
 import Button from "@material-ui/core/Button";
 
 import * as ROLES from "../../constants/roles";
-import * as Styles from "../../styles/styles";
+import * as Styles from "./styles";
 import { AuthUserContext } from "../Session";
 
 import * as ROUTES from "../../constants/routes";
@@ -32,7 +32,7 @@ import * as ROUTES from "../../constants/routes";
 function NavigationBase(props) {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const authUser = useContext(AuthUserContext);
-  const classes = Styles.useNavigationStyles();
+  const classes = Styles.useStyles();
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 

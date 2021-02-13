@@ -13,7 +13,7 @@ import Button from "@material-ui/core/Button";
 import { Pie, Line, Bar } from "react-chartjs-2";
 
 import * as CONSTANTS from "../../constants/routes";
-import * as styles from "../../styles/styles";
+import * as styles from "./styles";
 import * as COLORS from "../../constants/colors";
 
 const SummaryTable = ({ data, title, loading }) => {
@@ -208,7 +208,7 @@ const LineChartTotal = ({ data, title, loading }) => {
 };
 
 const SummaryTableCountry = ({ data, title, loading }) => {
-  const classes = styles.useTableStyles();
+  const classes = styles.useStyles();
 
   const columns = [
     { field: "id", hide: true },

@@ -14,7 +14,7 @@ import { withRouter } from "react-router-dom";
 import { FirebaseContext } from "../Firebase";
 
 import * as ROUTES from "../../constants/routes";
-import * as styles from "../../styles/styles";
+import * as styles from "./styles";
 import { SignInLink, SignInGoogle } from "../SignIn";
 
 const INITIAL_STATE = {

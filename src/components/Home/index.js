@@ -21,7 +21,7 @@ import API from "../../api";
 import Statistics from "./statistics";
 import NewsPage from "./newsPage";
 
-import * as styles from "../../styles/styles";
+import * as styles from "./styles";
 import * as ROUTES from "../../constants/routes";
 import * as IMAGES from "../../medias/images";
 
