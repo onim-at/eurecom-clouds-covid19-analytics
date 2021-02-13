@@ -107,7 +107,7 @@ const Home = () => {
           <CountryTitle titleName={titleName} classes={classes} />
         </Route>
 
-        <Paper>
+        <Paper classes={classes.grow}>
           <Tabs
             indicatorColor="primary"
             textColor="primary"
@@ -157,7 +157,7 @@ const CountryTitle = ({ titleName, classes }) => (
         aria-label="breadcrumb"
       >
         <Link style={{ textDecoration: "none" }} href="/home">
-          <Box fontWeight="fontWeightBold" color="dodgerBlue">
+          <Box fontWeight="fontWeightBold" color="Lightskyblue">
             Worldwide
           </Box>
         </Link>
