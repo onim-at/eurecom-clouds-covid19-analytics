@@ -105,7 +105,7 @@ function NavigationBase(props) {
           <Link
             color="inherit"
             style={{ textDecoration: "none" }}
-            href={ROUTES.HOME}
+            to={ROUTES.HOME}
             className={classes.title}
           >
             <Box display={{ xs: "none", sm: "block" }}>
