@@ -1,19 +1,12 @@
 import React, { useContext } from "react";
-import { withRouter } from "react-router-dom";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { withRouter, Link } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
-import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import MenuIcon from "@material-ui/icons/Menu";
-import SearchIcon from "@material-ui/icons/Search";
-import Link from "@material-ui/core/Link";
-import MailIcon from "@material-ui/icons/Mail";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+//import Link from "@material-ui/core/Link";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import Box from "@material-ui/core/Box";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -26,8 +19,6 @@ import * as Styles from "./styles";
 import { AuthUserContext } from "../Session";
 
 import * as ROUTES from "../../constants/routes";
-
-
 
 function NavigationBase(props) {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -64,27 +55,25 @@ function NavigationBase(props) {
       onClose={handleMobileMenuClose}
     >
       {authUser && !!authUser.roles[ROLES.WRITER] && (
-        
-          <MenuItem>
-            <Button color="inherit" href={ROUTES.YOUR_NEWS}>
-              Your News
-            </Button>
-          </MenuItem>
-          )}
-          {authUser && !!authUser.roles[ROLES.WRITER] && (
-          <MenuItem>
-            <Button color="inherit" href={ROUTES.CREATE_NEWS}>
-              Create News
-            </Button>
-          </MenuItem>
-       
+        <MenuItem>
+          <Link color="inherit" to={ROUTES.YOUR_NEWS}>
+            <Button color="inherit">Your News</Button>
+          </Link>
+        </MenuItem>
+      )}
+      {authUser && !!authUser.roles[ROLES.WRITER] && (
+        <MenuItem>
+          <Link color="inherit" to={ROUTES.CREATE_NEWS}>
+            <Button color="inherit">Create News</Button>
+          </Link>
+        </MenuItem>
       )}
       <MenuItem>
         <SignOutButton color="inherit" />
       </MenuItem>
     </Menu>
   );
-  
+
   const mobileNonAuthMenuId = "primary-search-account-menu-non-auth-mobile";
   const renderMobileNonAuthMenu = (
     <Menu
@@ -97,14 +86,14 @@ function NavigationBase(props) {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <Button color="inherit" href={ROUTES.SIGN_IN}>
-          Sign in
-        </Button>
+        <Link color="inherit" to={ROUTES.SIGN_IN}>
+          <Button color="inherit">Sign in</Button>
+        </Link>
       </MenuItem>
       <MenuItem>
-        <Button color="inherit" href={ROUTES.SIGN_UP}>
-          Sign up
-        </Button>
+        <Link color="inherit" to={ROUTES.SIGN_UP}>
+          <Button color="inherit">Sign up</Button>
+        </Link>
       </MenuItem>
     </Menu>
   );
@@ -152,9 +141,7 @@ function NavigationBase(props) {
           </div>
         </Toolbar>
       </AppBar>
-      {authUser ? 
-      renderMobileAuthMenu : 
-      renderMobileNonAuthMenu}
+      {authUser ? renderMobileAuthMenu : renderMobileNonAuthMenu}
     </div>
   );
 }
@@ -165,12 +152,12 @@ const NavigationAuth = ({ classes, authUser }) => (
 
     {!!authUser.roles[ROLES.WRITER] && (
       <>
-        <Button color="inherit" href={ROUTES.YOUR_NEWS}>
-          Your News
-        </Button>
-        <Button color="inherit" href={ROUTES.CREATE_NEWS}>
-          Create News
-        </Button>
+        <Link color="inherit" to={ROUTES.YOUR_NEWS}>
+          <Button color="inherit">Your News</Button>
+        </Link>
+        <Link color="inherit" to={ROUTES.CREATE_NEWS}>
+          <Button color="inherit">Create News</Button>
+        </Link>
       </>
     )}
     <SignOutButton color="inherit" />
@@ -179,12 +166,12 @@ const NavigationAuth = ({ classes, authUser }) => (
 
 const NavigationNonAuth = ({ classes }) => (
   <>
-    <Button color="inherit" href={ROUTES.SIGN_IN}>
-      Sign in
-    </Button>
-    <Button color="inherit" href={ROUTES.SIGN_UP}>
-      Sign up
-    </Button>
+    <Link color="inherit" to={ROUTES.SIGN_IN}>
+      <Button color="inherit">Sign in</Button>
+    </Link>
+    <Link color="inherit" to={ROUTES.SIGN_UP}>
+      <Button color="inherit">Sign up</Button>
+    </Link>
   </>
 );
 
@@ -216,6 +203,6 @@ const CountrySelect = (props) => {
 
 const Navigation = withRouter(NavigationBase);
 
-export {CountrySelect}
+export { CountrySelect };
 
-export default Navigation
+export default Navigation;
