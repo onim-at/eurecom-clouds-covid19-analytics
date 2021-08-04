@@ -6,7 +6,9 @@ import { FirebaseContext } from "../Firebase";
 
 const withAuthentication = (Component) => {
   const WithAuthentication = (props) => {
-    const [authUser, setAuthUser] = useState(JSON.parse(localStorage.getItem('authUser')));
+    const [authUser, setAuthUser] = useState(
+      JSON.parse(localStorage.getItem("authUser"))
+    );
     const firebase = useContext(FirebaseContext);
 
     useEffect(() => {

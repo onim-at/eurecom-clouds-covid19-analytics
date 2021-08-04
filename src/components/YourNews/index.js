@@ -25,7 +25,7 @@ const YourNews = () => {
       console.log(news);
       setLoading(false);
     });
-  }, []);
+  }, [firebase, user, user.uid]);
 
   function deleteNews(id) {
     firebase.deleteNews(id);
@@ -52,7 +52,12 @@ const YourNews = () => {
           {!loading && (
             <LineGridList
               data={news.map((item) => (
-                <NewsCard news={item} deleteNews={deleteNews} showNews={() => false} writer={true} />
+                <NewsCard
+                  news={item}
+                  deleteNews={deleteNews}
+                  showNews={() => false}
+                  writer={true}
+                />
               ))}
             />
           )}

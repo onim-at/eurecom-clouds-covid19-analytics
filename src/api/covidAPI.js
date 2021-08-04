@@ -1,7 +1,5 @@
 const baseURL = "https://api.covid19api.com";
 
-const moment = require("moment");
-
 export async function getSummary() {
   let url = "/summary";
 

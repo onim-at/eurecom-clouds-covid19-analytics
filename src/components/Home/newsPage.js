@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { NewsCard, LineGridList, DisplayNews } from "../News";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import IconButton from "@material-ui/core/IconButton"
+import IconButton from "@material-ui/core/IconButton";
 
 const NewsPage = ({ loading, newsList }) => {
   const [showList, setShowList] = useState(true);
@@ -30,7 +30,9 @@ const NewsPage = ({ loading, newsList }) => {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 color="inherit"
-                onClick={() => {setShowList(true)}}
+                onClick={() => {
+                  setShowList(true);
+                }}
               >
                 <KeyboardBackspaceIcon />
               </IconButton>

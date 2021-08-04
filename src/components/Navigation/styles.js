@@ -1,50 +1,49 @@
-import {fade, makeStyles } from "@material-ui/core/styles";
+import { fade, makeStyles } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme) => ({
-    grow: {
-      flexGrow: 1,
-    },
-    title: {
-      display: "none",
-      [theme.breakpoints.up("sm")]: {
-        display: "block",
-        marginRight: theme.spacing(2)
-      },
-      textDecoration: 'none',
-      "&:hover": {
-        color: 'black',
-      }
-    },
-    search: {
-      position: "relative",
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.common.white, 0.15),
-      "&:hover": {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
-      },
+  grow: {
+    flexGrow: 1,
+  },
+  title: {
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
       marginRight: theme.spacing(2),
-      marginLeft: 0,
-      width: "100%",
-      [theme.breakpoints.up("sm")]: {
-        marginLeft: theme.spacing(3),
-        width: "auto",
-      },
     },
-    inputRoot: {
-      color: "inherit",
+    textDecoration: "none",
+    "&:hover": {
+      color: "black",
     },
-    
-    sectionDesktop: {
-      display: "none",
-      [theme.breakpoints.up("md")]: {
-        display: "flex",
-      },
+  },
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    sectionMobile: {
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(3),
+      width: "auto",
+    },
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+
+  sectionDesktop: {
+    display: "none",
+    [theme.breakpoints.up("md")]: {
       display: "flex",
-      [theme.breakpoints.up("md")]: {
-        display: "none",
-      },
     },
-  }));
-  
+  },
+  sectionMobile: {
+    display: "flex",
+    [theme.breakpoints.up("md")]: {
+      display: "none",
+    },
+  },
+}));

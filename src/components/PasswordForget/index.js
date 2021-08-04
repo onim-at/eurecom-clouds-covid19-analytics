@@ -8,7 +8,6 @@ import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
 import Container from "@material-ui/core/Container";
 
-
 import { FirebaseContext } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 import * as Styles from "./styles";
@@ -30,7 +29,6 @@ const PasswordForgetForm = () => {
   const firebase = useContext(FirebaseContext);
   const classes = Styles.useStyles();
   const isInvalid = email === "";
-
 
   const resetPasswordHandler = (event) => {
     event.preventDefault();
@@ -86,9 +84,7 @@ const PasswordForgetForm = () => {
             Reset My Password
           </Button>
 
-          {error != null && (
-            <Alert severity="error">{error.message}</Alert>
-          )}
+          {error != null && <Alert severity="error">{error.message}</Alert>}
         </form>
       </div>
     </Container>

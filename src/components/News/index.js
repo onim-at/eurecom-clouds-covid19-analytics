@@ -132,8 +132,7 @@ const DisplayNews = ({ news }) => {
         <Typography variant="h2">{news.title}</Typography>
       </Grid>
       <Grid item>
-        {news.image && 
-        <img style={imgStyle} src={news.image} />}
+        {news.image && <img style={imgStyle} src={news.image} alt="img"/>}
       </Grid>
       <Grid item>
         <ReactMarkdown skipHtml>{news.content}</ReactMarkdown>
