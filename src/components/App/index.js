@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,7 +9,6 @@ import {
 import { withAuthentication } from "../Session";
 import API from "../../api";
 import Navigation from "../Navigation";
-import {PrimarySearchAppBar} from "../Navigation";
 import Home from "../Home";
 import SignIn from "../SignIn";
 import SignUp from "../SignUp";

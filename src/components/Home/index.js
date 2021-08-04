@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Route } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
@@ -94,7 +94,7 @@ const Home = () => {
       <div className={classes.paper}>
         <Grid container direction="row" justify="center" spacing={1}>
           <Grid item>
-            <img height="45px" width="45px" src={IMAGES.VIRUS_ICON} />
+            <img height="45px" width="45px" src={IMAGES.VIRUS_ICON} alt='covid-img' />
           </Grid>
           <Grid item>
             <Typography variant="h3">COVID-19</Typography>

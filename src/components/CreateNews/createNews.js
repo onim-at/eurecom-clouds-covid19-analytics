@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { withRouter } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
@@ -171,8 +171,7 @@ const CreateNews = (props) => {
 };
 
 const markdown_description_label =
-  "Use *markdown* to write your article, \
-see [this reference](https://markdown-it.github.io/) to learn more about it.";
+  "Use *markdown* to write your article, see [this reference](https://markdown-it.github.io/) to learn more about it.";
 
 const condition = (authUser) => authUser && !!authUser.roles[ROLES.WRITER];
 

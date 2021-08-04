@@ -31,7 +31,7 @@ export const transformCountryData = (data) => {
 // For corona.lmao.ninja API
 export const transformGlobalData = (data) => {
   let computeDailyData = (currentValue, index, array) => {
-    if (index == 0) {
+    if (index === 0) {
       return 0;
     }
     return currentValue - array[index - 1];

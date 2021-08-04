@@ -42,7 +42,6 @@ function NavigationBase(props) {
   };
 
   const menuId = "primary-search-account-menu";
-
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileAuthMenu = (
     <Menu

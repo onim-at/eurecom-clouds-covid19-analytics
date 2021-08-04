@@ -25,7 +25,7 @@ const YourNews = () => {
       console.log(news);
       setLoading(false);
     });
-  }, []);
+  }, [firebase, user, user.uid]);
 
   function deleteNews(id) {
     firebase.deleteNews(id);
