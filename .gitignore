@@ -27,7 +27,6 @@ yarn-error.log*
 # firebase
 .firebase
 .firebaserc
-firebase.json
 
 # bfg
 bfg*
