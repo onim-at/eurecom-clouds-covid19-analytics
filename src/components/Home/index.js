@@ -19,7 +19,7 @@ import { FirebaseContext } from "../Firebase";
 import API from "../../api";
 import Statistics from "./statistics";
 import NewsPage from "./newsPage";
-import {transformCountryData, transformGlobalData} from "../../transform"
+import { transformCountryData, transformGlobalData } from "../../transform";
 
 import * as styles from "./styles";
 import * as ROUTES from "../../constants/routes";
@@ -45,13 +45,12 @@ const Home = () => {
   useEffect(() => {
     var getSummary = isGlobal ? API.getSummary : firebase.getSummaryByCountry;
     var getTotal = isGlobal ? API.getTotalGlobal : API.getTotalByCountry;
-    var newsLocation = country ? country : 'worldwide';
+    var newsLocation = country ? country : "worldwide";
 
     setSummaryLoading(true);
     setTotalLoading(true);
     setNewsLoading(true);
     setError(null);
-    
 
     getSummary(country)
       .then((data) => {
@@ -74,13 +73,15 @@ const Home = () => {
         setError(error);
       });
 
-    firebase.getNewsByLocation(newsLocation).then((news) => {
-      setNews(news);
-      setNewsLoading(false);
-    }).catch((error) => {
-      setError(error);
-    });
-
+    firebase
+      .getNewsByLocation(newsLocation)
+      .then((news) => {
+        setNews(news);
+        setNewsLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+      });
   }, [firebase, country, isGlobal]);
 
   let loading = summaryLoading || totalLoading;
@@ -126,7 +127,7 @@ const Home = () => {
         {error && <Alert severity="error">{error.message}</Alert>}
 
         <Fade in={showStatistics} mountOnEnter unmountOnExit>
-          <div style={{ overflowX: "hidden"}}>
+          <div style={{ overflowX: "hidden" }}>
             <Statistics
               summary={summary}
               total={total}
@@ -137,8 +138,8 @@ const Home = () => {
         </Fade>
 
         <Fade in={!showStatistics} mountOnEnter unmountOnExit>
-          <div style={{ overflowX: "hidden"}}>
-            <NewsPage loading={newsLoading} newsList={news}/>
+          <div style={{ overflowX: "hidden" }}>
+            <NewsPage loading={newsLoading} newsList={news} />
           </div>
         </Fade>
         <Footer />
