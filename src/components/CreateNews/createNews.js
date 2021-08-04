@@ -14,7 +14,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { CountrySelect } from "../Navigation";
 
-import * as styles from "../../styles/styles";
+import * as styles from "./styles";
 import ReactMarkdown from "react-markdown";
 import { FirebaseContext } from "../Firebase";
 import { AuthUserContext } from "../Session";

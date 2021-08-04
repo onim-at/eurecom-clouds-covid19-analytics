@@ -15,28 +15,28 @@ import {
 const Statistics = ({ summary, total, loading, titleName }) => {
   return (
     <Grid container justify="center" spacing={6}>
-      <Grid item xs={10}>
+      <Grid item xs={11}>
         <SummaryTable
           data={summary}
           loading={loading}
           title={TITLES.SUMMARY + titleName}
         />
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={11}>
         <SummaryPie
           data={summary}
           loading={loading}
           title={TITLES.DISTRIBUTION + titleName}
         />
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={11}>
         <BarPlotWeek
           data={total}
           loading={loading}
           title={TITLES.DAILY_WEEK + titleName}
         />
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={11}>
         <LineChartTotal
           data={total}
           title={TITLES.DAILY_TOTAL + titleName}
@@ -44,7 +44,7 @@ const Statistics = ({ summary, total, loading, titleName }) => {
         />
       </Grid>
       <Route path={ROUTES.HOME}>
-        <Grid item xs={10}>
+        <Grid item xs={11}>
           <SummaryTableCountry
             data={summary.Countries}
             title={TITLES.COUNTRY}

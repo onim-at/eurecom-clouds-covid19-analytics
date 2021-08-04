@@ -14,7 +14,7 @@ import { FirebaseContext } from "../Firebase";
 
 import { SignUpLink } from "../SignUp";
 import * as ROUTES from "../../constants/routes";
-import * as styles from "../../styles/styles";
+import * as styles from "./styles";
 
 import { PasswordForgetLink } from "../PasswordForget";
 

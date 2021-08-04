@@ -12,7 +12,7 @@ import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import * as styles from "../../styles/styles";
+import * as styles from "./styles";
 import ReactMarkdown from "react-markdown";
 import { FirebaseContext } from "../Firebase";
 import { AuthUserContext } from "../Session";

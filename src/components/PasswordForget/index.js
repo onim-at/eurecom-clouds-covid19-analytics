@@ -11,7 +11,7 @@ import Container from "@material-ui/core/Container";
 
 import { FirebaseContext } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
-import * as Styles from "../../styles/styles";
+import * as Styles from "./styles";
 
 const PasswordForgetPage = () => (
   <div>
