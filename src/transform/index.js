@@ -27,7 +27,7 @@ export const transformCountryData = (data) => {
     newConfirmed: newConfirmed,
   };
 };
-/*
+
 // For corona.lmao.ninja API
 export const transformGlobalData = (data) => {
   let computeDailyData = (currentValue, index, array) => {
@@ -56,39 +56,40 @@ export const transformGlobalData = (data) => {
   };
   return processedData;
 };
-*/
-// for api.covid19api
+
+/*// for api.covid19api
 export const transformGlobalData = (data) => {
-  let start = moment("2020-04-12");
-  let sorting = function (a, b) {
-    return a[0] - b[0];
+    let start = moment("2020-04-12");
+    let sorting = function (a, b) {
+      return a[0] - b[0];
+    };
+  
+    data.sort((a, b) => a.TotalConfirmed - b.TotalConfirmed);
+    let deaths = data
+      .map((item) => [item.TotalDeaths, item.NewDeaths])
+      .sort(sorting);
+    let totalDeaths = deaths.map((item) => item[0]);
+    let newDeaths = deaths.map((item) => item[1]);
+    let recovered = data
+      .map((item) => [item.TotalRecovered, item.NewRecovered])
+      .sort(sorting);
+    let totalRecovered = recovered.map((item) => item[0]);
+    let newRecovered = recovered.map((item) => item[1]);
+    let confirmed = data
+      .map((item) => [item.TotalConfirmed, item.NewConfirmed])
+      .sort(sorting);
+    let totalConfirmed = confirmed.map((item) => item[0]);
+    let newConfirmed = confirmed.map((item) => item[1]);
+    let labels = data.map((item) => start.add(1, "days").format("MM-DD"));
+  
+    return {
+      labels: labels,
+      totalConfirmed: totalConfirmed,
+      newConfirmed: newConfirmed,
+      totalRecoveries: totalRecovered,
+      newRecoveries: newRecovered,
+      totalDeaths: totalDeaths,
+      newDeaths: newDeaths,
+    };
   };
-
-  data.sort((a, b) => a.TotalConfirmed - b.TotalConfirmed);
-  let deaths = data
-    .map((item) => [item.TotalDeaths, item.NewDeaths])
-    .sort(sorting);
-  let totalDeaths = deaths.map((item) => item[0]);
-  let newDeaths = deaths.map((item) => item[1]);
-  let recovered = data
-    .map((item) => [item.TotalRecovered, item.NewRecovered])
-    .sort(sorting);
-  let totalRecovered = recovered.map((item) => item[0]);
-  let newRecovered = recovered.map((item) => item[1]);
-  let confirmed = data
-    .map((item) => [item.TotalConfirmed, item.NewConfirmed])
-    .sort(sorting);
-  let totalConfirmed = confirmed.map((item) => item[0]);
-  let newConfirmed = confirmed.map((item) => item[1]);
-  let labels = data.map((item) => start.add(1, "days").format("MM-DD"));
-
-  return {
-    labels: labels,
-    totalConfirmed: totalConfirmed,
-    newConfirmed: newConfirmed,
-    totalRecoveries: totalRecovered,
-    newRecoveries: newRecovered,
-    totalDeaths: totalDeaths,
-    newDeaths: newDeaths,
-  };
-};
+  */
