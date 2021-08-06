@@ -58,9 +58,8 @@ const LineGridList = ({ data }) => {
   return (
     <div className={classes.root}>
       <GridList
-        style={{ flexWrap: "nowrap" }}
         className={classes.gridList}
-        cols={5}
+        cols={6}
       >
         {data.map((tile, index) => (
           <GridListTile className={classes.gridListTile} key={index}>
@@ -82,7 +81,7 @@ const BaseNewsCard = ({ history, news, writer, showNews, deleteNews }) => {
 
   return (
     <Card className={classes.root}>
-      <CardActionArea onClick={() => showNews(news)}>
+      <CardActionArea onClick={() => {writer ? modifyNews(news) : showNews(news)}}>
         <CardHeader
           className={classes.header}
           title={news.title}
@@ -132,7 +131,7 @@ const DisplayNews = ({ news }) => {
         <Typography variant="h2">{news.title}</Typography>
       </Grid>
       <Grid item>
-        {news.image && <img style={imgStyle} src={news.image} alt="img"/>}
+        {news.image && <img style={imgStyle} src={news.image} alt="img" />}
       </Grid>
       <Grid item>
         <ReactMarkdown skipHtml>{news.content}</ReactMarkdown>

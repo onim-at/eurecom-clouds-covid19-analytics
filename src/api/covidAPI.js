@@ -1,3 +1,4 @@
+const moment = require('moment')
 const baseURL = "https://api.covid19api.com";
 
 export async function getSummary() {
@@ -40,7 +41,7 @@ export async function getLiveByCountry(country) {
     throw err;
   }
 }
-/*
+
 export async function getTotalGlobal() {
   let start = "2020-04-13T00:00:00Z";
   let end = moment().format("YYYY-MM-DDThh:mm:ssZ");
@@ -56,7 +57,7 @@ export async function getTotalGlobal() {
     throw err;
   }
 }
-*/
+/*
 
 export async function getTotalGlobal() {
   let url = "https://corona.lmao.ninja/v2/historical/all";
@@ -70,7 +71,7 @@ export async function getTotalGlobal() {
     throw err;
   }
 }
-
+*/
 export async function getTotalByCountry(country) {
   let url = "/total/country/" + country;
 

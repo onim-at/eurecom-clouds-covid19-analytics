@@ -80,7 +80,8 @@ const CreateNews = (props) => {
     }
   }
   const countrySelectHandler = (value) => {
-    setLocation(value.Slug);
+    if (value)
+      setLocation(value.Slug);
   };
 
   return (

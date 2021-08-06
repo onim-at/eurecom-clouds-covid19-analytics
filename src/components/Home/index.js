@@ -94,7 +94,12 @@ const Home = () => {
       <div className={classes.paper}>
         <Grid container direction="row" justify="center" spacing={1}>
           <Grid item>
-            <img height="45px" width="45px" src={IMAGES.VIRUS_ICON} alt='covid-img' />
+            <img
+              height="45px"
+              width="45px"
+              src={IMAGES.VIRUS_ICON}
+              alt="covid-img"
+            />
           </Grid>
           <Grid item>
             <Typography variant="h3">COVID-19</Typography>
@@ -127,20 +132,16 @@ const Home = () => {
         {error && <Alert severity="error">{error.message}</Alert>}
 
         <Fade in={showStatistics} mountOnEnter unmountOnExit>
-          <div style={{ overflowX: "hidden" }}>
-            <Statistics
-              summary={summary}
-              total={total}
-              loading={loading}
-              titleName={titleName}
-            />
-          </div>
+          <Statistics
+            summary={summary}
+            total={total}
+            loading={loading}
+            titleName={titleName}
+          />
         </Fade>
 
         <Fade in={!showStatistics} mountOnEnter unmountOnExit>
-          <div style={{ overflowX: "hidden" }}>
-            <NewsPage loading={newsLoading} newsList={news} />
-          </div>
+          <NewsPage loading={newsLoading} newsList={news} />
         </Fade>
         <Footer />
       </div>

@@ -27,7 +27,7 @@ export const transformCountryData = (data) => {
     newConfirmed: newConfirmed,
   };
 };
-
+/*
 // For corona.lmao.ninja API
 export const transformGlobalData = (data) => {
   let computeDailyData = (currentValue, index, array) => {
@@ -56,8 +56,8 @@ export const transformGlobalData = (data) => {
   };
   return processedData;
 };
-
-/*// for api.covid19api
+*/
+// for api.covid19api
 export const transformGlobalData = (data) => {
     let start = moment("2020-04-12");
     let sorting = function (a, b) {
@@ -92,4 +92,4 @@ export const transformGlobalData = (data) => {
       newDeaths: newDeaths,
     };
   };
-  */
+  
