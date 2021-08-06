@@ -275,12 +275,12 @@ const SummaryTableCountry = ({ data, title, loading }) => {
       totalDeaths: item.TotalDeaths,
     }));
   };
-
+  console.log(data)
   return (
     <>
       <Title title={title} />
-      {loading && <LinearProgress />}
-      {!loading && (
+      {loading && data == null && <LinearProgress />}
+      {!loading && data != null && (
         <Box
           style={{ height: 520, width: "100%", borderColor: "white" }}
           className={classes.root}

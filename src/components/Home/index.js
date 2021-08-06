@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Route } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import Link from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
@@ -36,7 +35,7 @@ const Home = () => {
   const [summaryLoading, setSummaryLoading] = useState(true);
   const [totalLoading, setTotalLoading] = useState(true);
   const [newsLoading, setNewsLoading] = useState(true);
-  const [showStatistics, setShowStatistics] = useState(true);
+  const [showStatistics, setShowStatistics] = useState(1);
   const firebase = useContext(FirebaseContext);
   const classes = styles.useStyles();
   const { country } = useParams();
@@ -82,10 +81,17 @@ const Home = () => {
       .catch((error) => {
         setError(error);
       });
+
+    return () => {
+      setSummaryLoading(true);
+      setTotalLoading(true);
+      setNewsLoading(true);
+      setError(null);
+    };
   }, [firebase, country, isGlobal]);
 
   let loading = summaryLoading || totalLoading;
-
+//  console.log(`${country} - ${loading} - ${summaryLoading} - ${totalLoading}`);
   let titleName = country ? summary.Country : GLOBAL;
   titleName = loading ? "Loading..." : titleName;
 
@@ -109,10 +115,6 @@ const Home = () => {
           Live Updates and Statistics
         </Typography>
 
-        <Route path={ROUTES.COUNTRY}>
-          <CountryTitle titleName={titleName} classes={classes} />
-        </Route>
-
         <Paper classes={classes.grow}>
           <Tabs
             indicatorColor="primary"
@@ -124,10 +126,14 @@ const Home = () => {
             centered
             variant="fullWidth"
           >
-            <Tab value={true} label="Statistics" />
-            <Tab value={false} label="News" />
+            <Tab value={1} index={1} label="Statistics" />
+            <Tab value={0} index={0} label="News" />
           </Tabs>
         </Paper>
+
+        <Route path={ROUTES.COUNTRY}>
+          <CountryTitle titleName={titleName} classes={classes} />
+        </Route>
 
         {error && <Alert severity="error">{error.message}</Alert>}
 
@@ -158,7 +164,7 @@ const CountryTitle = ({ titleName, classes }) => (
         }
         aria-label="breadcrumb"
       >
-        <Link style={{ textDecoration: "none" }} href="/home">
+        <Link style={{ textDecoration: "none" }} to="/home">
           <Box fontWeight="fontWeightBold" color="Lightskyblue">
             Worldwide
           </Box>

@@ -178,7 +178,7 @@ const CountrySelect = (props) => {
   return (
     <Autocomplete
       id="country-select"
-      style={{ width: 300 }}
+      style={{ width: "15em" }}
       options={props.countries}
       size="small"
       autoHighlight
