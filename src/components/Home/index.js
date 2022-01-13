@@ -25,7 +25,6 @@ import * as ROUTES from "../../constants/routes";
 import * as IMAGES from "../../medias/images";
 
 const GLOBAL = "Worldwide";
-const COUNTRIES = "Countries";
 
 const Home = () => {
   const [summary, setSummary] = useState({});
@@ -91,14 +90,13 @@ const Home = () => {
   }, [firebase, country, isGlobal]);
 
   let loading = summaryLoading || totalLoading;
-//  console.log(`${country} - ${loading} - ${summaryLoading} - ${totalLoading}`);
   let titleName = country ? summary.Country : GLOBAL;
   titleName = loading ? "Loading..." : titleName;
 
   return (
     <Container>
       <div className={classes.paper}>
-        <Grid container direction="row" justify="center" spacing={1}>
+        <Grid container direction="row" justifyContent="center" spacing={1}>
           <Grid item>
             <img
               height="45px"
@@ -137,7 +135,7 @@ const Home = () => {
 
         {error && <Alert severity="error">{error.message}</Alert>}
 
-        <Fade in={showStatistics} mountOnEnter unmountOnExit>
+        <Fade in={Boolean(showStatistics)} mountOnEnter unmountOnExit>
           <Statistics
             summary={summary}
             total={total}
@@ -156,7 +154,7 @@ const Home = () => {
 };
 
 const CountryTitle = ({ titleName, classes }) => (
-  <Grid container justify="center" alignItems="center">
+  <Grid container justifyContent="center" alignItems="center">
     <Grid item className={classes.countryTitle} xs={10}>
       <Breadcrumbs
         separator={
@@ -179,9 +177,9 @@ const Footer = () => (
   <Box m={4}>
     <Typography align="center">
       Data Source:
-      <Link href="https://covid19api.com/">
+      <a href="https://covid19api.com/">
         COVID-19 API / Johns Hopkins CSSE
-      </Link>
+      </a>
     </Typography>
   </Box>
 );

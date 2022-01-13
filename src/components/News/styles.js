@@ -4,14 +4,14 @@ export const useGridSlideStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexWrap: "wrap",
-    justifyContent: "space-around",
+    justifyContentContent: "space-around",
     backgroundColor: theme.palette.background.paper,
   },
-  gridList: {
+  imageList: {
     flexWrap: "nowrap",
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
   },
-  gridListTile: {
+  imageListTile: {
     position: "relative",
     float: "left",
     minWidth: 250,

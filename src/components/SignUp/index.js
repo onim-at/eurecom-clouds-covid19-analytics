@@ -70,7 +70,6 @@ const SignUp = (props) => {
         setPassword(INITIAL_STATE.password);
         setConfirmPassword(INITIAL_STATE.confirmPassword);
         setError(INITIAL_STATE.error);
-        console.log("FIRE");
 
         props.history.push(ROUTES.HOME);
       })
@@ -173,7 +172,7 @@ const SignUp = (props) => {
           </Box>
           <SignInGoogle setError={setError} />
           {error != null && <Alert severity="error">{error.message}</Alert>}
-          <Grid container justify="flex-end">
+          <Grid container justifyContent="flex-end">
             <Grid item>
               <SignInLink />
             </Grid>

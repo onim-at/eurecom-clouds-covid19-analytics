@@ -26,7 +26,7 @@ const withAuthentication = (Component) => {
       return () => {
         listener();
       };
-    }, []);
+    }, [firebase]);
 
     return (
       <AuthUserContext.Provider value={authUser}>

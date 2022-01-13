@@ -14,7 +14,7 @@ import {
 
 const Statistics = ({ summary, total, loading, titleName }) => {
   return (
-    <Grid container justify="center" spacing={6}>
+    <Grid container justifyContent="center" spacing={6}>
       <Grid item xs={11}>
         <SummaryTable
           data={summary}

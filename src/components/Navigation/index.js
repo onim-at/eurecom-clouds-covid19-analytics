@@ -6,7 +6,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-//import Link from "@material-ui/core/Link";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import Box from "@material-ui/core/Box";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -41,7 +40,7 @@ function NavigationBase(props) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const menuId = "primary-search-account-menu";
+  //const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileAuthMenu = (
     <Menu

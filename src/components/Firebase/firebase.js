@@ -103,10 +103,10 @@ class Firebase {
         }
       })
       .catch((error) => {
-        throw {
+        throw new Error({
           error: error,
           message: "Failed to retrieve summary data; ",
-        };
+        });
       });
   };
 
@@ -120,7 +120,6 @@ class Firebase {
   };
 
   removeImage = (imagePath) => {
-    console.log(imagePath);
     var imageRef = this.storageRef.child(imagePath);
     return imageRef
       .delete()
@@ -143,7 +142,6 @@ class Firebase {
   };
 
   updateNews = (id, news) => {
-    console.log(id);
     var newsRef = this.firestore.collection("news").doc(id);
     return newsRef
       .update(Object.assign({}, news))
@@ -154,13 +152,11 @@ class Firebase {
   };
 
   deleteNews = (id) => {
-    console.log(id);
     var newsRef = this.firestore.collection("news").doc(id);
     return newsRef.get().then((doc) => {
       if (doc.exists) {
         return newsRef.delete().then(() => {
-          if(doc.data().imagePath)
-            this.removeImage(doc.data().imagePath);
+          if (doc.data().imagePath) this.removeImage(doc.data().imagePath);
         });
       }
     });

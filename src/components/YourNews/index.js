@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
-import { NewsCard, LineGridList } from "../News";
+import { NewsCard, LineImageList } from "../News";
 import { FirebaseContext } from "../Firebase";
 import { AuthUserContext } from "../Session";
 import { withAuthorization } from "../Session";
@@ -11,7 +11,6 @@ import { withAuthorization } from "../Session";
 import * as ROLES from "../../constants/roles";
 
 const YourNews = () => {
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [news, setNews] = useState([]);
   const firebase = useContext(FirebaseContext);
@@ -19,10 +18,8 @@ const YourNews = () => {
 
   useEffect(() => {
     setLoading(true);
-    setError("");
     firebase.getNewsByUser(user.uid).then((news) => {
       setNews(news);
-      console.log(news);
       setLoading(false);
     });
   }, [firebase, user, user.uid]);
@@ -30,7 +27,7 @@ const YourNews = () => {
   function deleteNews(id) {
     firebase.deleteNews(id);
     var filteredNews = news.filter(
-      (data) => data.newsid.localeCompare(id) != 0
+      (data) => data.newsid.localeCompare(id) !== 0
     );
     setNews(filteredNews);
   }
@@ -40,7 +37,7 @@ const YourNews = () => {
       <Grid
         container
         direction="column"
-        justify="center"
+        justifyContent="center"
         alignItems="center"
         spacing={2}
       >
@@ -50,7 +47,7 @@ const YourNews = () => {
 
         <Grid item xs={10}>
           {!loading && (
-            <LineGridList
+            <LineImageList
               data={news.map((item) => (
                 <NewsCard
                   news={item}

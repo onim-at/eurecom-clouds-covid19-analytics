@@ -87,7 +87,7 @@ const CreateNews = (props) => {
   return (
     <Container>
       <div className={classes.paper}>
-        <Grid container justify="center" direction="row" spacing={4}>
+        <Grid container justifyContent="center" direction="row" spacing={4}>
           {error && (
             <Grid item xs={8}>
               <Alert severity="error">{error.message}</Alert>
