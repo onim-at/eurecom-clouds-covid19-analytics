@@ -13,7 +13,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   countryTitle: {
     display: "flex",
-    justify: "center",
+    justifyContent: "center",
     padding: "8px 0px",
     backgroundColor: COLORS.COUNTRY,
   },

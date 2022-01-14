@@ -38,37 +38,13 @@ const SummaryTable = ({ data, title, loading }) => {
     },
     {
       id: 3,
-      measure: "Active Cases",
-      value: data.TotalConfirmed - data.TotalRecovered,
-      bg: COLORS.CONFIRMED,
-    },
-    {
-      id: 4,
-      measure: "Total Recovered",
-      value: data.TotalRecovered,
-      bg: COLORS.RECOVERED,
-    },
-    {
-      id: 5,
-      measure: "New Recovered",
-      value: data.NewRecovered,
-      bg: COLORS.RECOVERED,
-    },
-    {
-      id: 6,
-      measure: "Recovery Rate",
-      value: percentage(data.TotalRecovered, data.TotalConfirmed),
-      bg: COLORS.RECOVERED,
-    },
-    {
-      id: 7,
       measure: "Total Deaths",
       value: data.TotalDeaths,
       bg: COLORS.DEATHS,
     },
-    { id: 8, measure: "New Deaths", value: data.NewDeaths, bg: COLORS.DEATHS },
+    { id: 4, measure: "New Deaths", value: data.NewDeaths, bg: COLORS.DEATHS },
     {
-      id: 9,
+      id: 5,
       measure: "Mortality Rate",
       value: percentage(data.TotalDeaths, data.TotalConfirmed),
       bg: COLORS.DEATHS,
@@ -101,11 +77,11 @@ const SummaryTable = ({ data, title, loading }) => {
 
 const SummaryPie = ({ data, title, loading }) => {
   const getData = (data) => ({
-    labels: ["Death Cases", "Recovered Cases", "Active Cases"],
+    labels: ["Death Cases", "Total cases"],
     datasets: [
       {
-        data: [data.TotalDeaths, data.TotalRecovered, data.TotalConfirmed],
-        backgroundColor: [COLORS.DEATHS, COLORS.RECOVERED, COLORS.CONFIRMED],
+        data: [data.TotalDeaths, data.TotalConfirmed],
+        backgroundColor: [COLORS.DEATHS, COLORS.CONFIRMED],
       },
     ],
   });
@@ -130,11 +106,6 @@ const BarPlotWeek = ({ data, title, loading }) => {
           backgroundColor: COLORS.DEATHS,
           label: "Total deaths",
           data: data.newDeaths.slice(-len),
-        },
-        {
-          backgroundColor: COLORS.RECOVERED,
-          label: "Total Recovered",
-          data: data.newRecoveries.slice(-len),
         },
         {
           backgroundColor: COLORS.CONFIRMED,
@@ -173,12 +144,6 @@ const LineChartTotal = ({ data, title, loading }) => {
           data: data.totalDeaths,
         },
         {
-          borderColor: COLORS.RECOVERED,
-          backgroundColor: COLORS.RECOVERED_BG,
-          label: "Total Recovered",
-          data: data.totalRecoveries,
-        },
-        {
           borderColor: COLORS.CONFIRMED,
           backgroundColor: COLORS.CONFIRMED_BG,
           label: "Total Cases",
@@ -215,7 +180,7 @@ const SummaryTableCountry = ({ data, title, loading }) => {
     {
       field: "country",
       headerName: "Country",
-      width: 240,
+      flex: 1,
       cellClassName: "country--cell",
       renderCell: (params) => (
         <Button style={{color: "white"}} href={CONSTANTS.COUNTRY_BASE + "/" + params.value.Slug}>
@@ -228,37 +193,25 @@ const SummaryTableCountry = ({ data, title, loading }) => {
     {
       field: "newCases",
       headerName: "New Cases",
-      width: 110,
+      flex: 1,
       cellClassName: "confirmed--cell",
     },
     {
       field: "totalCases",
       headerName: "Total Cases",
-      width: 135,
+      flex: 1,
       cellClassName: "confirmed--cell",
-    },
-    {
-      field: "newRecoveries",
-      headerName: "New Recoveries",
-      width: 138,
-      cellClassName: "recovered--cell",
-    },
-    {
-      field: "totalRecoveries",
-      headerName: "Total Recoveries",
-      width: 140,
-      cellClassName: "recovered--cell",
     },
     {
       field: "newDeaths",
       headerName: "New Deaths",
-      width: 110,
+      flex: 1,
       cellClassName: "deaths--cell",
     },
     {
       field: "totalDeaths",
       headerName: "Total Deaths",
-      width: 130,
+      flex: 1,
       cellClassName: "deaths--cell",
     },
   ];
@@ -269,8 +222,6 @@ const SummaryTableCountry = ({ data, title, loading }) => {
       country: item,
       newCases: item.NewConfirmed,
       totalCases: item.TotalConfirmed,
-      newRecoveries: item.NewRecovered,
-      totalRecoveries: item.TotalRecovered,
       newDeaths: item.NewDeaths,
       totalDeaths: item.TotalDeaths,
     }));

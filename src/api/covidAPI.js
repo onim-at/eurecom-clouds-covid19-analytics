@@ -57,21 +57,7 @@ export async function getTotalGlobal() {
     throw err;
   }
 }
-/*
 
-export async function getTotalGlobal() {
-  let url = "https://corona.lmao.ninja/v2/historical/all";
-  const response = await fetch(url);
-  const data = await response.json();
-
-  if (response.ok) {
-    return data;
-  } else {
-    let err = { status: response.status, message: data.message };
-    throw err;
-  }
-}
-*/
 export async function getTotalByCountry(country) {
   let url = "/total/country/" + country;
 

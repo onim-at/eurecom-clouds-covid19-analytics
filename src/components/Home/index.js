@@ -54,6 +54,7 @@ const Home = () => {
       .then((data) => {
         setSummary(data);
         setSummaryLoading(false);
+        console.log(data)
       })
       .catch((error) => {
         setError(error);
@@ -66,6 +67,7 @@ const Home = () => {
           : transformCountryData(data);
         setTotal(data);
         setTotalLoading(false);
+        console.log(data)
       })
       .catch((error) => {
         setError(error);
