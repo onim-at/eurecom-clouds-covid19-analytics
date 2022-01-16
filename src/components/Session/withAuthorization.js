@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from "react";
 import { withRouter } from "react-router-dom";
 
 import AuthUserContext from "./context";
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 
 import * as ROUTES from "../../constants/routes";
 

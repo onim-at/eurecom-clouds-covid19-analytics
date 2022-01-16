@@ -3,7 +3,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/database";
 import "firebase/storage";
-import API from "../../api";
+import API from "../api";
 
 const moment = require("moment");
 

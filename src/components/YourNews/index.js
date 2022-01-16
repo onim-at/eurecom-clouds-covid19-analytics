@@ -4,7 +4,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
 import { NewsCard, LineImageList } from "../News";
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 import { AuthUserContext } from "../Session";
 import { withAuthorization } from "../Session";
 

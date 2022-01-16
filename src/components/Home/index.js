@@ -14,7 +14,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Fade from "@material-ui/core/Fade";
 
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 import API from "../../api";
 import Statistics from "./statistics";
 import NewsPage from "./newsPage";

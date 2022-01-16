@@ -10,7 +10,7 @@ import Alert from "@material-ui/lab/Alert";
 import Container from "@material-ui/core/Container";
 import { withRouter } from "react-router-dom";
 
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 
 import * as ROUTES from "../../constants/routes";
 import * as styles from "./styles";

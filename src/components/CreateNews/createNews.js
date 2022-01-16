@@ -16,7 +16,7 @@ import { CountrySelect } from "../Navigation";
 
 import * as styles from "./styles";
 import ReactMarkdown from "react-markdown";
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 import { AuthUserContext } from "../Session";
 import { withAuthorization } from "../Session";
 import News from "../News";

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Button from "@material-ui/core/Button";
 
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 
 const SignOutButton = (props) => {
   const firebase = useContext(FirebaseContext);
