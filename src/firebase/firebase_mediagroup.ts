@@ -3,7 +3,8 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/database";
 import "firebase/storage";
-import API from "../api";
+import { MEDIAGROUP } from "../api";
+const API = MEDIAGROUP;
 
 const moment = require("moment");
 
@@ -18,7 +19,23 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
+interface RolesDictionary {
+  [key: string]: string;
+}
+
+interface User {
+  uid: string;
+  username: string;
+  email: string;
+  roles: RolesDictionary;
+}
+
 class Firebase {
+  auth: app.auth.Auth;
+  provider: app.auth.GoogleAuthProvider;
+  firestore: app.firestore.Firestore;
+  storageRef: app.storage.Reference;
+
   constructor() {
     app.initializeApp(firebaseConfig);
 
@@ -30,24 +47,24 @@ class Firebase {
 
   // *** Auth API ***
 
-  doCreateUserWithEmailAndPassword = (email, password) =>
+  doCreateUserWithEmailAndPassword = (email: string, password: string) =>
     this.auth.createUserWithEmailAndPassword(email, password);
 
-  doSignInWithEmailAndPassword = (email, password) =>
+  doSignInWithEmailAndPassword = (email: string, password: string) =>
     this.auth.signInWithEmailAndPassword(email, password);
 
   doSignInWithGoogle = () => this.auth.signInWithPopup(this.provider);
 
   doSignOut = () => this.auth.signOut();
 
-  doPasswordReset = (email) => this.auth.sendPasswordResetEmail(email);
+  doPasswordReset = (email: string) => this.auth.sendPasswordResetEmail(email);
 
-  doPasswordUpdate = (password) =>
+  doPasswordUpdate = (password: string) =>
     this.auth.currentUser.updatePassword(password);
 
   // *** Merge Auth and DB User API *** //
 
-  onAuthUserListener = (next, fallback) =>
+  onAuthUserListener = (next, fallback: () => any) =>
     this.auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         this.user(authUser.uid)
@@ -59,12 +76,11 @@ class Firebase {
               data.roles = {};
             }
 
-            // merge auth and db user
-            authUser = {
+            let user: User = {
               uid: authUser.uid,
               username: authUser.displayName,
               email: authUser.email,
-              ...data,
+              roles: data.roles,
             };
 
             next(authUser);
@@ -76,38 +92,95 @@ class Firebase {
 
   // *** User API ***
 
-  user = (uid) => this.firestore.collection("users").doc(uid);
+  user = (uid: string) => this.firestore.collection("users").doc(uid);
 
   users = () => this.firestore.collection("users");
 
-  // *** Summary API ***
+  // *** Statistics API ***
 
-  getSummaryByCountry = (country) => {
-    var summaryRef = this.firestore.collection("summary").doc(country);
+  getSummary = async () => {
+    let collection = await this.firestore.collection("summary").get();
+    let docs = collection.docs.map((doc) => doc.data());
 
-    return summaryRef
-      .get()
-      .then((doc) => {
-        if (doc.exists && moment(doc.data().Date).isSame(moment(), "day")) {
-          // document exist and is updated
-          return doc.data();
-        } else {
-          // document does not exist / is outdated -> retrieve it from api.covid19
-          return API.getSummary().then((summary) => {
-            let data = summary.Countries.filter(
-              (item) => item.Slug.localeCompare(country) === 0
-            );
-            summaryRef.set(data[0]);
-            return data[0];
-          });
-        }
-      })
-      .catch((error) => {
-        throw new Error({
-          error: error,
-          message: "Failed to retrieve summary data; ",
-        });
+    try {
+      if (
+        docs["Italy"] &&
+        moment(docs["Italy"].data().All.updated).isSame(moment(), "day")
+      ) {
+        return docs;
+      }
+
+      let summaryNew = await API.getSummary();
+      Object.entries(summaryNew).forEach((data) => {
+        docs[data[0]].set(data[1]);
       });
+      return summaryNew;
+    } catch (error) {
+      let err = {
+        error: error,
+        message: "Failed to retrieve summary data; ",
+      };
+      throw err;
+    }
+  };
+
+  getHistory = async (country: string) => {
+    let ref = this.firestore.collection("vaccines").doc(country)
+    let doc = await ref.get();
+
+    try {
+      let yesterday = moment().subtract(1, "days").format("yyyy-mm-dd");
+      if (doc.exists && doc.data().All.dates.hasOwnProperty(yesterday)) {
+        return doc.data();
+      }
+
+      let confirmedNew = await API.getHistory(country, "confirmed");
+      let deathNew = await API.getHistory(country, "deaths");
+
+      Object.entries(confirmedNew.All.dates).forEach((data) => {
+        let hist = {
+          confirmed: data[1],
+          death: deathNew.All.dates[data[0]],
+        };
+
+        deathNew.All.dates[data[0]] = hist;
+      });
+      ref.set(deathNew)
+      
+      return deathNew
+
+    } catch (error) {
+      let err = {
+        error: error,
+        message: "Failed to retrieve vaccines data; ",
+      };
+      throw err;
+    }
+  };
+
+  getVaccines = async () => {
+    let collection = await this.firestore.collection("vaccines").get();
+    let docs = collection.docs.map((doc) => doc.data());
+
+    try {
+      if (
+        docs["Italy"] &&
+        moment(docs["Italy"].All.updated).isSame(moment(), "day")
+      ) {
+        return docs;
+      }
+      let vaccinesNew = await API.getVaccines();
+      Object.entries(vaccinesNew).forEach((data) => {
+        docs[data[0]].set(data[1]);
+      });
+      return vaccinesNew;
+    } catch (error) {
+      let err = {
+        error: error,
+        message: "Failed to retrieve vaccines data; ",
+      };
+      throw err;
+    }
   };
 
   // *** News API ***
