@@ -31,9 +31,8 @@ const App = () => {
       try {
         let summary = await firebase.getSummary();
         let vaccines = await firebase.getVaccines();
-
-        setSummary(combineSummaryVaccines(summary, vaccines));
-        console.log(combineSummaryVaccines(summary, vaccines));
+        let combine = combineSummaryVaccines(summary, vaccines);
+        setSummary(combine);
         setSummaryLoading(false);
       } catch (error) {
         setError(error);
@@ -42,6 +41,7 @@ const App = () => {
 
     setSummaryLoading(true);
     setError(null);
+
     fetchData();
 
     return () => {
@@ -50,7 +50,6 @@ const App = () => {
   }, [firebase]);
 
   let countries = Object.keys(summary);
-
   return (
     <Router>
       <Navigation

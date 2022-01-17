@@ -17,6 +17,7 @@ import * as styles from "./styles";
 import * as COLORS from "../../constants/colors";
 
 const SummaryTable = ({ data, title, loading }) => {
+  console.log(data);
   const numberWithCommas = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -26,28 +27,33 @@ const SummaryTable = ({ data, title, loading }) => {
   const getRows = (data) => [
     {
       id: 1,
-      measure: "Total Cases",
-      value: data.TotalConfirmed,
+      measure: "Cases",
+      value: data.confirmed,
       bg: COLORS.CONFIRMED,
     },
     {
       id: 2,
-      measure: "New Cases",
-      value: data.NewConfirmed,
-      bg: COLORS.CONFIRMED,
+      measure: "Deaths",
+      value: data.deaths,
+      bg: COLORS.DEATHS,
     },
     {
       id: 3,
-      measure: "Total Deaths",
-      value: data.TotalDeaths,
-      bg: COLORS.DEATHS,
+      measure: "Fully vaccinated",
+      value: data.people_vaccinated,
+      bg: COLORS.VACCINATED,
     },
-    { id: 4, measure: "New Deaths", value: data.NewDeaths, bg: COLORS.DEATHS },
+    {
+      id: 4,
+      measure: "Partially vaccinated",
+      value: data.people_partially_vaccinated,
+      bg: COLORS.VACCINATED,
+    },
     {
       id: 5,
-      measure: "Mortality Rate",
-      value: percentage(data.TotalDeaths, data.TotalConfirmed),
-      bg: COLORS.DEATHS,
+      measure: "Shots given",
+      value: data.administered,
+      bg: COLORS.VACCINATED,
     },
   ];
 
@@ -183,12 +189,16 @@ const SummaryTableCountry = ({ data, title, loading }) => {
       flex: 1,
       cellClassName: "country--cell",
       renderCell: (params) => (
-        <Button style={{color: "white"}} href={CONSTANTS.HOME_BASE + "/" + params.value.Slug}>
+        <Button
+          style={{ color: "white" }}
+          href={CONSTANTS.HOME_BASE + "/" + params.value.Slug}
+        >
           {params.value.Country}
         </Button>
       ),
-      sortComparator: (v1, v2, row1, row2) => { 
-        return row1.value.Country.localeCompare(row2.value.Country)},
+      sortComparator: (v1, v2, row1, row2) => {
+        return row1.value.Country.localeCompare(row2.value.Country);
+      },
     },
     {
       field: "newCases",
@@ -226,7 +236,7 @@ const SummaryTableCountry = ({ data, title, loading }) => {
       totalDeaths: item.TotalDeaths,
     }));
   };
-  
+
   return (
     <>
       <Title title={title} />

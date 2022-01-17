@@ -22,7 +22,7 @@ export async function getSummary(): Promise<SummaryResponse>{
 }
 
 export async function getHistory(country: string, status: string): Promise<HistoryResponse> {
-  let url = `/history?country=${country}$status=${status}`;
+  let url = `/history?country=${country}&status=${status}`;
   const response = await fetch(baseURL + url);
   const data = await response.json();
 

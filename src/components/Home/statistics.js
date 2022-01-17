@@ -22,6 +22,7 @@ const Statistics = ({ country, summary, history, loading }) => {
           title={TITLES.SUMMARY + country}
         />
       </Grid>
+      {/* 
       <Grid item xs={11}>
         <SummaryPie
           data={summary}
@@ -51,7 +52,9 @@ const Statistics = ({ country, summary, history, loading }) => {
             loading={loading}
           />
         </Grid>
+        
       </Route>
+      */}
     </Grid>
   );
 };

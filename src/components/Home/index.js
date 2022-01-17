@@ -22,7 +22,7 @@ import { transformHistory } from "../../transform";
 import * as styles from "./styles";
 import * as IMAGES from "../../medias/images";
 
-const Home = (summary, summaryLoading) => {
+const Home = ({summary, summaryLoading}) => {
   const [history, setHistory] = useState({});
   const [news, setNews] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(true);
@@ -53,7 +53,7 @@ const Home = (summary, summaryLoading) => {
     setNewsLoading(true);
     setError(null);
 
-    fetchData()
+    fetchData();
 
     return () => {
       setHistoryLoading(true);
@@ -103,17 +103,15 @@ const Home = (summary, summaryLoading) => {
       )}
 
       {error && <Alert severity="error">{error.message}</Alert>}
-      {/*
-        <Fade in={Boolean(showStatistics)} mountOnEnter unmountOnExit>
-          <Statistics
-            country={country}
-            summary={summary}
-            history={history}
-            loading={loading}
-            titleName={country}
-          />
-        </Fade>
-        */}
+      <Fade in={Boolean(showStatistics)} mountOnEnter unmountOnExit>
+        <Statistics
+          country={country}
+          summary={summary}
+          history={history}
+          loading={loading}
+          titleName={country}
+        />
+      </Fade>
       <Fade in={!showStatistics} mountOnEnter unmountOnExit>
         <NewsPage loading={newsLoading} newsList={news} />
       </Fade>

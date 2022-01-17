@@ -82,32 +82,41 @@ class Firebase {
   // *** Statistics API ***
 
   getSummary = async () => {
-    return this.getDataCollection("summary", API.getSummary)
+    return this.getDataCollection("summary", API.getSummary, "YYYY-MM-DD HH:mm:ss");
   };
 
   getVaccines = async () => {
-    return this.getDataCollection("vaccines", API.getVaccines)
+    return this.getDataCollection("vaccines", API.getVaccines, "YYYY/MM/DD HH:mm:ss+00");
   };
 
-  getDataCollection = async (collection_name, fallback) => {
+  getDataCollection = async (collection_name, fallback, date_format) => {
     let collection = await this.firestore.collection(collection_name).get();
-    let docs = collection.docs.reduce((obj, item) => {
-      return { ...obj, [item.id]: item };
-    }, {});
 
+    let docs = collection.docs.reduce((obj, item) => {
+      return { ...obj, [item.id]: item.data() };
+    }, {});
     try {
-      if (docs && moment(docs["Italy"].All.updated).isSame(moment(), "day")) {
+
+      if (
+        docs["Afghanistan"] &&
+        check_today_or_yesterday(moment(docs["Afghanistan"].All.updated, date_format))
+      ) {
         return docs;
       }
+
       let collectionNew = await fallback();
-      Object.entries(collectionNew).forEach((data) => {
-        docs[data[0]].set(data[1]);
-      });
+      let collectionOld = this.firestore.collection(collection_name);
+
+      for (const country in collectionNew) {
+        collectionOld.doc(country).set(collectionNew[country]);
+      }
+      console.log(collectionNew);
+
       return collectionNew;
     } catch (error) {
       let err = {
         error: error,
-        message: `Failed to retrieve ${collection} data;`,
+        message: `Failed to retrieve ${collection_name} data;`,
       };
       throw err;
     }
@@ -137,7 +146,6 @@ class Firebase {
       ref.set(deathNew);
 
       return deathNew;
-
     } catch (error) {
       let err = {
         error: error,
@@ -229,4 +237,14 @@ class Firebase {
       .catch((err) => err);
   };
 }
+
+
+const check_today_or_yesterday = (date) => {
+  let today = moment()
+  let yesterday = moment().subtract(1, "day")
+
+  return today.isSame(date, "day") || yesterday.isSame(date, "day")
+}
+
+
 export default Firebase;
