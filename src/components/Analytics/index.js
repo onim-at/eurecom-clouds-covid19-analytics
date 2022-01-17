@@ -17,7 +17,6 @@ import * as styles from "./styles";
 import * as COLORS from "../../constants/colors";
 
 const SummaryTable = ({ data, title, loading }) => {
-  console.log(data);
   const numberWithCommas = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };

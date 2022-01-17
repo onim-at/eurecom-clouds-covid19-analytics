@@ -28,7 +28,7 @@ function NavigationBase(props) {
 
   const handleSubmit = (value) => {
     if (value) {
-      props.history.push(ROUTES.HOME_BASE + "/" + value.Slug);
+      props.history.push(ROUTES.HOME_BASE + "/" + value.label);
     }
   };
 
@@ -174,6 +174,7 @@ const NavigationNonAuth = ({ classes }) => (
 );
 
 const CountrySelect = (props) => {
+  console.log(props)
   return (
     <Autocomplete
       id="country-select"
@@ -182,8 +183,9 @@ const CountrySelect = (props) => {
       size="small"
       autoHighlight
       loading={props.loading}
-      getOptionLabel={(option) => option.Country}
+      getOptionLabel={(option) => option.label}
       onChange={(event, value) => props.handleSubmit(value)}
+      autoComplete={true}
       renderInput={(params) => (
         <TextField
           {...params}

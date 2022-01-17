@@ -48,8 +48,9 @@ const App = () => {
       setSummaryLoading(true);
     };
   }, [firebase]);
-
-  let countries = Object.keys(summary);
+  let countries = Object.keys(summary).map((item) => {
+    return { label: item };
+  });
   return (
     <Router>
       <Navigation
