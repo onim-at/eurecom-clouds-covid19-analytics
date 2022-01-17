@@ -183,7 +183,7 @@ const SummaryTableCountry = ({ data, title, loading }) => {
       flex: 1,
       cellClassName: "country--cell",
       renderCell: (params) => (
-        <Button style={{color: "white"}} href={CONSTANTS.COUNTRY_BASE + "/" + params.value.Slug}>
+        <Button style={{color: "white"}} href={CONSTANTS.HOME_BASE + "/" + params.value.Slug}>
           {params.value.Country}
         </Button>
       ),

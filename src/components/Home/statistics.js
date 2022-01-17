@@ -12,41 +12,41 @@ import {
   BarPlotWeek,
 } from "../Analytics";
 
-const Statistics = ({ summary, total, loading, titleName }) => {
+const Statistics = ({ country, summary, history, loading }) => {
   return (
     <Grid container justifyContent="center" spacing={6}>
       <Grid item xs={11}>
         <SummaryTable
-          data={summary}
+          data={summary[country]}
           loading={loading}
-          title={TITLES.SUMMARY + titleName}
+          title={TITLES.SUMMARY + country}
         />
       </Grid>
       <Grid item xs={11}>
         <SummaryPie
           data={summary}
           loading={loading}
-          title={TITLES.DISTRIBUTION + titleName}
+          title={TITLES.DISTRIBUTION + country}
         />
       </Grid>
       <Grid item xs={11}>
         <BarPlotWeek
-          data={total}
+          data={history}
           loading={loading}
-          title={TITLES.DAILY_WEEK + titleName}
+          title={TITLES.DAILY_WEEK + country}
         />
       </Grid>
       <Grid item xs={11}>
         <LineChartTotal
-          data={total}
-          title={TITLES.DAILY_TOTAL + titleName}
+          data={history}
+          title={TITLES.DAILY_TOTAL + country}
           loading={loading}
         />
       </Grid>
       <Route path={ROUTES.HOME}>
         <Grid item xs={11}>
           <SummaryTableCountry
-            data={summary.Countries}
+            data={summary}
             title={TITLES.COUNTRY}
             loading={loading}
           />

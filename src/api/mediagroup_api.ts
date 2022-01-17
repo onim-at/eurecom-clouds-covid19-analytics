@@ -1,8 +1,6 @@
 import {SummaryResponse, HistoryResponse, VaccinesResponse} from "./mediagroup_interfaces"
 
-const moment = require('moment')
 const baseURL = "https://covid-api.mmediagroup.fr/v1";
-
 
 
 /**

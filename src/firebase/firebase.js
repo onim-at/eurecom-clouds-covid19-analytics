@@ -59,15 +59,14 @@ class Firebase {
               data.roles = {};
             }
 
-            // merge auth and db user
-            authUser = {
+            let user = {
               uid: authUser.uid,
               username: authUser.displayName,
               email: authUser.email,
-              ...data,
+              roles: data.roles,
             };
 
-            next(authUser);
+            next(user);
           });
       } else {
         fallback();
@@ -80,34 +79,72 @@ class Firebase {
 
   users = () => this.firestore.collection("users");
 
-  // *** Summary API ***
+  // *** Statistics API ***
 
-  getSummaryByCountry = (country) => {
-    var summaryRef = this.firestore.collection("summary").doc(country);
+  getSummary = async () => {
+    return this.getDataCollection("summary", API.getSummary)
+  };
 
-    return summaryRef
-      .get()
-      .then((doc) => {
-        if (doc.exists && moment(doc.data().Date).isSame(moment(), "day")) {
-          // document exist and is updated
-          return doc.data();
-        } else {
-          // document does not exist / is outdated -> retrieve it from api.covid19
-          return API.getSummary().then((summary) => {
-            let data = summary.Countries.filter(
-              (item) => item.Slug.localeCompare(country) === 0
-            );
-            summaryRef.set(data[0]);
-            return data[0];
-          });
-        }
-      })
-      .catch((error) => {
-        throw new Error({
-          error: error,
-          message: "Failed to retrieve summary data; ",
-        });
+  getVaccines = async () => {
+    return this.getDataCollection("vaccines", API.getVaccines)
+  };
+
+  getDataCollection = async (collection_name, fallback) => {
+    let collection = await this.firestore.collection(collection_name).get();
+    let docs = collection.docs.reduce((obj, item) => {
+      return { ...obj, [item.id]: item };
+    }, {});
+
+    try {
+      if (docs && moment(docs["Italy"].All.updated).isSame(moment(), "day")) {
+        return docs;
+      }
+      let collectionNew = await fallback();
+      Object.entries(collectionNew).forEach((data) => {
+        docs[data[0]].set(data[1]);
       });
+      return collectionNew;
+    } catch (error) {
+      let err = {
+        error: error,
+        message: `Failed to retrieve ${collection} data;`,
+      };
+      throw err;
+    }
+  };
+
+  getHistory = async (country) => {
+    let ref = this.firestore.collection("country").doc(country);
+    let doc = await ref.get();
+
+    try {
+      let yesterday = moment().subtract(1, "days").format("yyyy-mm-dd");
+      if (doc.exists && doc.data().All.dates.hasOwnProperty(yesterday)) {
+        return doc.data();
+      }
+
+      let confirmedNew = await API.getHistory(country, "confirmed");
+      let deathNew = await API.getHistory(country, "deaths");
+
+      Object.entries(confirmedNew.All.dates).forEach((data) => {
+        let hist = {
+          confirmed: data[1],
+          death: deathNew.All.dates[data[0]],
+        };
+
+        deathNew.All.dates[data[0]] = hist;
+      });
+      ref.set(deathNew);
+
+      return deathNew;
+
+    } catch (error) {
+      let err = {
+        error: error,
+        message: `Failed to retrieve ${country} data;`,
+      };
+      throw err;
+    }
   };
 
   // *** News API ***

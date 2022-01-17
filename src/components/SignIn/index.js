@@ -47,7 +47,7 @@ const SignInFormBase = (props) => {
         setPassword(INITIAL_STATE.password);
         setError(INITIAL_STATE.error);
 
-        props.history.push(ROUTES.HOME);
+        props.history.push(ROUTES.HOME_REDIRECT);
       })
       .catch((error) => {
         setError(error);
@@ -159,7 +159,7 @@ const SignInGoogleBase = (props) => {
       })
       .then(() => {
         props.setError(null);
-        props.history.push(ROUTES.HOME);
+        props.history.push(ROUTES.HOME_REDIRECT);
       })
       .catch((error) => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {

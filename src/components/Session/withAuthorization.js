@@ -15,10 +15,10 @@ const withAuthorization = (condition) => (Component) => {
       var listener = firebase.onAuthUserListener(
         (authUser) => {
           if (!condition(authUser)) {
-            props.history.push(ROUTES.HOME);
+            props.history.push(ROUTES.HOME_REDIRECT);
           }
         },
-        () => props.history.push(ROUTES.HOME)
+        () => props.history.push(ROUTES.HOME_REDIRECT)
       );
 
       return () => {

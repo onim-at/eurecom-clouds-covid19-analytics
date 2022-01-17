@@ -28,7 +28,7 @@ function NavigationBase(props) {
 
   const handleSubmit = (value) => {
     if (value) {
-      props.history.push(ROUTES.COUNTRY_BASE + "/" + value.Slug);
+      props.history.push(ROUTES.HOME_BASE + "/" + value.Slug);
     }
   };
 
@@ -103,7 +103,7 @@ function NavigationBase(props) {
           <Link
             color="inherit"
             style={{ textDecoration: "none" }}
-            to={ROUTES.HOME}
+            to={ROUTES.HOME_REDIRECT}
             className={classes.title}
           >
             <Box display={{ xs: "none", sm: "block" }}>
@@ -121,9 +121,9 @@ function NavigationBase(props) {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             {authUser ? (
-              <NavigationAuth classes={classes} authUser={authUser} />
+              <NavigationAuth className={classes} authUser={authUser} />
             ) : (
-              <NavigationNonAuth classes={classes} />
+              <NavigationNonAuth className={classes} />
             )}
           </div>
           <div className={classes.sectionMobile}>

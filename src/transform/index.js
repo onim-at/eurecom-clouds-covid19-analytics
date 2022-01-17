@@ -1,5 +1,32 @@
 const moment = require("moment");
 
+export const combineSummaryVaccines = (summary_dict, vaccines_dict) => {
+
+  let out = {}
+
+  for (const country in summary_dict) {
+    let summary = summary_dict[country].All
+    let vaccines = vaccines_dict[country].All
+
+    out[country] = {
+      population: summary.population,
+      confirmed: summary.confirmed,
+      deaths: summary.deaths,
+      administered: vaccines.administered,
+      people_vaccinated: vaccines.people_vaccinated, 
+      people_partially_vaccinated: vaccines.people_partially_vaccinated, 
+    }
+  }
+  return out    
+} 
+
+
+
+export const transformHistory = (data) => {
+
+}
+
+
 export const transformCountryData = (data) => {
   let totalDeaths = data.map((item) => item.Deaths);
   let totalConfirmed = data.map((item) => item.Confirmed);

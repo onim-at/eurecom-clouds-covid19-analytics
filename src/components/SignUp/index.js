@@ -71,7 +71,7 @@ const SignUp = (props) => {
         setConfirmPassword(INITIAL_STATE.confirmPassword);
         setError(INITIAL_STATE.error);
 
-        props.history.push(ROUTES.HOME);
+        props.history.push(ROUTES.HOME_REDIRECT);
       })
       .catch((error) => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {

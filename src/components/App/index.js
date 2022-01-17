@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,40 +7,64 @@ import {
 } from "react-router-dom";
 
 import { withAuthentication } from "../Session";
-import API from "../../api";
 import Navigation from "../Navigation";
 import Home from "../Home";
 import SignIn from "../SignIn";
 import SignUp from "../SignUp";
 import { CreateNews, UpdateNews } from "../CreateNews";
+import { FirebaseContext } from "../../firebase";
+
 import PasswordForgetPage from "../PasswordForget";
 import YourNews from "../YourNews";
+import { combineSummaryVaccines } from "../../transform";
 
 import * as ROUTES from "../../constants/routes";
 
 const App = () => {
-  const [countries, setCountries] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [summary, setSummary] = useState({});
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const firebase = useContext(FirebaseContext);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    API.getCountries()
-      .then((countries) => {
-        countries.sort((a, b) => a.Country.localeCompare(b.Country));
-        setCountries(countries);
-        setLoading(false);
-      })
-      .catch((error) => {
+    async function fetchData() {
+      try {
+        let summary = await firebase.getSummary();
+        let vaccines = await firebase.getVaccines();
+
+        setSummary(combineSummaryVaccines(summary, vaccines));
+        console.log(combineSummaryVaccines(summary, vaccines));
+        setSummaryLoading(false);
+      } catch (error) {
         setError(error);
-      });
-  }, []);
+      }
+    }
+
+    setSummaryLoading(true);
+    setError(null);
+    fetchData();
+
+    return () => {
+      setSummaryLoading(true);
+    };
+  }, [firebase]);
+
+  let countries = Object.keys(summary);
 
   return (
     <Router>
-      <Navigation loading={loading} countries={countries} error={error} />
+      <Navigation
+        loading={summaryLoading}
+        countries={countries}
+        error={error}
+      />
       <Switch>
-        <Route path={ROUTES.HOME} component={Home} />
-        <Route path={ROUTES.COUNTRY} component={Home} />
+        <Route
+          path={ROUTES.HOME}
+          render={() => (
+            <Home summary={summary} summaryLoading={summaryLoading} />
+          )}
+        />
         <Route path={ROUTES.SIGN_IN} component={SignIn} />
         <Route path={ROUTES.SIGN_UP} component={SignUp} />
         <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
@@ -50,7 +74,7 @@ const App = () => {
           render={(props) => (
             <CreateNews
               {...props}
-              loading={loading}
+              loading={summaryLoading}
               countries={countries}
               error={error}
             />
@@ -58,7 +82,7 @@ const App = () => {
         />
         <Route path={ROUTES.MODIFY_NEWS} component={UpdateNews} />
 
-        <Route render={() => <Redirect to={ROUTES.HOME} />} />
+        <Route render={() => <Redirect to={ROUTES.HOME_REDIRECT} />} />
       </Switch>
     </Router>
   );
