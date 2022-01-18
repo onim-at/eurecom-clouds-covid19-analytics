@@ -40,7 +40,6 @@ const Home = ({summary, summaryLoading}) => {
         let history = await firebase.getHistory(country);
         setHistory(transformHistory(history));
         setHistoryLoading(false);
-
         let news = await firebase.getNewsByLocation(country);
         setNews(news);
         setNewsLoading(false);

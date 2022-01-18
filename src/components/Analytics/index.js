@@ -100,22 +100,16 @@ const SummaryPie = ({ data, title, loading }) => {
   );
 };
 
-const BarPlotWeek = ({ data, title, loading }) => {
+const BarPlotWeek = ({ label, data, title, loading, color }) => {
   const getData = (data) => {
     var len = 7;
 
     return {
-      labels: data.labels.slice(-len),
+      labels: label.slice(-len),
       datasets: [
         {
-          backgroundColor: COLORS.DEATHS,
-          label: "Total deaths",
-          data: data.newDeaths.slice(-len),
-        },
-        {
-          backgroundColor: COLORS.CONFIRMED,
-          label: "Total Cases",
-          data: data.newConfirmed.slice(-len),
+          backgroundColor: color,
+          data: data.slice(-len),
         },
       ],
     };
@@ -124,8 +118,7 @@ const BarPlotWeek = ({ data, title, loading }) => {
   const options = {
     responsive: true,
     legend: {
-      display: true,
-      position: "top",
+      display: false,
     },
   };
   return (
@@ -137,38 +130,33 @@ const BarPlotWeek = ({ data, title, loading }) => {
   );
 };
 
-const LineChartTotal = ({ data, title, loading }) => {
-  const getData = (data) => {
-    return {
-      labels: data.labels,
-      datasets: [
-        {
-          borderColor: COLORS.DEATHS,
-          backgroundColor: COLORS.DEATHS_BG,
-          label: "Total deaths",
-          data: data.totalDeaths,
-        },
-        {
-          borderColor: COLORS.CONFIRMED,
-          backgroundColor: COLORS.CONFIRMED_BG,
-          label: "Total Cases",
-          data: data.totalConfirmed,
-        },
-      ],
-    };
-  };
-
+const LineChartTotal = ({
+  data,
+  labels,
+  title,
+  loading,
+  borderColor,
+  backgroundColor,
+}) => {
   return (
     <>
       <Title title={title} />
       {loading && <LinearProgress />}
       {!loading && (
         <Line
-          data={getData(data)}
+          data={{
+            labels: labels,
+            datasets: [
+              {
+                borderColor: borderColor,
+                backgroundColor: backgroundColor,
+                data: data,
+              },
+            ],
+          }}
           options={{
             legend: {
-              display: true,
-              position: "top",
+              display: false,
             },
           }}
         />
@@ -190,52 +178,59 @@ const SummaryTableCountry = ({ data, title, loading }) => {
       renderCell: (params) => (
         <Button
           style={{ color: "white" }}
-          href={CONSTANTS.HOME_BASE + "/" + params.value.Slug}
+          href={CONSTANTS.HOME_BASE + "/" + params.value}
         >
-          {params.value.Country}
+          {params.value}
         </Button>
       ),
       sortComparator: (v1, v2, row1, row2) => {
-        return row1.value.Country.localeCompare(row2.value.Country);
+        return row1.value.localeCompare(row2.value);
       },
     },
     {
-      field: "newCases",
-      headerName: "New Cases",
+      field: "confirmed",
+      headerName: "Cases",
       flex: 1,
       cellClassName: "confirmed--cell",
     },
     {
-      field: "totalCases",
-      headerName: "Total Cases",
+      field: "deaths",
+      headerName: "Deaths",
       flex: 1,
-      cellClassName: "confirmed--cell",
-    },
-    {
-      field: "newDeaths",
-      headerName: "New Deaths",
-      flex: 1,
+      value: data.deaths,
       cellClassName: "deaths--cell",
     },
     {
-      field: "totalDeaths",
-      headerName: "Total Deaths",
+      headerName: "Vaccinated",
+      field: "people_vaccinated",
       flex: 1,
-      cellClassName: "deaths--cell",
+      cellClassName: "vaccines--cell",
+    },
+    {
+      headerName: "Partially Vaccinated",
+      field: "people_partially_vaccinated",
+      flex: 1,
+      cellClassName: "vaccines--cell",
+    },
+    {
+      headerName: "Shots given",
+      field: "administered",
+      flex: 1,
+      cellClassName: "vaccines--cell",
     },
   ];
-
+  
   const getRows = (data) => {
-    return data.map((item, index) => ({
+    return Object.keys(data).map((item, index) => ({
       id: index,
       country: item,
-      newCases: item.NewConfirmed,
-      totalCases: item.TotalConfirmed,
-      newDeaths: item.NewDeaths,
-      totalDeaths: item.TotalDeaths,
+      confirmed: data[item].confirmed,
+      deaths: data[item].deaths,
+      people_vaccinated: data[item].people_vaccinated,
+      people_partially_vaccinated: data[item].people_partially_vaccinated,
+      administered: data[item].administered,
     }));
   };
-
   return (
     <>
       <Title title={title} />

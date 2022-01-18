@@ -128,9 +128,9 @@ class Firebase {
     let doc = await ref.get();
 
     try {
-      let yesterday = moment().subtract(1, "days").format("yyyy-mm-dd");
+      let yesterday = moment().subtract(1, "days").format("YYYY-MM-DD");
       if (doc.exists && doc.data().All.dates.hasOwnProperty(yesterday)) {
-        console.log("RETRIEVED FROM FIREBASE")
+        console.log("HISTORY RETRIEVED FROM FIREBASE")
         return doc.data();
       }
 
@@ -146,7 +146,7 @@ class Firebase {
         deathNew.All.dates[data[0]] = hist;
       });
       ref.set(deathNew);
-      console.log("RETRIEVED FROM API")
+      console.log("HISTORY RETRIEVED FROM API")
 
       return deathNew;
     } catch (error) {

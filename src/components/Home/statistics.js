@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 
 import * as TITLES from "../../constants/titles";
 import * as ROUTES from "../../constants/routes";
+import * as COLORS from "../../constants/colors";
 import {
   SummaryTable,
   SummaryPie,
@@ -22,29 +23,50 @@ const Statistics = ({ country, summary, history, loading }) => {
           title={TITLES.SUMMARY + country}
         />
       </Grid>
-      {/* 
-      <Grid item xs={11}>
-        <SummaryPie
-          data={summary}
-          loading={loading}
-          title={TITLES.DISTRIBUTION + country}
-        />
-      </Grid>
+
       <Grid item xs={11}>
         <BarPlotWeek
-          data={history}
+          data={history.confirmed}
+          label={history.labels}
           loading={loading}
-          title={TITLES.DAILY_WEEK + country}
+          color={COLORS.CONFIRMED}
+          title={TITLES.DAILY_WEEK_CONFIRMED + country}
         />
       </Grid>
+
+      <Grid item xs={11}>
+        <BarPlotWeek
+          data={history.death}
+          label={history.labels}
+          loading={loading}
+          color={COLORS.DEATHS}
+          title={TITLES.DAILY_WEEK_DEATHS + country}
+        />
+      </Grid>
+
       <Grid item xs={11}>
         <LineChartTotal
-          data={history}
+          data={history.confirmed}
+          labels={history.labels}
           title={TITLES.DAILY_TOTAL + country}
           loading={loading}
+          backgroundColor={COLORS.CONFIRMED_BG}
+          borderColor={COLORS.CONFIRMED}
         />
       </Grid>
-      <Route path={ROUTES.HOME}>
+
+      <Grid item xs={11}>
+        <LineChartTotal
+          data={history.death}
+          labels={history.labels}
+          title={TITLES.DAILY_TOTAL + country}
+          loading={loading}
+          backgroundColor={COLORS.DEATHS_BG}
+          borderColor={COLORS.DEATHS}
+        />
+      </Grid>
+
+      <Route path={ROUTES.HOME_REDIRECT}>
         <Grid item xs={11}>
           <SummaryTableCountry
             data={summary}
@@ -52,9 +74,7 @@ const Statistics = ({ country, summary, history, loading }) => {
             loading={loading}
           />
         </Grid>
-        
       </Route>
-      */}
     </Grid>
   );
 };

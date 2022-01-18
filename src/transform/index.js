@@ -28,6 +28,19 @@ export const combineSummaryVaccines = (summary_dict, vaccines_dict) => {
 
 export const transformHistory = (data) => {
 
+  let out = {
+    labels: [],
+    death: [],
+    confirmed : [],
+  }
+  let dates = data.All.dates
+  for (const date in dates) {
+    out.labels.push(date)
+    out.death.push(dates[date].death)
+    out.confirmed.push(dates[date].confirmed)
+  }
+
+  return out
 }
 
 

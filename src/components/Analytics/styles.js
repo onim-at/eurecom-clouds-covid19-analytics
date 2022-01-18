@@ -15,5 +15,9 @@ export const useStyles = makeStyles((theme) => ({
       backgroundColor: COLORS.DEATHS,
       border: "2px solid white",
     },
+    "& .vaccines--cell": {
+      backgroundColor: COLORS.VACCINATED,
+      border: "2px solid white",
+    },
   },
 }));

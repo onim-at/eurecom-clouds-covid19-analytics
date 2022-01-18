@@ -174,7 +174,6 @@ const NavigationNonAuth = ({ classes }) => (
 );
 
 const CountrySelect = (props) => {
-  console.log(props)
   return (
     <Autocomplete
       id="country-select"
