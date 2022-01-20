@@ -6,7 +6,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-//import Link from "@material-ui/core/Link";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import Box from "@material-ui/core/Box";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -24,12 +23,11 @@ function NavigationBase(props) {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const authUser = useContext(AuthUserContext);
   const classes = Styles.useStyles();
-
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleSubmit = (value) => {
     if (value) {
-      props.history.push(ROUTES.COUNTRY_BASE + "/" + value.Slug);
+      props.history.push(ROUTES.HOME_BASE + "/" + value.label);
     }
   };
 
@@ -41,7 +39,7 @@ function NavigationBase(props) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const menuId = "primary-search-account-menu";
+  //const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileAuthMenu = (
     <Menu
@@ -104,7 +102,7 @@ function NavigationBase(props) {
           <Link
             color="inherit"
             style={{ textDecoration: "none" }}
-            to={ROUTES.HOME}
+            to={ROUTES.HOME_REDIRECT}
             className={classes.title}
           >
             <Box display={{ xs: "none", sm: "block" }}>
@@ -122,9 +120,9 @@ function NavigationBase(props) {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             {authUser ? (
-              <NavigationAuth classes={classes} authUser={authUser} />
+              <NavigationAuth className={classes} authUser={authUser} />
             ) : (
-              <NavigationNonAuth classes={classes} />
+              <NavigationNonAuth className={classes} />
             )}
           </div>
           <div className={classes.sectionMobile}>
@@ -183,8 +181,9 @@ const CountrySelect = (props) => {
       size="small"
       autoHighlight
       loading={props.loading}
-      getOptionLabel={(option) => option.Country}
+      getOptionLabel={(option) => option.label}
       onChange={(event, value) => props.handleSubmit(value)}
+      autoComplete={true}
       renderInput={(params) => (
         <TextField
           {...params}

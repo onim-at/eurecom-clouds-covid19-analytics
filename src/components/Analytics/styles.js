@@ -11,13 +11,12 @@ export const useStyles = makeStyles((theme) => ({
       backgroundColor: COLORS.CONFIRMED,
       border: "2px solid white",
     },
-
-    "& .recovered--cell": {
-      backgroundColor: COLORS.RECOVERED,
-      border: "2px solid white",
-    },
     "& .deaths--cell": {
       backgroundColor: COLORS.DEATHS,
+      border: "2px solid white",
+    },
+    "& .vaccines--cell": {
+      backgroundColor: COLORS.VACCINATED,
       border: "2px solid white",
     },
   },

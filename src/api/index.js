@@ -1,3 +1,2 @@
-import * as API from "./covidAPI";
-
+import * as API from "./mediagroup_api"
 export default API;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 
 import AuthUserContext from "./context";
 
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 
 const withAuthentication = (Component) => {
   const WithAuthentication = (props) => {
@@ -26,7 +26,7 @@ const withAuthentication = (Component) => {
       return () => {
         listener();
       };
-    }, []);
+    }, [firebase]);
 
     return (
       <AuthUserContext.Provider value={authUser}>

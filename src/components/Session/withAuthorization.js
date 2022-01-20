@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from "react";
 import { withRouter } from "react-router-dom";
 
 import AuthUserContext from "./context";
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 
 import * as ROUTES from "../../constants/routes";
 
@@ -15,10 +15,10 @@ const withAuthorization = (condition) => (Component) => {
       var listener = firebase.onAuthUserListener(
         (authUser) => {
           if (!condition(authUser)) {
-            props.history.push(ROUTES.HOME);
+            props.history.push(ROUTES.HOME_REDIRECT);
           }
         },
-        () => props.history.push(ROUTES.HOME)
+        () => props.history.push(ROUTES.HOME_REDIRECT)
       );
 
       return () => {

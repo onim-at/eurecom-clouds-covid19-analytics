@@ -16,62 +16,43 @@ import * as CONSTANTS from "../../constants/routes";
 import * as styles from "./styles";
 import * as COLORS from "../../constants/colors";
 
+const numberWithCommas = (x) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+const percentage = (x, y) => ((x / y) * 100).toFixed(2);
+
 const SummaryTable = ({ data, title, loading }) => {
-  const numberWithCommas = (x) => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  const percentage = (x, y) => ((x / y) * 100).toFixed(2) + "%";
-
   const getRows = (data) => [
     {
       id: 1,
-      measure: "Total Cases",
-      value: data.TotalConfirmed,
+      measure: "Cases",
+      value: data.confirmed,
       bg: COLORS.CONFIRMED,
     },
     {
       id: 2,
-      measure: "New Cases",
-      value: data.NewConfirmed,
-      bg: COLORS.CONFIRMED,
+      measure: "Deaths",
+      value: data.deaths,
+      bg: COLORS.DEATHS,
     },
     {
       id: 3,
-      measure: "Active Cases",
-      value: data.TotalConfirmed - data.TotalRecovered,
-      bg: COLORS.CONFIRMED,
+      measure: "Fully vaccinated",
+      value: data.people_vaccinated,
+      bg: COLORS.VACCINATED,
     },
     {
       id: 4,
-      measure: "Total Recovered",
-      value: data.TotalRecovered,
-      bg: COLORS.RECOVERED,
+      measure: "At least one dose",
+      value: data.people_partially_vaccinated,
+      bg: COLORS.VACCINATED,
     },
     {
       id: 5,
-      measure: "New Recovered",
-      value: data.NewRecovered,
-      bg: COLORS.RECOVERED,
-    },
-    {
-      id: 6,
-      measure: "Recovery Rate",
-      value: percentage(data.TotalRecovered, data.TotalConfirmed),
-      bg: COLORS.RECOVERED,
-    },
-    {
-      id: 7,
-      measure: "Total Deaths",
-      value: data.TotalDeaths,
-      bg: COLORS.DEATHS,
-    },
-    { id: 8, measure: "New Deaths", value: data.NewDeaths, bg: COLORS.DEATHS },
-    {
-      id: 9,
-      measure: "Mortality Rate",
-      value: percentage(data.TotalDeaths, data.TotalConfirmed),
-      bg: COLORS.DEATHS,
+      measure: "Shots given",
+      value: data.administered,
+      bg: COLORS.VACCINATED,
     },
   ];
 
@@ -100,15 +81,21 @@ const SummaryTable = ({ data, title, loading }) => {
 };
 
 const SummaryPie = ({ data, title, loading }) => {
-  const getData = (data) => ({
-    labels: ["Death Cases", "Recovered Cases", "Active Cases"],
-    datasets: [
-      {
-        data: [data.TotalDeaths, data.TotalRecovered, data.TotalConfirmed],
-        backgroundColor: [COLORS.DEATHS, COLORS.RECOVERED, COLORS.CONFIRMED],
-      },
-    ],
-  });
+  const getData = (data) => {
+    let vaccinated = percentage(data.people_vaccinated, data.population);
+    let partially_vaccinated = percentage(data.people_partially_vaccinated-data.people_vaccinated, data.population);
+    let non_vaccinated = percentage(data.population-data.people_partially_vaccinated,data.population);
+
+    return {
+      labels: ["Fully vaccinated", "Partially vaccinated", "Non vaccinated"],
+      datasets: [
+        {
+          data: [vaccinated, partially_vaccinated, non_vaccinated],
+          backgroundColor: [COLORS.VACCINATED, COLORS.PARTIALLY_VACCINATED, COLORS.NON_VACCINATED],
+        },
+      ],
+    };
+  };
 
   return (
     <>
@@ -119,27 +106,16 @@ const SummaryPie = ({ data, title, loading }) => {
   );
 };
 
-const BarPlotWeek = ({ data, title, loading }) => {
+const BarPlotWeek = ({ label, data, title, loading, color }) => {
   const getData = (data) => {
     var len = 7;
 
     return {
-      labels: data.labels.slice(-len),
+      labels: label.slice(-len),
       datasets: [
         {
-          backgroundColor: COLORS.DEATHS,
-          label: "Total deaths",
-          data: data.newDeaths.slice(-len),
-        },
-        {
-          backgroundColor: COLORS.RECOVERED,
-          label: "Total Recovered",
-          data: data.newRecoveries.slice(-len),
-        },
-        {
-          backgroundColor: COLORS.CONFIRMED,
-          label: "Total Cases",
-          data: data.newConfirmed.slice(-len),
+          backgroundColor: color,
+          data: data.slice(-len),
         },
       ],
     };
@@ -148,8 +124,7 @@ const BarPlotWeek = ({ data, title, loading }) => {
   const options = {
     responsive: true,
     legend: {
-      display: true,
-      position: "top",
+      display: false,
     },
   };
   return (
@@ -161,44 +136,33 @@ const BarPlotWeek = ({ data, title, loading }) => {
   );
 };
 
-const LineChartTotal = ({ data, title, loading }) => {
-  const getData = (data) => {
-    return {
-      labels: data.labels,
-      datasets: [
-        {
-          borderColor: COLORS.DEATHS,
-          backgroundColor: COLORS.DEATHS_BG,
-          label: "Total deaths",
-          data: data.totalDeaths,
-        },
-        {
-          borderColor: COLORS.RECOVERED,
-          backgroundColor: COLORS.RECOVERED_BG,
-          label: "Total Recovered",
-          data: data.totalRecoveries,
-        },
-        {
-          borderColor: COLORS.CONFIRMED,
-          backgroundColor: COLORS.CONFIRMED_BG,
-          label: "Total Cases",
-          data: data.totalConfirmed,
-        },
-      ],
-    };
-  };
-
+const LineChartTotal = ({
+  data,
+  labels,
+  title,
+  loading,
+  borderColor,
+  backgroundColor,
+}) => {
   return (
     <>
       <Title title={title} />
       {loading && <LinearProgress />}
       {!loading && (
         <Line
-          data={getData(data)}
+          data={{
+            labels: labels,
+            datasets: [
+              {
+                borderColor: borderColor,
+                backgroundColor: backgroundColor,
+                data: data,
+              },
+            ],
+          }}
           options={{
             legend: {
-              display: true,
-              position: "top",
+              display: false,
             },
           }}
         />
@@ -215,67 +179,58 @@ const SummaryTableCountry = ({ data, title, loading }) => {
     {
       field: "country",
       headerName: "Country",
-      width: 240,
+      flex: 1,
       cellClassName: "country--cell",
       renderCell: (params) => (
-        <Button style={{color: "white"}} href={CONSTANTS.COUNTRY_BASE + "/" + params.value.Slug}>
-          {params.value.Country}
+        <Button
+          style={{ color: "white" }}
+          href={CONSTANTS.HOME_BASE + "/" + params.value}
+        >
+          {params.value}
         </Button>
       ),
-      sortComparator: (v1, v2, row1, row2) => { 
-        return row1.value.Country.localeCompare(row2.value.Country)},
+      sortComparator: (v1, v2, row1, row2) => {
+        return row1.value.localeCompare(row2.value);
+      },
     },
     {
-      field: "newCases",
-      headerName: "New Cases",
-      width: 110,
+      field: "confirmed",
+      headerName: "Cases",
+      flex: 1,
       cellClassName: "confirmed--cell",
     },
     {
-      field: "totalCases",
-      headerName: "Total Cases",
-      width: 135,
-      cellClassName: "confirmed--cell",
-    },
-    {
-      field: "newRecoveries",
-      headerName: "New Recoveries",
-      width: 138,
-      cellClassName: "recovered--cell",
-    },
-    {
-      field: "totalRecoveries",
-      headerName: "Total Recoveries",
-      width: 140,
-      cellClassName: "recovered--cell",
-    },
-    {
-      field: "newDeaths",
-      headerName: "New Deaths",
-      width: 110,
+      field: "deaths",
+      headerName: "Deaths",
+      flex: 1,
+      value: data.deaths,
       cellClassName: "deaths--cell",
     },
     {
-      field: "totalDeaths",
-      headerName: "Total Deaths",
-      width: 130,
-      cellClassName: "deaths--cell",
+      headerName: "Vaccinated",
+      field: "people_vaccinated",
+      flex: 1,
+      cellClassName: "vaccines--cell",
     },
+    {
+      headerName: "One shot",
+      field: "people_partially_vaccinated",
+      flex: 1,
+      cellClassName: "vaccines--cell",
+    },
+    
   ];
 
   const getRows = (data) => {
-    return data.map((item, index) => ({
+    return Object.keys(data).map((item, index) => ({
       id: index,
       country: item,
-      newCases: item.NewConfirmed,
-      totalCases: item.TotalConfirmed,
-      newRecoveries: item.NewRecovered,
-      totalRecoveries: item.TotalRecovered,
-      newDeaths: item.NewDeaths,
-      totalDeaths: item.TotalDeaths,
+      confirmed: data[item].confirmed,
+      deaths: data[item].deaths,
+      people_vaccinated: data[item].people_vaccinated,
+      people_partially_vaccinated: data[item].people_partially_vaccinated-data[item].people_vaccinated,
     }));
   };
-  console.log(data)
   return (
     <>
       <Title title={title} />
@@ -285,7 +240,7 @@ const SummaryTableCountry = ({ data, title, loading }) => {
           style={{ height: 520, width: "100%", borderColor: "white" }}
           className={classes.root}
         >
-          <DataGrid rows={getRows(data)} columns={columns} pageSize={20} />
+          <DataGrid rows={getRows(data)} columns={columns} />
         </Box>
       )}
     </>

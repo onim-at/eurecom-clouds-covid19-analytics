@@ -8,8 +8,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
+import ImageList from "@material-ui/core/ImageList";
+import ImageListItem from "@material-ui/core/ImageListItem";
 import ReactMarkdown from "react-markdown";
 
 import { withRouter } from "react-router-dom";
@@ -52,21 +52,21 @@ class News {
   }
 }
 
-const LineGridList = ({ data }) => {
+const LineImageList = ({ data }) => {
   const classes = styles.useGridSlideStyles();
 
   return (
     <div className={classes.root}>
-      <GridList
-        className={classes.gridList}
+      <ImageList
+        className={classes.imageList}
         cols={6}
       >
         {data.map((tile, index) => (
-          <GridListTile className={classes.gridListTile} key={index}>
+          <ImageListItem className={classes.imageListTile} key={index}>
             {tile}
-          </GridListTile>
+          </ImageListItem>
         ))}
-      </GridList>
+      </ImageList>
     </div>
   );
 };
@@ -148,4 +148,4 @@ const DisplayNews = ({ news }) => {
 const NewsCard = withRouter(BaseNewsCard);
 
 export default News;
-export { NewsCard, News, LineGridList, DisplayNews };
+export { NewsCard, News, LineImageList, DisplayNews };

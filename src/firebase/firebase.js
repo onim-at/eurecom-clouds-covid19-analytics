@@ -3,7 +3,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/database";
 import "firebase/storage";
-import API from "../../api";
+import API from "../api";
 
 const moment = require("moment");
 
@@ -58,16 +58,13 @@ class Firebase {
             if (!data.roles) {
               data.roles = {};
             }
-
-            // merge auth and db user
-            authUser = {
+            let user = {
               uid: authUser.uid,
-              username: authUser.username,
+              username: data.username,
               email: authUser.email,
-              ...data,
+              roles: data.roles,
             };
-
-            next(authUser);
+            next(user);
           });
       } else {
         fallback();
@@ -80,34 +77,87 @@ class Firebase {
 
   users = () => this.firestore.collection("users");
 
-  // *** Summary API ***
+  // *** Statistics API ***
 
-  getSummaryByCountry = (country) => {
-    var summaryRef = this.firestore.collection("summary").doc(country);
+  getSummary = async () => {
+    return this.getDataCollection(
+      "summary",
+      API.getSummary,
+      "YYYY-MM-DD HH:mm:ss"
+    );
+  };
 
-    return summaryRef
-      .get()
-      .then((doc) => {
-        if (doc.exists && moment(doc.data().Date).isSame(moment(), "day")) {
-          // document exist and is updated
-          return doc.data();
-        } else {
-          // document does not exist / is outdated -> retrieve it from api.covid19
-          return API.getSummary().then((summary) => {
-            let data = summary.Countries.filter(
-              (item) => item.Slug.localeCompare(country) === 0
-            );
-            summaryRef.set(data[0]);
-            return data[0];
-          });
-        }
-      })
-      .catch((error) => {
-        throw {
-          error: error,
-          message: "Failed to retrieve summary data; ",
+  getVaccines = async () => {
+    return this.getDataCollection(
+      "vaccines",
+      API.getVaccines,
+      "YYYY/MM/DD HH:mm:ss+00"
+    );
+  };
+
+  getDataCollection = async (collection_name, fallback, date_format) => {
+    let collection = await this.firestore.collection(collection_name).get();
+
+    let docs = collection.docs.reduce((obj, item) => {
+      return { ...obj, [item.id]: item.data() };
+    }, {});
+    try {
+      if (
+        docs["Afghanistan"] &&
+        check_today_or_yesterday(
+          moment(docs["Afghanistan"].All.updated, date_format)
+        )
+      ) {
+        return docs;
+      }
+
+      let collectionNew = await fallback();
+      let collectionOld = this.firestore.collection(collection_name);
+
+      for (const country in collectionNew) {
+        collectionOld.doc(country).set(collectionNew[country]);
+      }
+
+      return collectionNew;
+    } catch (error) {
+      let err = {
+        error: error,
+        message: `Failed to retrieve ${collection_name} data;`,
+      };
+      throw err;
+    }
+  };
+
+  getHistory = async (country) => {
+    let ref = this.firestore.collection("country").doc(country);
+    let doc = await ref.get();
+
+    try {
+      let yesterday = moment().subtract(1, "days").format("YYYY-MM-DD");
+      if (doc.exists && doc.data().All.dates.hasOwnProperty(yesterday)) {
+        return doc.data();
+      }
+
+      let confirmedNew = await API.getHistory(country, "confirmed");
+      let deathNew = await API.getHistory(country, "deaths");
+
+      Object.entries(confirmedNew.All.dates).forEach((data) => {
+        let hist = {
+          confirmed: data[1],
+          death: deathNew.All.dates[data[0]],
         };
+
+        deathNew.All.dates[data[0]] = hist;
       });
+      ref.set(deathNew);
+      return deathNew;
+    } catch (error) {
+      let err = {
+        error: error,
+        message: `Failed to retrieve ${country} data;`,
+      };
+      throw err;
+    }
   };
 
   // *** News API ***
@@ -120,7 +170,6 @@ class Firebase {
   };
 
   removeImage = (imagePath) => {
-    console.log(imagePath);
     var imageRef = this.storageRef.child(imagePath);
     return imageRef
       .delete()
@@ -143,7 +192,6 @@ class Firebase {
   };
 
   updateNews = (id, news) => {
-    console.log(id);
     var newsRef = this.firestore.collection("news").doc(id);
     return newsRef
       .update(Object.assign({}, news))
@@ -154,13 +202,11 @@ class Firebase {
   };
 
   deleteNews = (id) => {
-    console.log(id);
     var newsRef = this.firestore.collection("news").doc(id);
     return newsRef.get().then((doc) => {
       if (doc.exists) {
         return newsRef.delete().then(() => {
-          if(doc.data().imagePath)
-            this.removeImage(doc.data().imagePath);
+          if (doc.data().imagePath) this.removeImage(doc.data().imagePath);
         });
       }
     });
@@ -196,4 +242,12 @@ class Firebase {
       .catch((err) => err);
   };
 }
+
+const check_today_or_yesterday = (date) => {
+  let today = moment();
+  let yesterday = moment().subtract(1, "day");
+
+  return today.isSame(date, "day") || yesterday.isSame(date, "day");
+};
+
 export default Firebase;

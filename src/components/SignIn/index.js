@@ -10,7 +10,7 @@ import Alert from "@material-ui/lab/Alert";
 import Container from "@material-ui/core/Container";
 import { withRouter } from "react-router-dom";
 
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 
 import { SignUpLink } from "../SignUp";
 import * as ROUTES from "../../constants/routes";
@@ -47,7 +47,7 @@ const SignInFormBase = (props) => {
         setPassword(INITIAL_STATE.password);
         setError(INITIAL_STATE.error);
 
-        props.history.push(ROUTES.HOME);
+        props.history.push(ROUTES.HOME_REDIRECT);
       })
       .catch((error) => {
         setError(error);
@@ -159,10 +159,9 @@ const SignInGoogleBase = (props) => {
       })
       .then(() => {
         props.setError(null);
-        props.history.push(ROUTES.HOME);
+        props.history.push(ROUTES.HOME_REDIRECT);
       })
       .catch((error) => {
-        console.log(error);
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
           error.message = ERROR_MSG_ACCOUNT_EXISTS;
         }

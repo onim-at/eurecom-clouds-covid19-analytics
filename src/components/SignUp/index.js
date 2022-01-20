@@ -10,7 +10,7 @@ import Alert from "@material-ui/lab/Alert";
 import Container from "@material-ui/core/Container";
 import { withRouter } from "react-router-dom";
 
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 
 import * as ROUTES from "../../constants/routes";
 import * as styles from "./styles";
@@ -62,6 +62,7 @@ const SignUp = (props) => {
         return firebase.user(authUser.user.uid).set({
           username,
           email,
+          roles: {},
         });
       })
       .then((authUser) => {
@@ -70,9 +71,8 @@ const SignUp = (props) => {
         setPassword(INITIAL_STATE.password);
         setConfirmPassword(INITIAL_STATE.confirmPassword);
         setError(INITIAL_STATE.error);
-        console.log("FIRE");
 
-        props.history.push(ROUTES.HOME);
+        props.history.push(ROUTES.HOME_REDIRECT);
       })
       .catch((error) => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
@@ -173,7 +173,7 @@ const SignUp = (props) => {
           </Box>
           <SignInGoogle setError={setError} />
           {error != null && <Alert severity="error">{error.message}</Alert>}
-          <Grid container justify="flex-end">
+          <Grid container justifyContent="flex-end">
             <Grid item>
               <SignInLink />
             </Grid>

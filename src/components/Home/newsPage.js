@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { NewsCard, LineGridList, DisplayNews } from "../News";
+import { NewsCard, LineImageList, DisplayNews } from "../News";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import IconButton from "@material-ui/core/IconButton";
 
@@ -15,7 +15,7 @@ const NewsPage = ({ loading, newsList }) => {
   }
 
   return (
-    <Grid container justify="center" spacing={6}>
+    <Grid container justifyContent="center" spacing={6}>
       <Grid item xs={10}></Grid>
       {loading && <LinearProgress />}
       {!loading && (
@@ -47,7 +47,7 @@ const NewsPage = ({ loading, newsList }) => {
 
 function NewsList({ newsList, showNews }) {
   return (
-    <LineGridList
+    <LineImageList
       data={newsList.map((item) => (
         <NewsCard news={item} writer={false} showNews={showNews} />
       ))}

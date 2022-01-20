@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
 import Container from "@material-ui/core/Container";
 
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 import * as ROUTES from "../../constants/routes";
 import * as Styles from "./styles";
 

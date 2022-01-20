@@ -14,7 +14,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import * as styles from "./styles";
 import ReactMarkdown from "react-markdown";
-import { FirebaseContext } from "../Firebase";
+import { FirebaseContext } from "../../firebase";
 import { AuthUserContext } from "../Session";
 import { withAuthorization } from "../Session";
 import News from "../News";
@@ -64,7 +64,6 @@ const UpdateNews = (props) => {
           user.username,
           moment().format("YYYY-MM-DD")
         );
-        console.log(oldNews);
         firebase.updateNews(oldNews.newsid, news).then(() => {
           setMessage(
             "The news has been modified. You can continue to browse the website"
@@ -76,7 +75,6 @@ const UpdateNews = (props) => {
         firebase
           .storeImage(imagePath, image)
           .then((imageLink) => {
-            console.log("LINK", imageLink);
             var news = new News(
               location,
               title,
@@ -105,7 +103,7 @@ const UpdateNews = (props) => {
   return (
     <Container>
       <div className={classes.paper}>
-        <Grid container justify="center" direction="row" spacing={4}>
+        <Grid container justifyContent="center" direction="row" spacing={4}>
           {error && (
             <Grid item xs={8}>
               <Alert severity="error">{error.message}</Alert>
