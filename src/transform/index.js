@@ -25,7 +25,7 @@ export const combineSummaryVaccines = (summary_dict, vaccines_dict) => {
 export const transformHistory = (data) => {
   data = data.All.dates;
   let dates = Object.keys(data);
-  dates.sort((a, b) => a.localeCompare(b) > 0);
+  dates.sort((a, b) => a.localeCompare(b));
 
   let firstDay = data[dates[0]];
   let out = {
