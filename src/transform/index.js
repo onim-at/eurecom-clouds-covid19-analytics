@@ -28,16 +28,28 @@ export const combineSummaryVaccines = (summary_dict, vaccines_dict) => {
 
 export const transformHistory = (data) => {
 
+  data = data.All.dates
+  console.log(data)
+  let dates = Object.keys(data)
+  dates.sort((a,b) => a.localeCompare(b) > 0)
+
+  let firstDay = data[dates[0]]
   let out = {
-    labels: [],
-    death: [],
-    confirmed : [],
+    labels: [dates[0]],
+    totalDeath: [firstDay.death],
+    totalConfirmed : [firstDay.confirmed],
+    dailyDeath: [firstDay.death],
+    dailyConfirmed : [firstDay.confirmed],
   }
-  let dates = data.All.dates
-  for (const date in dates) {
-    out.labels.push(date)
-    out.death.push(dates[date].death)
-    out.confirmed.push(dates[date].confirmed)
+
+  for (let i = 1; i < dates.length; i++) {
+    let cur = dates[i]
+    let prev = dates[i-1]
+    out.labels.push(cur)
+    out.totalDeath.push(data[cur].death)
+    out.totalConfirmed.push(data[cur].confirmed)
+    out.dailyDeath.push(data[cur].death-data[prev].death)
+    out.dailyConfirmed.push(data[cur].confirmed-data[prev].confirmed)
   }
 
   return out

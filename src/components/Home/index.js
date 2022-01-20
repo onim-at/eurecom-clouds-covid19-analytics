@@ -61,7 +61,6 @@ const Home = ({summary, summaryLoading}) => {
     };
   }, [firebase, country]);
 
-  let loading = summaryLoading || historyLoading;
   return (
     <Container className={classes.paper}>
       <Grid container direction="row" justifyContent="center" spacing={1}>
@@ -107,7 +106,8 @@ const Home = ({summary, summaryLoading}) => {
           country={country}
           summary={summary}
           history={history}
-          loading={loading}
+          summaryLoading={summaryLoading}
+          historyLoading={historyLoading}
           titleName={country}
         />
       </Fade>

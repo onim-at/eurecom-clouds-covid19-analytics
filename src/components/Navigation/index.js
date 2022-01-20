@@ -23,7 +23,7 @@ function NavigationBase(props) {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const authUser = useContext(AuthUserContext);
   const classes = Styles.useStyles();
-
+  console.log(authUser)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleSubmit = (value) => {

@@ -22,7 +22,7 @@ import * as ROUTES from "../../constants/routes";
 
 const App = () => {
   const [summary, setSummary] = useState({});
-  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [summaryLoading, setSummaryLoading] = useState(true);
   const firebase = useContext(FirebaseContext);
   const [error, setError] = useState(null);
 

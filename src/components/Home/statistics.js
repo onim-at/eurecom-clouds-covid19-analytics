@@ -13,43 +13,51 @@ import {
   BarPlotWeek,
 } from "../Analytics";
 
-const Statistics = ({ country, summary, history, loading }) => {
+const Statistics = ({ country, summary, history, summaryLoading, historyLoading }) => {
   return (
     <Grid container justifyContent="center" spacing={6}>
       <Grid item xs={11}>
         <SummaryTable
           data={summary[country]}
-          loading={loading}
-          title={TITLES.SUMMARY + country}
+          loading={summaryLoading}
+          title={TITLES.SUMMARY}
+        />
+      </Grid>
+
+      <Grid item xs={11}>
+        <SummaryPie
+          data={summary[country]}
+          loading={summaryLoading}
+          title={TITLES.VACCINATION}
         />
       </Grid>
 
       <Grid item xs={11}>
         <BarPlotWeek
-          data={history.confirmed}
+          data={history.dailyConfirmed}
           label={history.labels}
-          loading={loading}
+          loading={historyLoading}
           color={COLORS.CONFIRMED}
-          title={TITLES.DAILY_WEEK_CONFIRMED + country}
+          title={TITLES.DAILY_CONFIRMED}
         />
       </Grid>
 
       <Grid item xs={11}>
         <BarPlotWeek
-          data={history.death}
+          data={history.dailyDeath}
           label={history.labels}
-          loading={loading}
+          loading={historyLoading}
           color={COLORS.DEATHS}
-          title={TITLES.DAILY_WEEK_DEATHS + country}
+          title={TITLES.DAILY_DEATHS}
         />
       </Grid>
 
       <Grid item xs={11}>
         <LineChartTotal
-          data={history.confirmed}
+          data={history.totalConfirmed}
           labels={history.labels}
-          title={TITLES.DAILY_TOTAL + country}
-          loading={loading}
+          title={TITLES.TOTAL_CONFIRMED}
+          loading={historyLoading}
           backgroundColor={COLORS.CONFIRMED_BG}
           borderColor={COLORS.CONFIRMED}
         />
@@ -57,10 +65,10 @@ const Statistics = ({ country, summary, history, loading }) => {
 
       <Grid item xs={11}>
         <LineChartTotal
-          data={history.death}
+          data={history.totalDeath}
           labels={history.labels}
-          title={TITLES.DAILY_TOTAL + country}
-          loading={loading}
+          title={TITLES.TOTAL_DEATHS}
+          loading={historyLoading}
           backgroundColor={COLORS.DEATHS_BG}
           borderColor={COLORS.DEATHS}
         />
@@ -71,7 +79,7 @@ const Statistics = ({ country, summary, history, loading }) => {
           <SummaryTableCountry
             data={summary}
             title={TITLES.COUNTRY}
-            loading={loading}
+            loading={summaryLoading}
           />
         </Grid>
       </Route>

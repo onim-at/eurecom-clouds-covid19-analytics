@@ -58,14 +58,13 @@ class Firebase {
             if (!data.roles) {
               data.roles = {};
             }
-
             let user = {
               uid: authUser.uid,
-              username: authUser.displayName,
+              username: data.username,
               email: authUser.email,
               roles: data.roles,
             };
-
+            
             next(user);
           });
       } else {
@@ -101,7 +100,6 @@ class Firebase {
         docs["Afghanistan"] &&
         check_today_or_yesterday(moment(docs["Afghanistan"].All.updated, date_format))
       ) {
-        console.log("RETRIEVED FROM FIREBASE")
         return docs;
       }
 
@@ -111,7 +109,6 @@ class Firebase {
       for (const country in collectionNew) {
         collectionOld.doc(country).set(collectionNew[country]);
       }
-      console.log("RETRIEVED FROM API")
 
       return collectionNew;
     } catch (error) {
@@ -130,7 +127,6 @@ class Firebase {
     try {
       let yesterday = moment().subtract(1, "days").format("YYYY-MM-DD");
       if (doc.exists && doc.data().All.dates.hasOwnProperty(yesterday)) {
-        console.log("HISTORY RETRIEVED FROM FIREBASE")
         return doc.data();
       }
 
@@ -146,8 +142,6 @@ class Firebase {
         deathNew.All.dates[data[0]] = hist;
       });
       ref.set(deathNew);
-      console.log("HISTORY RETRIEVED FROM API")
-
       return deathNew;
     } catch (error) {
       let err = {

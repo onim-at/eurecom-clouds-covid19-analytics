@@ -16,13 +16,13 @@ import * as CONSTANTS from "../../constants/routes";
 import * as styles from "./styles";
 import * as COLORS from "../../constants/colors";
 
+const numberWithCommas = (x) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+const percentage = (x, y) => ((x / y) * 100).toFixed(2);
+
 const SummaryTable = ({ data, title, loading }) => {
-  const numberWithCommas = (x) => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  const percentage = (x, y) => ((x / y) * 100).toFixed(2) + "%";
-
   const getRows = (data) => [
     {
       id: 1,
@@ -44,7 +44,7 @@ const SummaryTable = ({ data, title, loading }) => {
     },
     {
       id: 4,
-      measure: "Partially vaccinated",
+      measure: "At least one dose",
       value: data.people_partially_vaccinated,
       bg: COLORS.VACCINATED,
     },
@@ -81,15 +81,21 @@ const SummaryTable = ({ data, title, loading }) => {
 };
 
 const SummaryPie = ({ data, title, loading }) => {
-  const getData = (data) => ({
-    labels: ["Death Cases", "Total cases"],
-    datasets: [
-      {
-        data: [data.TotalDeaths, data.TotalConfirmed],
-        backgroundColor: [COLORS.DEATHS, COLORS.CONFIRMED],
-      },
-    ],
-  });
+  const getData = (data) => {
+    let vaccinated = percentage(data.people_vaccinated, data.population);
+    let partially_vaccinated = percentage(data.people_partially_vaccinated-data.people_vaccinated, data.population);
+    let non_vaccinated = percentage(data.population-data.people_partially_vaccinated,data.population);
+
+    return {
+      labels: ["Fully vaccinated", "Partially vaccinated", "Non vaccinated"],
+      datasets: [
+        {
+          data: [vaccinated, partially_vaccinated, non_vaccinated],
+          backgroundColor: [COLORS.VACCINATED, COLORS.PARTIALLY_VACCINATED, COLORS.NON_VACCINATED],
+        },
+      ],
+    };
+  };
 
   return (
     <>
@@ -207,19 +213,14 @@ const SummaryTableCountry = ({ data, title, loading }) => {
       cellClassName: "vaccines--cell",
     },
     {
-      headerName: "Partially Vaccinated",
+      headerName: "One shot",
       field: "people_partially_vaccinated",
       flex: 1,
       cellClassName: "vaccines--cell",
     },
-    {
-      headerName: "Shots given",
-      field: "administered",
-      flex: 1,
-      cellClassName: "vaccines--cell",
-    },
+    
   ];
-  
+
   const getRows = (data) => {
     return Object.keys(data).map((item, index) => ({
       id: index,
@@ -227,8 +228,7 @@ const SummaryTableCountry = ({ data, title, loading }) => {
       confirmed: data[item].confirmed,
       deaths: data[item].deaths,
       people_vaccinated: data[item].people_vaccinated,
-      people_partially_vaccinated: data[item].people_partially_vaccinated,
-      administered: data[item].administered,
+      people_partially_vaccinated: data[item].people_partially_vaccinated-data[item].people_vaccinated,
     }));
   };
   return (
@@ -240,7 +240,7 @@ const SummaryTableCountry = ({ data, title, loading }) => {
           style={{ height: 520, width: "100%", borderColor: "white" }}
           className={classes.root}
         >
-          <DataGrid rows={getRows(data)} columns={columns} pageSize={20} />
+          <DataGrid rows={getRows(data)} columns={columns} />
         </Box>
       )}
     </>
