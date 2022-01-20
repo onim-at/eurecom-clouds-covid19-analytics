@@ -62,6 +62,7 @@ const SignUp = (props) => {
         return firebase.user(authUser.user.uid).set({
           username,
           email,
+          roles: {},
         });
       })
       .then((authUser) => {

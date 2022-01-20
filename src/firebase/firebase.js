@@ -64,7 +64,6 @@ class Firebase {
               email: authUser.email,
               roles: data.roles,
             };
-            
             next(user);
           });
       } else {
@@ -81,11 +80,19 @@ class Firebase {
   // *** Statistics API ***
 
   getSummary = async () => {
-    return this.getDataCollection("summary", API.getSummary, "YYYY-MM-DD HH:mm:ss");
+    return this.getDataCollection(
+      "summary",
+      API.getSummary,
+      "YYYY-MM-DD HH:mm:ss"
+    );
   };
 
   getVaccines = async () => {
-    return this.getDataCollection("vaccines", API.getVaccines, "YYYY/MM/DD HH:mm:ss+00");
+    return this.getDataCollection(
+      "vaccines",
+      API.getVaccines,
+      "YYYY/MM/DD HH:mm:ss+00"
+    );
   };
 
   getDataCollection = async (collection_name, fallback, date_format) => {
@@ -95,10 +102,11 @@ class Firebase {
       return { ...obj, [item.id]: item.data() };
     }, {});
     try {
-
       if (
         docs["Afghanistan"] &&
-        check_today_or_yesterday(moment(docs["Afghanistan"].All.updated, date_format))
+        check_today_or_yesterday(
+          moment(docs["Afghanistan"].All.updated, date_format)
+        )
       ) {
         return docs;
       }
@@ -235,13 +243,11 @@ class Firebase {
   };
 }
 
-
 const check_today_or_yesterday = (date) => {
-  let today = moment()
-  let yesterday = moment().subtract(1, "day")
+  let today = moment();
+  let yesterday = moment().subtract(1, "day");
 
-  return today.isSame(date, "day") || yesterday.isSame(date, "day")
-}
-
+  return today.isSame(date, "day") || yesterday.isSame(date, "day");
+};
 
 export default Firebase;

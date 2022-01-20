@@ -13,7 +13,13 @@ import {
   BarPlotWeek,
 } from "../Analytics";
 
-const Statistics = ({ country, summary, history, summaryLoading, historyLoading }) => {
+const Statistics = ({
+  country,
+  summary,
+  history,
+  summaryLoading,
+  historyLoading,
+}) => {
   return (
     <Grid container justifyContent="center" spacing={6}>
       <Grid item xs={11}>

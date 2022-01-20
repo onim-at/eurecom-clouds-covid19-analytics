@@ -1,60 +1,53 @@
 const moment = require("moment");
 
 export const combineSummaryVaccines = (summary_dict, vaccines_dict) => {
-
-  let out = {}
+  let out = {};
 
   for (const country in summary_dict) {
-    let summary = summary_dict[country].All
+    let summary = summary_dict[country].All;
 
-    if (vaccines_dict[country]){
-      let vaccines = vaccines_dict[country].All
+    if (vaccines_dict[country]) {
+      let vaccines = vaccines_dict[country].All;
 
       out[country] = {
         population: summary.population,
         confirmed: summary.confirmed,
         deaths: summary.deaths,
         administered: vaccines.administered,
-        people_vaccinated: vaccines.people_vaccinated, 
-        people_partially_vaccinated: vaccines.people_partially_vaccinated, 
-      }
+        people_vaccinated: vaccines.people_vaccinated,
+        people_partially_vaccinated: vaccines.people_partially_vaccinated,
+      };
     }
-    
   }
-  return out    
-} 
-
-
+  return out;
+};
 
 export const transformHistory = (data) => {
+  data = data.All.dates;
+  let dates = Object.keys(data);
+  dates.sort((a, b) => a.localeCompare(b) > 0);
 
-  data = data.All.dates
-  console.log(data)
-  let dates = Object.keys(data)
-  dates.sort((a,b) => a.localeCompare(b) > 0)
-
-  let firstDay = data[dates[0]]
+  let firstDay = data[dates[0]];
   let out = {
     labels: [dates[0]],
     totalDeath: [firstDay.death],
-    totalConfirmed : [firstDay.confirmed],
+    totalConfirmed: [firstDay.confirmed],
     dailyDeath: [firstDay.death],
-    dailyConfirmed : [firstDay.confirmed],
-  }
+    dailyConfirmed: [firstDay.confirmed],
+  };
 
   for (let i = 1; i < dates.length; i++) {
-    let cur = dates[i]
-    let prev = dates[i-1]
-    out.labels.push(cur)
-    out.totalDeath.push(data[cur].death)
-    out.totalConfirmed.push(data[cur].confirmed)
-    out.dailyDeath.push(data[cur].death-data[prev].death)
-    out.dailyConfirmed.push(data[cur].confirmed-data[prev].confirmed)
+    let cur = dates[i];
+    let prev = dates[i - 1];
+    out.labels.push(cur);
+    out.totalDeath.push(data[cur].death);
+    out.totalConfirmed.push(data[cur].confirmed);
+    out.dailyDeath.push(data[cur].death - data[prev].death);
+    out.dailyConfirmed.push(data[cur].confirmed - data[prev].confirmed);
   }
 
-  return out
-}
-
+  return out;
+};
 
 export const transformCountryData = (data) => {
   let totalDeaths = data.map((item) => item.Deaths);
@@ -80,30 +73,29 @@ export const transformCountryData = (data) => {
 };
 
 export const transformGlobalData = (data) => {
-    let start = moment("2020-04-12");
-    let sorting = function (a, b) {
-      return a[0] - b[0];
-    };
-  
-    data.sort((a, b) => a.TotalConfirmed - b.TotalConfirmed);
-    let deaths = data
-      .map((item) => [item.TotalDeaths, item.NewDeaths])
-      .sort(sorting);
-    let totalDeaths = deaths.map((item) => item[0]);
-    let newDeaths = deaths.map((item) => item[1]);
-    let confirmed = data
-      .map((item) => [item.TotalConfirmed, item.NewConfirmed])
-      .sort(sorting);
-    let totalConfirmed = confirmed.map((item) => item[0]);
-    let newConfirmed = confirmed.map((item) => item[1]);
-    let labels = data.map((item) => start.add(1, "days").format("MM-DD"));
-  
-    return {
-      labels: labels,
-      totalConfirmed: totalConfirmed,
-      newConfirmed: newConfirmed,
-      totalDeaths: totalDeaths,
-      newDeaths: newDeaths,
-    };
+  let start = moment("2020-04-12");
+  let sorting = function (a, b) {
+    return a[0] - b[0];
   };
-  
+
+  data.sort((a, b) => a.TotalConfirmed - b.TotalConfirmed);
+  let deaths = data
+    .map((item) => [item.TotalDeaths, item.NewDeaths])
+    .sort(sorting);
+  let totalDeaths = deaths.map((item) => item[0]);
+  let newDeaths = deaths.map((item) => item[1]);
+  let confirmed = data
+    .map((item) => [item.TotalConfirmed, item.NewConfirmed])
+    .sort(sorting);
+  let totalConfirmed = confirmed.map((item) => item[0]);
+  let newConfirmed = confirmed.map((item) => item[1]);
+  let labels = data.map((item) => start.add(1, "days").format("MM-DD"));
+
+  return {
+    labels: labels,
+    totalConfirmed: totalConfirmed,
+    newConfirmed: newConfirmed,
+    totalDeaths: totalDeaths,
+    newDeaths: newDeaths,
+  };
+};
