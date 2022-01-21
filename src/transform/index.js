@@ -42,8 +42,12 @@ export const transformHistory = (data) => {
     out.labels.push(cur);
     out.totalDeath.push(data[cur].death);
     out.totalConfirmed.push(data[cur].confirmed);
-    out.dailyDeath.push(data[cur].death - data[prev].death);
-    out.dailyConfirmed.push(data[cur].confirmed - data[prev].confirmed);
+    let dailyDeath = data[cur].death - data[prev].death
+    if (dailyDeath < 0) dailyDeath = 0
+    out.dailyDeath.push(dailyDeath);
+    let dailyConfirmed = data[cur].confirmed - data[prev].confirmed
+    if (dailyConfirmed < 0) dailyConfirmed = 0
+    out.dailyConfirmed.push(dailyConfirmed);
   }
 
   return out;
