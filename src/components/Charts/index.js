@@ -12,6 +12,11 @@ import { DataGrid } from "@material-ui/data-grid";
 import Button from "@material-ui/core/Button";
 import { Pie, Line, Bar } from "react-chartjs-2";
 import { Link } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 import * as ROUTES from "../../constants/routes";
 import * as styles from "./styles";
@@ -234,11 +239,10 @@ export function BarChartMovingAverage({ data, labels, barColor, lineColor }) {
     };
 
     let result = [];
-    
 
     // pad beginning of result with null values
     for (let i = 0; i < count - 1; i++) {
-      let val = avg(array.slice(0, i));
+      let val = avg(array.slice(0, i + 1));
       if (isNaN(val)) result.push(null);
       else result.push(parseInt(val));
     }
@@ -252,7 +256,7 @@ export function BarChartMovingAverage({ data, labels, barColor, lineColor }) {
     return result;
   }
 
-  const getData = (data, label) => {
+  const getData = (data, labels) => {
     let moving_average = movingAvg(data, 7);
 
     return {
@@ -269,16 +273,27 @@ export function BarChartMovingAverage({ data, labels, barColor, lineColor }) {
         },
         {
           type: "bar",
-          label: "Daily cases",
+          label: "Daily",
           backgroundColor: barColor,
           data: data,
         },
-        
       ],
     };
   };
 
-  return <Bar data={getData(data, labels)} />;
+  const options = {
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            suggestedMin: 0,
+          },
+        },
+      ],
+    },
+  };
+
+  return <Bar data={getData(data, labels)} options={options} />;
 }
 
 const WithChartWrapper = (Component) => {
@@ -286,8 +301,8 @@ const WithChartWrapper = (Component) => {
     return (
       <>
         <Title title={title} />
-        {(loading || data==null) && <LinearProgress />}
-        {!loading && data !=null && <Component data={data} {...props} />}
+        {(loading || data == null) && <LinearProgress />}
+        {!loading && data != null && <Component data={data} {...props} />}
       </>
     );
   };
@@ -295,8 +310,67 @@ const WithChartWrapper = (Component) => {
   return WithChartWrapper;
 };
 
+const WithDataSelector = (Component) => {
+  const WithDataSelector = ({
+    loading,
+    title,
+    children,
+    data,
+    labels,
+    ...props
+  }) => {
+    const [span, setSpan] = React.useState(60);
+
+    const handleChange = (event) => {
+      setSpan(event.target.value);
+    };
+
+    return (
+      <>
+        <Grid container direction="row" alignItems="center" spacing={1}>
+          <Grid item xs={6}>
+            <Title title={title} />
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel id={"select-time-span-" + title + "-label"}>
+                Time span
+              </InputLabel>
+              <Select
+                labelId={"select-time-span-" + title + "-label"}
+                id={"select-time-span-" + title}
+                value={span}
+                label="Time span"
+                onChange={handleChange}
+              >
+                <MenuItem value={14}>2 Weeks</MenuItem>
+                <MenuItem value={30}>30 Days</MenuItem>
+                <MenuItem value={60}>3 months</MenuItem>
+                <MenuItem value={120}>6 months</MenuItem>
+                {data != null && (
+                  <MenuItem value={data.length}>From beginning</MenuItem>
+                )}
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+        {(loading || data == null) && <LinearProgress />}
+        {!loading && data != null && (
+          <Component
+            data={data.slice(-span)}
+            labels={labels.slice(-span)}
+            {...props}
+          />
+        )}
+      </>
+    );
+  };
+
+  return WithDataSelector;
+};
+
 const Title = ({ title }) => (
-  <Typography variant="h5" style={{ background: "Beige" }}>
+  <Typography p={1} m={1} variant="h5" style={{ background: "Beige" }}>
     <Box p={1} m={1} fontWeight="fontWeightBold">
       {title}
     </Box>
@@ -308,4 +382,6 @@ export const SummaryPieWrapper = WithChartWrapper(SummaryPie);
 export const BarPlotWrapper = WithChartWrapper(BarPlot);
 export const LineChartWrapper = WithChartWrapper(LineChart);
 export const SummaryTableCountryWrapper = WithChartWrapper(SummaryTableCountry);
-export const BarChartMovingAverageWrapper = WithChartWrapper(BarChartMovingAverage);
+export const BarChartMovingAverageWrapper = WithDataSelector(
+  BarChartMovingAverage
+);

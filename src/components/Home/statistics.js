@@ -1,7 +1,6 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import { Pie, Line, Bar, Chart } from "react-chartjs-2";
 
 import * as TITLES from "../../constants/titles";
 import * as ROUTES from "../../constants/routes";
@@ -9,9 +8,7 @@ import * as COLORS from "../../constants/colors";
 import {
   SummaryTableWrapper,
   SummaryPieWrapper,
-  LineChartWrapper,
   SummaryTableCountryWrapper,
-  BarPlotWrapper,
   BarChartMovingAverageWrapper,
 } from "../Charts";
 
