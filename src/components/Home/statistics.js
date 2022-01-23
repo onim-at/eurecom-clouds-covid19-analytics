@@ -6,12 +6,11 @@ import * as TITLES from "../../constants/titles";
 import * as ROUTES from "../../constants/routes";
 import * as COLORS from "../../constants/colors";
 import {
-  SummaryTable,
-  SummaryPie,
-  LineChartTotal,
-  SummaryTableCountry,
-  BarPlotWeek,
-} from "../Analytics";
+  SummaryTableWrapper,
+  SummaryPieWrapper,
+  SummaryTableCountryWrapper,
+  BarChartMovingAverageWrapper,
+} from "../Charts";
 
 const Statistics = ({
   country,
@@ -22,24 +21,24 @@ const Statistics = ({
 }) => {
   return (
     <Grid container justifyContent="center" spacing={6}>
-      <Grid item xs={11}>
-        <SummaryTable
+      <Grid item xs={11} md={5}>
+        <SummaryTableWrapper
           data={summary[country]}
           loading={summaryLoading}
           title={TITLES.SUMMARY}
         />
       </Grid>
 
-      <Grid item xs={11}>
-        <SummaryPie
+      <Grid item xs={11} md={5}>
+        <SummaryPieWrapper
           data={summary[country]}
           loading={summaryLoading}
           title={TITLES.VACCINATION}
         />
       </Grid>
-
+      {/*
       <Grid item xs={11}>
-        <BarPlotWeek
+        <BarPlotWrapper
           data={history.dailyConfirmed}
           label={history.labels}
           loading={historyLoading}
@@ -49,7 +48,7 @@ const Statistics = ({
       </Grid>
 
       <Grid item xs={11}>
-        <BarPlotWeek
+        <BarPlotWrapper
           data={history.dailyDeath}
           label={history.labels}
           loading={historyLoading}
@@ -59,7 +58,7 @@ const Statistics = ({
       </Grid>
 
       <Grid item xs={11}>
-        <LineChartTotal
+        <LineChartWrapper
           data={history.totalConfirmed}
           labels={history.labels}
           title={TITLES.TOTAL_CONFIRMED}
@@ -70,7 +69,7 @@ const Statistics = ({
       </Grid>
 
       <Grid item xs={11}>
-        <LineChartTotal
+        <LineChartWrapper
           data={history.totalDeath}
           labels={history.labels}
           title={TITLES.TOTAL_DEATHS}
@@ -79,10 +78,30 @@ const Statistics = ({
           borderColor={COLORS.DEATHS}
         />
       </Grid>
-
+      */}
+      <Grid item xs={11}>
+        <BarChartMovingAverageWrapper
+          data={history.dailyConfirmed}
+          labels={history.labels}
+          title={TITLES.DAILY_CONFIRMED}
+          loading={historyLoading}
+          lineColor={COLORS.CONFIRMED_LINE}
+          barColor={COLORS.CONFIRMED_BAR}
+        />
+      </Grid>
+      <Grid item xs={11}>
+        <BarChartMovingAverageWrapper
+          data={history.dailyConfirmed}
+          labels={history.labels}
+          title={TITLES.DAILY_DEATHS}
+          loading={historyLoading}
+          lineColor={COLORS.DEATH_LINE}
+          barColor={COLORS.DEATH_BAR}
+        />
+      </Grid>
       <Route path={ROUTES.HOME_REDIRECT}>
         <Grid item xs={11}>
-          <SummaryTableCountry
+          <SummaryTableCountryWrapper
             data={summary}
             title={TITLES.COUNTRY}
             loading={summaryLoading}

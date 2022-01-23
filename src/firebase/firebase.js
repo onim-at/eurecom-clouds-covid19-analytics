@@ -81,7 +81,7 @@ class Firebase {
 
   getSummary = async () => {
     return this.getDataCollection(
-      "summary",
+      "cases",
       API.getSummary,
       "YYYY-MM-DD HH:mm:ss"
     );
@@ -94,35 +94,29 @@ class Firebase {
       "YYYY/MM/DD HH:mm:ss+00"
     );
   };
+  
+  getDataCollection = async (document_name, fallback, date_format) => {
+    let ref = this.firestore.collection("summary").doc(document_name);
+    let doc = await ref.get();
 
-  getDataCollection = async (collection_name, fallback, date_format) => {
-    let collection = await this.firestore.collection(collection_name).get();
-
-    let docs = collection.docs.reduce((obj, item) => {
-      return { ...obj, [item.id]: item.data() };
-    }, {});
     try {
       if (
-        docs["Afghanistan"] &&
+        doc["Afghanistan"] &&
         check_today_or_yesterday(
-          moment(docs["Afghanistan"].All.updated, date_format)
+          moment(doc["Afghanistan"].All.updated, date_format)
         )
       ) {
-        return docs;
+        return doc;
       }
 
-      let collectionNew = await fallback();
-      let collectionOld = this.firestore.collection(collection_name);
+      let docNew = await fallback();
+      ref.set(docNew) 
+      return docNew;
 
-      for (const country in collectionNew) {
-        collectionOld.doc(country).set(collectionNew[country]);
-      }
-
-      return collectionNew;
     } catch (error) {
       let err = {
         error: error,
-        message: `Failed to retrieve ${collection_name} data;`,
+        message: `Failed to retrieve ${document_name} data;`,
       };
       throw err;
     }
