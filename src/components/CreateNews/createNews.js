@@ -27,17 +27,13 @@ const CreateNews = (props) => {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(markdown_description_label);
-  const [location, setLocation] = useState("worldwide");
+  const [location, setLocation] = useState("Global");
   const [error, setError] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const firebase = useContext(FirebaseContext);
   const user = useContext(AuthUserContext);
   const classes = styles.useStyles();
-
-  var globalData = { Country: "Worldwide", Slug: "worldwide", ISO2: "WW" };
-  var countrySelectData = props.countries.slice();
-  countrySelectData.unshift(globalData);
 
   function submitNews() {
     if (!title || !content || !image) {
@@ -80,8 +76,8 @@ const CreateNews = (props) => {
     }
   }
   const countrySelectHandler = (value) => {
-    if (value)
-      setLocation(value.Slug);
+    if (value.label)
+      setLocation(value.label);
   };
 
   return (
@@ -111,7 +107,7 @@ const CreateNews = (props) => {
           <Grid item xs={10} align="center">
             <CountrySelect
               loading={props.loading}
-              countries={countrySelectData}
+              countries={props.countries}
               error={props.error}
               handleSubmit={countrySelectHandler}
             />
