@@ -48,7 +48,7 @@ const Statistics = ({
       </Grid>
       <Grid item xs={11}>
         <BarChartMovingAverageWrapper
-          data={history.dailyConfirmed}
+          data={history.dailyDeath}
           labels={history.labels}
           title={TITLES.DAILY_DEATHS}
           loading={historyLoading}
