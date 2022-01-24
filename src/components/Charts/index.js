@@ -158,6 +158,7 @@ const SummaryTableCountry = ({ data }) => {
     {
       field: "country",
       headerName: "Country",
+      minWidth: 150,
       flex: 1,
       cellClassName: "country--cell",
       renderCell: (params) => (
@@ -172,25 +173,22 @@ const SummaryTableCountry = ({ data }) => {
     {
       field: "confirmed",
       headerName: "Cases",
+      minWidth: 130,
       flex: 1,
       cellClassName: "confirmed--cell",
     },
     {
       field: "deaths",
       headerName: "Deaths",
+      minWidth: 130,
       flex: 1,
       value: data.deaths,
       cellClassName: "deaths--cell",
     },
     {
-      headerName: "Vaccinated",
+      headerName: "Vaccinations",
       field: "people_vaccinated",
-      flex: 1,
-      cellClassName: "vaccines--cell",
-    },
-    {
-      headerName: "One shot",
-      field: "people_partially_vaccinated",
+      minWidth: 180,
       flex: 1,
       cellClassName: "vaccines--cell",
     },
@@ -203,17 +201,16 @@ const SummaryTableCountry = ({ data }) => {
       confirmed: data[item].confirmed,
       deaths: data[item].deaths,
       people_vaccinated: data[item].people_vaccinated,
-      people_partially_vaccinated:
-        data[item].people_partially_vaccinated - data[item].people_vaccinated,
     }));
   };
   return (
-    <Box
-      style={{ height: 520, width: "100%", borderColor: "white" }}
-      className={classes.root}
-    >
-      <DataGrid rows={getRows(data)} columns={columns} />
-    </Box>
+    <div style={{ height: 520, width: "100%" }}>
+      <div style={{ display: "flex", height: "100%" }}>
+        <div style={{ flexGrow: 1 }} className={classes.root}>
+          <DataGrid rows={getRows(data)} columns={columns} />
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -328,10 +325,10 @@ const WithDataSelector = (Component) => {
     return (
       <>
         <Grid container direction="row" alignItems="center" spacing={1}>
-          <Grid item xs={6}>
+          <Grid item xs={7}>
             <Title title={title} />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={5}>
             <FormControl fullWidth>
               <InputLabel id={"select-time-span-" + title + "-label"}>
                 Time span
@@ -347,9 +344,7 @@ const WithDataSelector = (Component) => {
                 <MenuItem value={30}>30 Days</MenuItem>
                 <MenuItem value={60}>3 months</MenuItem>
                 <MenuItem value={120}>6 months</MenuItem>
-                {data != null && (
-                  <MenuItem value={data.length}>From beginning</MenuItem>
-                )}
+                {data != null && <MenuItem value={data.length}>All</MenuItem>}
               </Select>
             </FormControl>
           </Grid>

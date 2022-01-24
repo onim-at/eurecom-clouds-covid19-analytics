@@ -20,8 +20,8 @@ const Statistics = ({
   historyLoading,
 }) => {
   return (
-    <Grid container justifyContent="center" spacing={6}>
-      <Grid item xs={11} md={5}>
+    <Grid container justifyContent="center">
+      <Grid item xs={11} md={6}>
         <SummaryTableWrapper
           data={summary[country]}
           loading={summaryLoading}
@@ -36,49 +36,6 @@ const Statistics = ({
           title={TITLES.VACCINATION}
         />
       </Grid>
-      {/*
-      <Grid item xs={11}>
-        <BarPlotWrapper
-          data={history.dailyConfirmed}
-          label={history.labels}
-          loading={historyLoading}
-          color={COLORS.CONFIRMED}
-          title={TITLES.DAILY_CONFIRMED}
-        />
-      </Grid>
-
-      <Grid item xs={11}>
-        <BarPlotWrapper
-          data={history.dailyDeath}
-          label={history.labels}
-          loading={historyLoading}
-          color={COLORS.DEATHS}
-          title={TITLES.DAILY_DEATHS}
-        />
-      </Grid>
-
-      <Grid item xs={11}>
-        <LineChartWrapper
-          data={history.totalConfirmed}
-          labels={history.labels}
-          title={TITLES.TOTAL_CONFIRMED}
-          loading={historyLoading}
-          backgroundColor={COLORS.CONFIRMED_BG}
-          borderColor={COLORS.CONFIRMED}
-        />
-      </Grid>
-
-      <Grid item xs={11}>
-        <LineChartWrapper
-          data={history.totalDeath}
-          labels={history.labels}
-          title={TITLES.TOTAL_DEATHS}
-          loading={historyLoading}
-          backgroundColor={COLORS.DEATHS_BG}
-          borderColor={COLORS.DEATHS}
-        />
-      </Grid>
-      */}
       <Grid item xs={11}>
         <BarChartMovingAverageWrapper
           data={history.dailyConfirmed}
