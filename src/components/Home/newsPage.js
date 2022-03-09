@@ -15,7 +15,7 @@ const NewsPage = ({ loading, newsList }) => {
   }
 
   return (
-    <Grid container justifyContent="center">
+    <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={10}></Grid>
       {loading && <LinearProgress />}
       {!loading && (

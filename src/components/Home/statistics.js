@@ -10,7 +10,7 @@ import {
   SummaryPieWrapper,
   SummaryTableCountryWrapper,
   BarChartMovingAverageWrapper,
-} from "../Charts";
+} from "./Charts";
 
 const Statistics = ({
   country,
@@ -20,7 +20,7 @@ const Statistics = ({
   historyLoading,
 }) => {
   return (
-    <Grid container justifyContent="center">
+    <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={11} md={6}>
         <SummaryTableWrapper
           data={summary[country]}
@@ -36,6 +36,7 @@ const Statistics = ({
           title={TITLES.VACCINATION}
         />
       </Grid>
+
       <Grid item xs={11}>
         <BarChartMovingAverageWrapper
           data={history.dailyConfirmed}
