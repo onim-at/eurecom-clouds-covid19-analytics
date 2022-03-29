@@ -93,7 +93,7 @@ const loaderMockData = {
 
 export const BarChartLoader = () => {
   return (
-    <Skeleton width={"100%"} variant="rectangular">
+    <Skeleton width={"100%"} variant="rect">
       <Bar data={loaderMockData} />;
     </Skeleton>
   );

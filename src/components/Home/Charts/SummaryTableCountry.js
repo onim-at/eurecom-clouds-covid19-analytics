@@ -73,12 +73,12 @@ export const SummaryTableCountry = ({ data }) => {
 export const SummaryTableCountryLoader = () => {
   return (
     <>
-      <Skeleton height={52} variant="rectangular"></Skeleton>
+      <Skeleton height={52} variant="rect"></Skeleton>
       {[...new Array(8)].map((el, idx) => (
         <Skeleton height={52} key={idx}></Skeleton>
       ))}
 
-      <Skeleton height={52} variant="rectangular"></Skeleton>
+      <Skeleton height={52} variant="rect"></Skeleton>
     </>
   );
 };
