@@ -1,5 +1,7 @@
 # Covid-19 Analytics
 
+> :warning: **Unfortunately the website is deprecated alongside the [M-Media group API](https://github.com/M-Media-Group/Covid-19-API)**
+
 [Check the website!](https://covid-19-1bb90.firebaseapp.com/home)
 
 Web-App containing information about Covid-19 aruond the world
